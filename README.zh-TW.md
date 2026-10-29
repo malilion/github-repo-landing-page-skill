@@ -2,7 +2,7 @@
 
 [English](README.md) | 繁體中文
 
-一個 Claude Skill,可將任何 GitHub 儲存庫網址或 `README.md` 轉換成可直接上線、支援雙語(繁體中文 / English)的單檔 HTML 登陸頁。
+一個通用的 Agent Skill(標準 `SKILL.md` 格式,任何支援 skill 的 AI 程式助理都能用,例如 Claude Code、Grok CLI),可將任何 GitHub 儲存庫網址或 `README.md` 轉換成可直接上線、支援雙語(繁體中文 / English)的單檔 HTML 登陸頁。
 
 ![示範:Grok CLI 搭配本 skill 為 JetBrains/thinkrail 產生的登陸頁](assets/demo.gif)
 
@@ -19,7 +19,7 @@
 
 ## 使用方式
 
-1. 將本 repo(或只放 `SKILL.md`)放進 skill 資料夾,例如 `.claude/skills/github-repo-landing-page/SKILL.md` 或 `.grok/skills/github-repo-landing-page/SKILL.md`,工具才能自動發現。
+1. 將本 repo(或只放 `SKILL.md`)放進你所用工具的 skill 資料夾,例如 `.claude/skills/github-repo-landing-page/SKILL.md` 或 `.grok/skills/github-repo-landing-page/SKILL.md`,工具才能自動發現。
 2. 提供本機 clone、GitHub 儲存庫網址或貼上其 README,例如 `https://github.com/owner/repo`。
 3. 它會輸出 `landing/index.html`(不會覆蓋既有的 `index.html`)並執行驗證清單。可直接用瀏覽器開啟,或部署到 GitHub Pages。
 
