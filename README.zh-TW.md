@@ -4,6 +4,10 @@
 
 一個 Claude Skill,可將任何 GitHub 儲存庫網址或 `README.md` 轉換成可直接上線、支援雙語(繁體中文 / English)的單檔 HTML 登陸頁。
 
+![示範:Grok CLI 搭配本 skill 為 JetBrains/thinkrail 產生的登陸頁](assets/demo.gif)
+
+*上圖登陸頁由 Grok CLI 搭配本 skill 為 [JetBrains/thinkrail](https://github.com/JetBrains/thinkrail)(Apache-2.0)產生。GIF 內容為首屏、捲動瀏覽數個區塊,以及 繁體中文 / English 切換。*
+
 ## 特色
 
 - **單一檔案**:所有內容都在一個 `index.html`,不需建置流程,也不需 npm install。
@@ -21,7 +25,41 @@
 
 ### Headless 執行
 
-在 headless 模式搭配 Grok CLI `--permission-mode dontAsk` 這類權限模式時,任何未預先允許的工具呼叫都會取消整個 turn(`stopReason: cancelled`),常常就發生在最後的驗證步驟。請預先允許 skill 需要的指令,例如寫入輸出資料夾、唯讀的 `git -C <repo> rev-parse/log/remote`、`ls`,以及你用來驗證的工具(本機靜態伺服器、headless 瀏覽器腳本);並拒絕危險指令(`git push`、`rm`)。
+建議的 Grok CLI 設定(不開 shell 工具,寫入限制在 `landing/`):
+
+```bash
+grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
+  --tools read_file,list_dir,grep,write,search_replace,todo_write \
+  --allow 'Write(<repo>/landing/**)' --allow 'Edit(<repo>/landing/**)' \
+  --deny 'Read(~/.grok/**)' --deny 'Write(~/**)' --deny 'Edit(~/**)' \
+  --disable-web-search --max-turns 30
+```
+
+- `dontAsk` 模式下,任何未預先核准的工具呼叫都會取消整個 turn(`stopReason: cancelled`)。把 `--tools` 限縮為檔案類工具,並只允許寫入 `<repo>/landing/**`,就能順利跑完。
+- `--permission-mode acceptEdits` 不允許 shell 指令(只會自動核准檔案編輯),所以無法解決這個問題。
+- shell 白名單在實測中行不通:複合指令(`&&`、`;`、`||`、重導向)會逐段檢查,兩次執行都在數秒內被取消。
+- Headless 需要加 `--trust`,`.grok/skills/` 裡的專案 skill 才會被發現。這是隱藏旗標,會寫入 `~/.grok/trusted_folders.toml`;若不想讓該資料夾持續受信任,請事後移除該筆。
+- 沒有 shell 時,agent 無法自行跑瀏覽器檢查,請事後自行驗證(例如用 Playwright)。
+
+## 實測:Grok CLI
+
+2026-10-29 使用 Grok CLI 1.0.62,依上述 headless 設定對 [JetBrains/thinkrail](https://github.com/JetBrains/thinkrail)(GitHub Trending 專案,Apache-2.0)實測一次:
+
+| 結果 | 數值 |
+| --- | --- |
+| 結束原因 | `end_turn` |
+| 耗時 | 約 29 分鐘 |
+| 回合數 | 18 |
+| 費用 | 約 US$0.58 |
+
+以上僅為單次執行的數字,會因模型與 repo 而異。
+
+事後以 Playwright 驗證:
+
+- 使用 repo 的真實截圖,沒有編造 badge。
+- 無 console 錯誤。
+- 390px 寬度下沒有橫向溢出。
+- 繁體中文 / English 切換正常。
 
 ## 檔案說明
 
@@ -30,3 +68,4 @@
 | `SKILL.md` | Skill 定義(規則、區塊清單、工作流程、HTML 範本) |
 | `README.md` | 英文說明 |
 | `README.zh-TW.md` | 繁體中文說明 |
+| `assets/demo.gif` | 上方的示範動畫 |

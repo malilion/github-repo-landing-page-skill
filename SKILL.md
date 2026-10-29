@@ -82,7 +82,9 @@ When a user provides a GitHub repo URL (e.g., `https://github.com/owner/repo`):
 1. **Extract & Understand**:
    - Identify repo name, primary technology stack, core target users, and unique value proposition.
    - Read sources in the priority order from §1 (local `README*`, `LICENSE*`, manifest files, `docs/`, screenshots, then `gh`/API). Private or offline: local clone only.
+   - When gathering facts, prefer file tools (`read_file`, `list_dir`, `grep`) over shell commands, and do not chain recon commands; headless permission modes can cancel compound shell calls.
    - If details are missing, omit them or mark them as not provided (e.g. no `LICENSE` → say so). Do not infer features, install commands or stats from "standard" repo conventions.
+   - If only `landing/` gets deployed, copy the screenshot files it uses into `landing/` (or use public raw URLs) so relative image paths keep working.
    - The install tabs may be adapted to the project (e.g. `git clone`, static server, open the file directly) instead of listing every package manager.
 2. **Determine Design Tokens**:
    - Establish background tints, primary brand accents, fonts (Google Fonts), and border hair-lines.
