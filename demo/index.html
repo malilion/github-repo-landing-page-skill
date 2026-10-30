@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThinkRail — The agentic IDE that gets better every time you use it</title>
+  <meta name="description" content="ThinkRail is a workbench around the pi coding agent: git worktree workspaces, living SPEC.md files, reviewable diffs, and a desktop app or CLI.">
+  <meta name="theme-color" content="#09090b">
+  <meta property="og:title" content="ThinkRail — The agentic IDE that gets better every time you use it">
+  <meta property="og:description" content="A workbench around the pi coding agent: isolated git worktrees, living specs, reviewable diffs, desktop app or CLI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/JetBrains/thinkrail">
+  <meta property="og:image" content="https://raw.githubusercontent.com/JetBrains/thinkrail/main/.github/readme-assets/workbench-dark.png">
+  <meta property="og:image:alt" content="ThinkRail workbench in the dark theme: projects, a pi session, the diff, and the spec tree.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ThinkRail — The agentic IDE that gets better every time you use it">
+  <meta name="twitter:description" content="A workbench around the pi coding agent: isolated git worktrees, living specs, reviewable diffs, desktop app or CLI.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/JetBrains/thinkrail/main/.github/readme-assets/workbench-dark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Orbitron:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind Play CDN is pinned for this prototype. It logs its own production warning and sends no CORS headers, so it has no SRI. -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Geist', '"Plus Jakarta Sans"', '"Noto Sans TC"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Orbitron', '"Noto Serif TC"', 'serif'],
+            mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            acid: '#8dff4f',
+            acidink: '#102108',
+            mist: '#babac1',
+            fog: '#8d8d99',
+            info: '#6ac8ff',
+          },
+        },
+      },
+    };
+  </script>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('thinkrail-landing-lang');
+        var lang = saved === 'en' || saved === 'zh' ? saved : ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en');
+        document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+        document.documentElement.dataset.lang = lang;
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body { overflow-x: clip; }
+    ::selection { background: rgba(141, 255, 79, 0.28); color: #f4f4f5; }
+    .rail-grid {
+      background-image:
+        linear-gradient(to right, rgba(141, 255, 79, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(63, 63, 70, 0.45) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse at 50% 0%, black 15%, transparent 72%);
+    }
+    .prose-link {
+      color: #8dff4f;
+      text-decoration: underline;
+      text-decoration-color: rgba(141, 255, 79, 0.4);
+      text-underline-offset: 4px;
+      overflow-wrap: anywhere;
+    }
+    .prose-link:hover { text-decoration-color: #8dff4f; }
+    .faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 200ms ease; }
+    .faq-item.open .faq-panel { grid-template-rows: 1fr; }
+    .faq-panel > div { overflow: hidden; min-height: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-item code, .prose-link, p code {
+      overflow-wrap: anywhere;
+    }
+    .faq-item code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.92em;
+      color: #f4f4f5;
+    }
+    [data-filter][aria-pressed="true"],
+    [data-set-lang][aria-pressed="true"] {
+      background: #8dff4f !important;
+      color: #102108 !important;
+      border-color: transparent !important;
+    }
+    [data-tab][aria-selected="true"] {
+      background: rgba(141, 255, 79, 0.08) !important;
+      color: #8dff4f !important;
+      box-shadow: inset 2px 0 0 #8dff4f;
+    }
+    [data-shot][aria-pressed="true"] {
+      color: #f4f4f5 !important;
+      box-shadow: inset 0 -2px 0 #8dff4f;
+    }
+    [data-ring][aria-pressed="true"] {
+      border-color: #8dff4f !important;
+      background: rgba(141, 255, 79, 0.06) !important;
+    }
+    #menu-btn[aria-expanded="true"] .menu-open-icon { display: none; }
+    #menu-btn[aria-expanded="true"] .menu-close-icon { display: block; }
+    @media (min-width: 1024px) {
+      #mobile-nav { display: none !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-ping, .faq-panel { animation: none !important; transition: none !important; }
+    }
+    :focus-visible { outline: 2px solid #8dff4f; outline-offset: 2px; }
+  </style>
+</head>
+<body class="bg-zinc-950 font-sans text-zinc-100 antialiased">
+  <a href="#product" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-acid focus:px-3 focus:py-2 focus:text-acidink" data-i18n="nav.skip">Skip to content</a>
+
+  <header id="top" class="sticky top-0 z-50 border-b border-zinc-800/90 bg-zinc-950/75 backdrop-blur-xl">
+    <span class="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-acid" aria-hidden="true"></span>
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+      <a href="#top" class="flex shrink-0 items-center gap-2.5">
+        <span class="grid h-9 w-9 place-items-center rounded-lg bg-acid text-acidink">
+          <svg id="tr-logo" viewBox="0 -53.5 557 557" class="h-5 w-5" aria-hidden="true">
+            <path fill="currentColor" d="M430 111.3C430 88.49 411.51 70 388.7 70H189.68C184.33 70 180 74.33 180 79.68V449.2H220V321.24C220 277.27 244.37 250 299.74 250H374.14C405.09 250 430.16 224.89 430.12 193.95L430 111.3ZM390 189C390 198.54 382.19 206.35 372.65 206.35H311.86C254.74 206.35 230.59 222.1 223.64 227.89C222.74 228.65 221.36 228.01 221.35 226.82L220.05 114.19C220.02 111.89 221.89 110 224.19 110H374.87C383.22 110 390 116.78 390 125.13L390 189ZM500.38 358.64L460.1 294.06L458.06 290.8C465.46 284.43 471.77 277.49 477.05 270.08C492.54 248.38 499.3 222.65 499.18 195.36L499.11 179.98C499.75 173.77 500 170 500 170L499.98 98.35C499.96 44.03 455.91 9.53674e-06 401.59 9.53674e-06H340V31.11C340 36.02 343.98 40 348.89 40L398.91 40.78C433.09 41.17 460.72 68.76 461.13 102.95L462.2 191.14C462.63 219.89 462.04 258.15 399.31 277.63L503.44 449.2H556.36L500.38 358.64ZM371.84 291.19C367.59 284.24 360.04 280 351.9 280H288.66C266.79 280 249.05 297.74 249.05 319.61V449.2H289.11L289.73 340.61C289.79 329.21 299.05 320 310.45 320H333.84C337.68 320 341.26 321.95 343.34 325.18L423.06 449.2H468.4L371.84 291.19ZM140.57 70H0V110H110V449.2H150V79.43C150 74.22 145.78 70 140.57 70ZM0 0V40H301.88C306.37 40 310 36.36 310 31.88V0H0Z"></path>
+          </svg>
+        </span>
+        <span class="font-display text-sm font-medium tracking-[0.14em] text-zinc-50">ThinkRail</span>
+      </a>
+      <a href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE" class="hidden rounded-full border border-zinc-700 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-mist hover:border-acid hover:text-acid xl:inline-flex" data-i18n="hero.badge.license">Apache-2.0</a>
+      <nav class="hidden items-center gap-5 text-sm text-mist lg:flex" data-i18n="aria.nav" data-i18n-attr="aria-label" aria-label="Sections">
+        <a href="#proof" class="hover:text-zinc-50" data-i18n="nav.proof">Workbench</a>
+        <a href="#architecture" class="hover:text-zinc-50" data-i18n="nav.architecture">Architecture</a>
+        <a href="#capabilities" class="hover:text-zinc-50" data-i18n="nav.capabilities">Features</a>
+        <a href="#install" class="hover:text-zinc-50" data-i18n="nav.install">Install</a>
+        <a href="#faq" class="hover:text-zinc-50" data-i18n="nav.faq">FAQ</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="flex rounded-full border border-zinc-700 p-0.5" role="group" data-i18n="aria.lang" data-i18n-attr="aria-label" aria-label="Language">
+          <button type="button" data-set-lang="zh" class="rounded-full px-2.5 py-1 text-xs text-mist sm:px-3" aria-pressed="false"><span data-i18n="lang.zh">繁體中文</span></button>
+          <button type="button" data-set-lang="en" class="rounded-full px-2.5 py-1 text-xs text-mist sm:px-3" aria-pressed="true"><span data-i18n="lang.en">English</span></button>
+        </div>
+        <a href="https://github.com/JetBrains/thinkrail" class="inline-flex items-center gap-1.5 rounded-full bg-acid px-3 py-1.5 text-sm font-semibold text-acidink hover:bg-[#59d915]" target="_blank" rel="noopener noreferrer" data-i18n="nav.star.label" data-i18n-attr="aria-label" aria-label="Star ThinkRail on GitHub">
+          <i data-lucide="star" class="h-4 w-4" aria-hidden="true"></i>
+          <span class="hidden sm:inline" data-i18n="nav.star">Star</span>
+        </a>
+        <button type="button" id="menu-btn" class="grid h-9 w-9 place-items-center rounded-full border border-zinc-700 text-mist lg:hidden" aria-expanded="false" aria-controls="mobile-nav" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
+          <i data-lucide="menu" class="menu-open-icon h-4 w-4" aria-hidden="true"></i>
+          <i data-lucide="x" class="menu-close-icon hidden h-4 w-4" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-nav" class="hidden border-t border-zinc-800 px-4 py-3 lg:hidden">
+      <div class="mx-auto flex max-w-6xl flex-col gap-1 text-sm">
+        <a href="#proof" class="rounded-lg px-2 py-2 text-mist hover:bg-zinc-900 hover:text-zinc-50" data-i18n="nav.proof">Workbench</a>
+        <a href="#architecture" class="rounded-lg px-2 py-2 text-mist hover:bg-zinc-900 hover:text-zinc-50" data-i18n="nav.architecture">Architecture</a>
+        <a href="#capabilities" class="rounded-lg px-2 py-2 text-mist hover:bg-zinc-900 hover:text-zinc-50" data-i18n="nav.capabilities">Features</a>
+        <a href="#install" class="rounded-lg px-2 py-2 text-mist hover:bg-zinc-900 hover:text-zinc-50" data-i18n="nav.install">Install</a>
+        <a href="#faq" class="rounded-lg px-2 py-2 text-mist hover:bg-zinc-900 hover:text-zinc-50" data-i18n="nav.faq">FAQ</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="product" class="relative scroll-mt-28 overflow-hidden">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="rail-grid absolute inset-0"></div>
+        <div class="absolute left-1/2 top-[-8rem] h-[26rem] w-[min(48rem,100%)] -translate-x-1/2 rounded-full bg-acid/10 blur-3xl"></div>
+        <div class="absolute right-[8%] top-24 h-40 w-40 rounded-full bg-info/10 blur-3xl"></div>
+      </div>
+      <div class="relative mx-auto max-w-6xl px-4 pb-8 pt-16 sm:px-6 sm:pt-24">
+        <p class="inline-flex items-center gap-2 rounded-full border border-zinc-700/90 bg-zinc-900/70 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-mist">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-acid opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-acid"></span>
+          </span>
+          <span data-i18n="hero.kicker">In-process pi · JetBrains incubator</span>
+        </p>
+        <h1 class="font-display mt-6 max-w-4xl text-[2.35rem] font-semibold leading-[1.12] text-zinc-50 sm:text-6xl sm:leading-[1.08]" data-i18n="hero.title" data-i18n-html>The agentic IDE that gets better <em class="not-italic text-acid">every time</em> you use it.</h1>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-mist sm:text-lg" data-i18n="hero.subtitle">A workbench around pi for people who build on real git repositories. Newcomers get a visual on-ramp. Experienced users keep pi's models, skills, and sessions. Agents work in isolated worktrees; you review, comment, and merge from the same desk.</p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#install" class="inline-flex items-center gap-2 rounded-full bg-acid px-5 py-2.5 text-sm font-semibold text-acidink hover:bg-[#59d915]">
+            <i data-lucide="terminal" class="h-4 w-4" aria-hidden="true"></i>
+            <span data-i18n="hero.cta.install">Quick install</span>
+          </a>
+          <a href="#capabilities" class="inline-flex items-center gap-2 rounded-full border border-zinc-600 px-5 py-2.5 text-sm font-semibold text-zinc-100 hover:border-acid hover:text-acid">
+            <span data-i18n="hero.cta.features">Browse features</span>
+          </a>
+          <a href="https://thinkrail.ai/" class="inline-flex items-center gap-1.5 px-2 py-2 text-sm text-mist hover:text-acid" target="_blank" rel="noopener noreferrer">
+            <span data-i18n="hero.site">thinkrail.ai</span>
+            <i data-lucide="external-link" class="h-3.5 w-3.5" aria-hidden="true"></i>
+          </a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-2">
+          <li><a href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE" class="inline-flex rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 font-mono text-[11px] text-mist hover:border-acid hover:text-acid" data-i18n="hero.badge.license">Apache-2.0</a></li>
+          <li><a href="https://github.com/JetBrains" class="inline-flex rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 font-mono text-[11px] text-mist hover:border-acid hover:text-acid" target="_blank" rel="noopener noreferrer" data-i18n="hero.badge.incubator">JetBrains incubator</a></li>
+          <li><a href="#install" class="inline-flex rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 font-mono text-[11px] text-mist hover:border-acid hover:text-acid" data-i18n="hero.badge.ship">Desktop + CLI</a></li>
+          <li><a href="#faq-lang" class="inline-flex rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 font-mono text-[11px] text-mist hover:border-acid hover:text-acid" data-i18n="hero.badge.langs">EN · JA · 简中 · ES</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="proof" class="scroll-mt-28 pb-20 sm:pb-28">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div class="max-w-2xl">
+            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-acid" data-i18n="proof.kicker">01 — Workbench</p>
+            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl" data-i18n="proof.title">The desk around the agent</h2>
+            <p class="mt-3 text-sm leading-relaxed text-mist sm:text-base" data-i18n="proof.lead">These are the README screenshots in this repository. Switch surface and theme to see the same product: a pi turn beside its diff, or the spec graph open in the editor.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <div class="flex rounded-full border border-zinc-800 bg-zinc-900/70 p-1" role="group" data-i18n="aria.surface" data-i18n-attr="aria-label" aria-label="Screenshot surface">
+              <button type="button" data-shot="surface" data-value="workbench" class="rounded-full px-3 py-1.5 text-xs text-fog" aria-pressed="true"><span data-i18n="proof.tab.workbench">Workbench</span></button>
+              <button type="button" data-shot="surface" data-value="specs" class="rounded-full px-3 py-1.5 text-xs text-fog" aria-pressed="false"><span data-i18n="proof.tab.specs">Specs</span></button>
+            </div>
+            <div class="flex rounded-full border border-zinc-800 bg-zinc-900/70 p-1" role="group" data-i18n="aria.theme" data-i18n-attr="aria-label" aria-label="Screenshot theme">
+              <button type="button" data-shot="theme" data-value="dark" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-fog" aria-pressed="true">
+                <i data-lucide="moon" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                <span data-i18n="proof.theme.dark">Dark</span>
+              </button>
+              <button type="button" data-shot="theme" data-value="light" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-fog" aria-pressed="false">
+                <i data-lucide="sun" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                <span data-i18n="proof.theme.light">Light</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <figure class="overflow-hidden rounded-2xl border border-zinc-700/80 bg-zinc-900 shadow-[0_40px_120px_-48px_rgba(141,255,79,0.35)]">
+          <figcaption class="flex items-center gap-3 border-b border-zinc-800 px-4 py-2.5">
+            <span class="flex gap-1.5" aria-hidden="true">
+              <span class="h-2.5 w-2.5 rounded-full bg-zinc-700"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-zinc-700"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-acid"></span>
+            </span>
+            <span id="frame-label" class="font-mono text-[11px] text-fog" data-i18n="proof.tab.workbench">Workbench</span>
+            <span class="ml-auto min-w-0 truncate font-mono text-[11px] text-fog" data-i18n="proof.path">.github/readme-assets/</span>
+          </figcaption>
+          <img id="proof-img" src="https://raw.githubusercontent.com/JetBrains/thinkrail/main/.github/readme-assets/workbench-dark.png" alt="ThinkRail dark workbench: projects and worktree workspaces, a pi conversation, the diff it produced, and the spec tree beside the changes list." class="w-full bg-zinc-950" width="900" data-i18n="proof.alt.workbench-dark" data-i18n-attr="alt">
+        </figure>
+        <p id="proof-caption" class="mt-4 max-w-3xl text-sm leading-relaxed text-mist" data-i18n="proof.caption.workbench">A pi session and the change it made, scoped to an isolated git worktree. Projects and the Settled shelf sit on the left; the diff and the spec tree sit on the right.</p>
+
+        <div class="mt-12">
+          <h3 class="text-lg font-semibold text-zinc-50" data-i18n="proof.matrix.title">What the workbench is for</h3>
+          <p class="mt-2 max-w-2xl text-sm leading-relaxed text-fog" data-i18n="proof.matrix.lead">From the product goal: the cost of driving pi from a terminal, and what ThinkRail puts on the desk.</p>
+          <div class="mt-5 overflow-hidden rounded-2xl border border-zinc-800">
+            <div class="grid gap-px bg-zinc-800 md:grid-cols-2">
+              <div class="bg-zinc-950 p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="proof.col.problem">Terminal cost</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.p1">Parallel agents collide in one working tree — with each other and with your own edits.</p>
+              </div>
+              <div class="bg-[#10140e] p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-acid" data-i18n="proof.col.answer">Workbench</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.a1">A workspace ThinkRail creates is a git worktree with its own branch and directory. The main checkout stays clean until you merge.</p>
+              </div>
+              <div class="bg-zinc-950 p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="proof.col.problem">Terminal cost</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.p2">Reading diffs, commenting on exact lines, and handing that feedback back is clumsy from a CLI scrollback.</p>
+              </div>
+              <div class="bg-[#10140e] p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-acid" data-i18n="proof.col.answer">Workbench</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.a2">Anchored review comments sit on files and diffs, then go to a chat as structured context.</p>
+              </div>
+              <div class="bg-zinc-950 p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="proof.col.problem">Terminal cost</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.p3">Decisions made in a chat end with the session. The next one re-derives them.</p>
+              </div>
+              <div class="bg-[#10140e] p-5 sm:p-6">
+                <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-acid" data-i18n="proof.col.answer">Workbench</p>
+                <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.a3">A graph of SPEC.md files lives beside the code. The agent reads, searches, and maintains it with spec_* tools.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="scroll-mt-28 border-t border-zinc-800/80 py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-acid" data-i18n="arch.kicker">02 — Three rings</p>
+        <h2 class="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl" data-i18n="arch.title">A thin host. pi stays the engine.</h2>
+        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-mist sm:text-base" data-i18n="arch.lead">ThinkRail runs pi in-process and bridges it to this UI. pi owns models, skills, compaction, cost, and session state. ThinkRail owns the workspace, the editor, and the wire.</p>
+        <p class="mt-4 font-mono text-xs leading-relaxed text-fog" data-i18n="arch.flow">apps/cli and apps/desktop launch packages/server. packages/contracts is the wire. apps/web is the client.</p>
+        <div class="mt-8 grid gap-3 md:grid-cols-3" role="group" data-i18n="aria.rings" data-i18n-attr="aria-label" aria-label="Architecture rings">
+          <button type="button" data-ring="host" aria-pressed="true" class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 text-left">
+            <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-acid">01</span>
+            <span class="mt-3 block text-lg font-semibold text-zinc-50" data-i18n="arch.host.title">Engine host</span>
+            <span class="mt-1 block font-mono text-xs text-fog" data-i18n="arch.host.meta">packages/server + packages/shared</span>
+          </button>
+          <button type="button" data-ring="wire" aria-pressed="false" class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 text-left">
+            <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-acid">02</span>
+            <span class="mt-3 block text-lg font-semibold text-zinc-50" data-i18n="arch.wire.title">Wire</span>
+            <span class="mt-1 block font-mono text-xs text-fog" data-i18n="arch.wire.meta">packages/contracts</span>
+          </button>
+          <button type="button" data-ring="ui" aria-pressed="false" class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 text-left">
+            <span class="font-mono text-[10px] uppercase tracking-[0.18em] text-acid">03</span>
+            <span class="mt-3 block text-lg font-semibold text-zinc-50" data-i18n="arch.ui.title">UI client</span>
+            <span class="mt-1 block font-mono text-xs text-fog" data-i18n="arch.ui.meta">apps/web</span>
+          </button>
+        </div>
+        <div id="ring-detail" class="mt-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5 sm:p-6" aria-live="polite">
+          <p id="ring-title" class="text-base font-semibold text-zinc-50" data-i18n="arch.host.title">Engine host</p>
+          <p id="ring-meta" class="mt-1 font-mono text-xs text-acid" data-i18n="arch.host.meta">packages/server + packages/shared</p>
+          <p id="ring-body" class="mt-3 max-w-3xl text-sm leading-relaxed text-mist" data-i18n="arch.host.body">A Bun.serve HTTP and WebSocket host with one in-process pi session per chat, launched by the CLI or the Electrobun desktop shell. App state lives under ~/.thinkrail. This repository's catalog pins @earendil-works/pi-coding-agent, pi-ai, pi-agent-core, and pi-tui at 1.4.0.</p>
+        </div>
+        <div class="mt-6 grid gap-3 md:grid-cols-3">
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="text-sm font-semibold text-zinc-50" data-i18n="arch.p1.title">pi is the only engine</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="arch.p1.body">createAgentSession runs in-process. pi owns the model registry, system prompt, skills, extensions, compaction, cost, and session state.</p>
+          </article>
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="text-sm font-semibold text-zinc-50" data-i18n="arch.p2.title">Feed pi, then get out of the way</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="arch.p2.body">Features shape the agent through prompt context, files, pi's own skills and extensions, and the flags a session starts with. The host shows what pi reports.</p>
+          </article>
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="text-sm font-semibold text-zinc-50" data-i18n="arch.p3.title">Your tools, your credentials</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="arch.p3.body">git, gh, and model access go through your git, your gh, and pi's provider auth. ThinkRail keeps no accounts of its own. Who can reach a host is a network decision; the architecture names Tailscale ACLs.</p>
+          </article>
+        </div>
+        <p class="mt-6 text-sm text-fog">
+          <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/architecture.md" data-i18n="arch.spec">Read architecture.md</a>
+          <span aria-hidden="true"> · </span>
+          <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/goal-and-requirements.md" data-i18n="arch.goal">Read the product goal</a>
+        </p>
+      </div>
+    </section>
+
+    <section id="capabilities" class="scroll-mt-28 border-t border-zinc-800/80 py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-acid" data-i18n="cap.kicker">03 — Capabilities</p>
+        <h2 class="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl" data-i18n="cap.title">From a worktree to an open pull request</h2>
+        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-mist sm:text-base" data-i18n="cap.lead">Every card is a capability described in the README or the product goal. This page leaves out anything those sources do not state.</p>
+        <div class="mt-6 flex w-full min-w-0 max-w-full gap-2 overflow-x-auto pb-1" role="group" data-i18n="aria.filters" data-i18n-attr="aria-label" aria-label="Filter features">
+          <button type="button" data-filter="all" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="true"><span data-i18n="cap.filter.all">All</span></button>
+          <button type="button" data-filter="isolation" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.isolation">Isolation</span></button>
+          <button type="button" data-filter="workbench" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.workbench">Workbench</span></button>
+          <button type="button" data-filter="agent" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.agent">Agent</span></button>
+          <button type="button" data-filter="knowledge" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.knowledge">Knowledge</span></button>
+          <button type="button" data-filter="trust" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.trust">Trust</span></button>
+          <button type="button" data-filter="ship" class="shrink-0 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-mist" aria-pressed="false"><span data-i18n="cap.filter.ship">Ship</span></button>
+        </div>
+        <div id="cap-grid" class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <article data-cat="isolation" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="git-branch" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.isolation">Isolation</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.workspaces.title">Isolated workspaces</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.workspaces.body">Any git repository can be a project. A workspace ThinkRail creates is a git worktree with its own branch and directory, so agents work in parallel. You can attach an existing worktree, or explicitly work in the project folder itself — the Default workspace.</p>
+          </article>
+          <article data-cat="isolation" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="layers" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.isolation">Isolation</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.shelf.title">Settled shelf and branch position</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.shelf.body">Finished and dormant workspaces settle onto a per-project shelf when their pull request merges or closes, or after a quiet week, and return when you work in them. The top bar shows where the active branch stands against origin and its pull request.</p>
+          </article>
+          <article data-cat="workbench" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="monitor" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.workbench">Workbench</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.ide.title">An IDE around the agent</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.ide.body">A splittable workbench of Monaco editor tabs, a Files tree with live git marks, a Changed view, terminals, and documents — scoped to the active workspace. You can also open the worktree in an IDE you already have installed.</p>
+          </article>
+          <article data-cat="workbench" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="message-square" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.workbench">Workbench</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.review.title">Anchored review</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.review.body">Leave review comments on files and diffs and send them to a chat as structured context. It is local review on the worktree, collected even before the agent starts.</p>
+          </article>
+          <article data-cat="agent" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="bot" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.agent">Agent</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.chats.title">Chats that stream with the engine</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.chats.body">Several concurrent pi sessions per workspace, each with its own model and the token and cost readout pi reports. Steer a running turn, or queue a follow-up.</p>
+          </article>
+          <article data-cat="agent" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="list-checks" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.agent">Agent</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.plans.title">Plans, subagents, background commands</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.plans.body">You and the agent share a plan you can edit. A completed step can be committed and reviewed on its own. Subagents run in isolated child sessions. Background commands run without holding the turn. Each chat's Resources view can watch and stop them.</p>
+          </article>
+          <article data-cat="knowledge" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="file-text" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.knowledge">Knowledge</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.specs.title">Specs as ground truth</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.specs.body">A connected graph of SPEC.md files lives beside the code. The agent reads, searches, and maintains it through spec_* tools, so intent survives the session. The read-only Specs tool renders that graph as a tree.</p>
+          </article>
+          <article data-cat="knowledge" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="library" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.knowledge">Knowledge</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.skills.title">Skills and workflows</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.skills.body">Portable Agent Skills you already keep for other coding agents are read in place. Bundled workflows guide project setup, design brainstorming, and shipping a pull request through your own gh.</p>
+          </article>
+          <article data-cat="agent" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="workflow" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.agent">Agent</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.tools.title">Tools beyond the shell</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.tools.body">Web research, structured multiple-choice questions asked in chat, and inline diagrams, comparisons, and file previews. A proposed UI change shows up as a before/after you can comment on. The same two tools publish for vanilla pi: @thinkrail/pi-ask-user-question 0.1.0 and @thinkrail/pi-visualize 0.2.0.</p>
+          </article>
+          <article data-cat="trust" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="plug" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.trust">Trust</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.mcp.title">MCP, with a confirm on the call</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.mcp.body">ThinkRail reads the MCP servers in your pi mcp.json, and you can add servers and a few presets from Settings. Calls a server does not mark read-only ask in the chat first. Tools you trust can be always allowed per project. Servers a repository defines stay off until you approve them. OAuth sign-in lives in Settings.</p>
+          </article>
+          <article data-cat="trust" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="key-round" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.trust">Trust</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.providers.title">Your providers, your pi setup</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.providers.body">Sign in with JetBrains AI, or connect any provider through pi's own auth. ThinkRail reads ~/.pi/agent. Another config directory, or extra environment variables for the agent, terminals, and MCP servers, is Settings → Environment, applied on the next start. A variable you set at launch still wins.</p>
+          </article>
+          <article data-cat="trust" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="shield" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.trust">Trust</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.privacy.title">Analytics with a narrow payload</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.privacy.body">Basic usage events tie to a random installation ID and leave out prompts, code, files, credentials, and account identity. Error reports are always sent as a classifier — type, code, and ThinkRail stack frames — and leave out message text. Additional sharing lives in Settings → Privacy. thinkrail --no-analytics turns that extra sharing off for the run.</p>
+          </article>
+          <article data-cat="ship" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="git-pull-request" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.ship">Ship</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.pr.title">Publish, push, open the PR</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.pr.body">The top bar's next step is publish, push, or open a PR described from the plan, the commits, your PR template, or an agent-written draft — through your gh. An open GitHub PR shows CI checks and the review decision: mark ready, hand failing checks or a diverged branch to the agent, merge with the repository's last-used method, reopen, or delete the remote branch.</p>
+          </article>
+          <article data-cat="workbench" class="cap-card flex flex-col gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/30 p-5">
+            <div class="flex items-center justify-between gap-3">
+              <span class="grid h-10 w-10 place-items-center rounded-xl border border-zinc-800 bg-zinc-950 text-acid"><i data-lucide="languages" class="h-5 w-5" aria-hidden="true"></i></span>
+              <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="cap.filter.workbench">Workbench</span>
+            </div>
+            <h3 class="text-base font-semibold text-zinc-50" data-i18n="cap.locale.title">Language and themes</h3>
+            <p class="text-sm leading-relaxed text-mist" data-i18n="cap.locale.body">Settings → Language follows the system or a language you pick. English, Japanese, Simplified Chinese, and Spanish ship built-in. A translated en.json in ~/.thinkrail/locales applies as you save. Appearance ships dark, light, minimal, and high-contrast themes; a copied *.theme.json in ~/.thinkrail/themes applies the same way. Agent replies stay as the agent wrote them.</p>
+          </article>
+        </div>
+        <p id="cap-empty" class="mt-6 hidden text-sm text-fog" data-i18n="cap.empty">Nothing in this group.</p>
+      </div>
+    </section>
+
+    <section id="install" class="scroll-mt-28 border-t border-zinc-800/80 py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-acid" data-i18n="install.kicker">04 — Install</p>
+        <h2 class="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl" data-i18n="install.title">Desktop installer, or one command</h2>
+        <p class="mt-4 max-w-3xl text-sm leading-relaxed text-mist sm:text-base" data-i18n="install.lead" data-i18n-html>Two forms ship together: a native desktop installer and the self-contained <code>thinkrail</code> CLI, both with <code>SHA256SUMS</code> on the <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">releases page</a>. You need <code>git</code> on PATH and a model provider — JetBrains AI in the app, or pi's own auth. The first launch connects a provider and picks a project. <strong class="font-medium text-zinc-100">Start a new project</strong> creates an empty git repository under <code>~/thinkrail</code>. <strong class="font-medium text-zinc-100">Add project → Clone repository…</strong> clones a Git URL into a new folder on the computer running ThinkRail and leaves existing destination folders alone. Package manifests in this checkout read <code>0.0.0</code>; published version numbers live on the releases page.</p>
+        <div class="mt-8 grid min-w-0 gap-4 lg:grid-cols-[13.5rem_minmax(0,1fr)]">
+          <div role="tablist" data-i18n="aria.tabs" data-i18n-attr="aria-label" aria-label="Install methods" class="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto lg:flex-col lg:overflow-visible">
+            <button type="button" id="tab-unix" role="tab" data-tab="unix" aria-selected="true" aria-controls="install-panel" class="shrink-0 rounded-xl border border-transparent px-3 py-2 text-left text-sm text-mist lg:w-full"><span data-i18n="install.tab.unix">macOS / Linux</span></button>
+            <button type="button" id="tab-windows" role="tab" data-tab="windows" aria-selected="false" aria-controls="install-panel" class="shrink-0 rounded-xl border border-transparent px-3 py-2 text-left text-sm text-mist lg:w-full"><span data-i18n="install.tab.windows">Windows</span></button>
+            <button type="button" id="tab-desktop" role="tab" data-tab="desktop" aria-selected="false" aria-controls="install-panel" class="shrink-0 rounded-xl border border-transparent px-3 py-2 text-left text-sm text-mist lg:w-full"><span data-i18n="install.tab.desktop">Desktop</span></button>
+            <button type="button" id="tab-nightly" role="tab" data-tab="nightly" aria-selected="false" aria-controls="install-panel" class="shrink-0 rounded-xl border border-transparent px-3 py-2 text-left text-sm text-mist lg:w-full"><span data-i18n="install.tab.nightly">Nightly</span></button>
+            <button type="button" id="tab-source" role="tab" data-tab="source" aria-selected="false" aria-controls="install-panel" class="shrink-0 rounded-xl border border-transparent px-3 py-2 text-left text-sm text-mist lg:w-full"><span data-i18n="install.tab.source">From source</span></button>
+          </div>
+          <div id="install-panel" role="tabpanel" aria-labelledby="tab-unix" class="min-w-0 overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/50">
+            <div class="flex items-center justify-between gap-3 border-b border-zinc-800 px-4 py-2.5">
+              <span class="font-mono text-[11px] text-fog">thinkrail</span>
+              <button type="button" id="copy-btn" class="inline-flex items-center gap-1.5 rounded-full border border-zinc-700 px-3 py-1 text-xs text-mist hover:border-acid hover:text-acid">
+                <i data-lucide="copy" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                <span data-i18n="install.copy">Copy</span>
+              </button>
+            </div>
+            <pre class="max-h-80 min-w-0 overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-[13px] leading-relaxed text-zinc-100"><code id="install-code">curl -fsSL https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.sh | bash
+
+thinkrail ~/code/my-repo</code></pre>
+            <div class="border-t border-zinc-800 px-4 py-4 text-sm leading-relaxed text-mist">
+              <p data-note="unix" data-i18n="install.note.unix" data-i18n-html>The installer downloads the matching binary, checks its SHA-256, and puts <code>thinkrail</code> on your PATH. <code>thinkrail --help</code> lists flags. <code>thinkrail --version</code> prints the build. The same curl command works from Git Bash on Windows.</p>
+              <p data-note="windows" class="hidden" data-i18n="install.note.windows" data-i18n-html>The same command works from cmd and PowerShell. Channel, version, prefix, and PATH options are environment variables: <code>THINKRAIL_CHANNEL</code>, <code>THINKRAIL_VERSION</code>, <code>THINKRAIL_PREFIX</code>, <code>THINKRAIL_NO_MODIFY_PATH</code>.</p>
+              <p data-note="desktop" class="hidden" data-i18n="install.note.desktop" data-i18n-html>Download the <code>thinkrail-desktop-*</code> asset from <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">releases</a>. macOS 14+ opens the DMG for Apple Silicon or Intel. Windows x64 extracts the setup ZIP and runs its setup executable in place, next to its payload. Linux extracts the setup tarball and runs <code>installer</code>. The command above is the Linux desktop library line for Ubuntu 24.04 or newer: glibc 2.38+, GTK 3, WebKitGTK 4.1, Ayatana AppIndicator 3, and librsvg 2. Packaged stable and nightly builds offer updates in Settings → Updates and apply them only after Install &amp; Restart.</p>
+              <p data-note="nightly" class="hidden" data-i18n="install.note.nightly" data-i18n-html><code>--channel</code> is <code>stable</code> or <code>nightly</code>. A pinned <code>--version</code> has to belong to the selected channel. On Windows the same switches are <code>THINKRAIL_CHANNEL</code> and <code>THINKRAIL_VERSION</code>. Installed stable and nightly CLI hosts offer Run Update in Settings → Updates, which runs <code>thinkrail update</code> on the host machine. <code>thinkrail uninstall</code> removes the executable and the PATH entry the installer added. <code>~/.thinkrail</code> is kept unless you ask to delete it.</p>
+              <p data-note="source" class="hidden" data-i18n="install.note.source" data-i18n-html><code>bun run dev</code> boots the host and the web client together; Ctrl+C stops both. Browser launcher: <code>bun run --filter @thinkrail/cli dev</code>. Desktop shell: <code>bun run desktop:dev</code>. Development needs Bun 1.4.4, Node.js ≥ 22.19, and an authenticated pi provider. A source checkout exposes no application updater — update it with git and rebuild.</p>
+            </div>
+          </div>
+        </div>
+        <noscript>
+          <div class="mt-4 rounded-2xl border border-zinc-800 p-4 text-sm leading-relaxed text-mist">
+            <p>JavaScript is off, so language switching and the install tabs stay on the macOS / Linux command above.</p>
+            <p class="mt-2">Windows: <span class="font-mono text-xs text-zinc-100">powershell -c "irm https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.ps1 | iex"</span></p>
+            <p class="mt-2">未啟用 JavaScript。語言切換與安裝分頁不會動作，上方是 macOS / Linux 指令。</p>
+          </div>
+        </noscript>
+        <h3 class="mt-10 text-lg font-semibold text-zinc-50" data-i18n="install.platforms.title">Platform notes from the README</h3>
+        <div class="mt-4 grid gap-3 md:grid-cols-3">
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="font-mono text-xs uppercase tracking-[0.14em] text-acid">macOS 14+</h3>
+            <p class="mt-3 text-sm leading-relaxed text-mist" data-i18n="install.platforms.mac">DMG for Apple Silicon or Intel. The CLI is a signed binary and is not yet notarized. Signed and notarized desktop DMGs go through the JetBrains release pipeline; older published DMGs and local builds may still be unsigned, and Gatekeeper can block them.</p>
+          </article>
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="font-mono text-xs uppercase tracking-[0.14em] text-acid">Windows x64</h3>
+            <p class="mt-3 text-sm leading-relaxed text-mist" data-i18n="install.platforms.win">JetBrains signs the CLI, the desktop setup executable, and every executable and DLL the desktop app installs.</p>
+          </article>
+          <article class="rounded-2xl border border-zinc-800 p-5">
+            <h3 class="font-mono text-xs uppercase tracking-[0.14em] text-acid">Linux x64 / ARM64</h3>
+            <p class="mt-3 text-sm leading-relaxed text-mist" data-i18n="install.platforms.linux">The setup tarball and the CLI are unsigned. Desktop builds need glibc 2.38+ with GTK 3, WebKitGTK 4.1, Ayatana AppIndicator 3, and librsvg 2 — Ubuntu 24.04 or newer.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="scroll-mt-28 border-t border-zinc-800/80 py-20 sm:py-28">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-acid" data-i18n="faq.kicker">05 — FAQ</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-zinc-50 sm:text-4xl" data-i18n="faq.title">Licensing, pi, privacy, CI</h2>
+        <div class="mt-8 border-t border-zinc-800">
+          <div class="faq-item open border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="true">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q1">What license is ThinkRail under?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a1" data-i18n-html>Apache License 2.0. Copyright 2026 JetBrains s.r.o. Contributions are licensed the same way and follow the <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>. The license text is in <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE">LICENSE</a>.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q2">How does this sit with pi in the terminal?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a2" data-i18n-html>ThinkRail is a thin host around <a class="prose-link" href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent">pi</a>. pi keeps models, skills, compaction, cost, and session state, and ThinkRail reads your <code>~/.pi/agent</code> config. The workbench adds worktree isolation, Monaco, files, terminals, diffs, anchored review, and the spec graph. Two tools also ship as plain pi packages: <a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-ask-user-question">@thinkrail/pi-ask-user-question</a> 0.1.0 and <a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-visualize">@thinkrail/pi-visualize</a> 0.2.0. Settings → Extensions lists ThinkRail extensions and can switch each one off.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q3">Does ThinkRail store prompts or require an account?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a3" data-i18n-html>ThinkRail has no accounts of its own. Usage analytics carry a random installation ID and leave out prompts, code, files, credentials, and account identity. Error reports are always sent with the error type and code and ThinkRail stack frames, and they leave out message text, paths, names, and URLs. Additional product usage is shared only while Settings → Privacy is on. <code>thinkrail --no-analytics</code> or <code>THINKRAIL_NO_ANALYTICS=1</code> turns that extra sharing off for the run. With additional sharing on, a packaged build may open the ThinkRail blog once to link the installation to the site visit that brought you here — only where you accepted marketing cookies or no consent is required — and that link expires after 30 days. Analytics go through <a class="prose-link" href="https://posthog.com/privacy">PostHog</a>. The website's PostHog surveys can ask for an email after a desktop download if you choose to enter one.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q4">What do I need to run it?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a4" data-i18n-html>The CLI and desktop app need <code>git</code> on PATH and a model provider: JetBrains AI from the app, or pi's provider auth. Desktop targets are macOS 14+ (Apple Silicon or Intel), Windows x64, and Linux x64 / ARM64. Building from this repository needs Bun 1.4.4 and Node.js ≥ 22.19. The catalog pins <code>@earendil-works/pi-coding-agent</code> at 1.4.0.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q5">How do updates work?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a5" data-i18n-html>Packaged stable and nightly desktop builds check in the background and offer Download → Preparing update → Install &amp; Restart in Settings → Updates. Nothing is applied until you choose Install &amp; Restart. The updater appears when the package carries a valid HTTPS feed identity. Installed CLI hosts offer Run Update, which runs <code>thinkrail update</code> on the host machine and then asks you to restart the host. You can also run <code>thinkrail update</code> yourself.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q6">Where do CI checks show up?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a6" data-i18n-html>When a GitHub pull request is open, the top bar shows its CI checks and review decision. You can hand failing checks or a diverged branch to the agent, and merge with the repository's last-used method through your <code>gh</code>. People contributing to ThinkRail run <code>bun run lint</code>, <code>bun run typecheck</code>, <code>bun run test</code>, and the no-agent <code>bun run e2e</code> gate. The commands are in <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800" id="faq-lang">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q7">Which languages does the app ship?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a7" data-i18n-html>The app ships English, Japanese, Simplified Chinese, and Spanish (<code>en</code>, <code>ja</code>, <code>zh-CN</code>, <code>es</code> in <code>packages/locales</code>). Drop a translated <code>en.json</code> into <code>~/.thinkrail/locales</code> and it applies as you save. Agent replies and tool output stay as written. Traditional Chinese on this page is the page's own switch, separate from the app catalog.</p></div></div>
+          </div>
+          <div class="faq-item border-b border-zinc-800">
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+              <span class="text-base font-medium text-zinc-50" data-i18n="faq.q8">Can I use the tools from a stock pi?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-acid transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div><p class="pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a8" data-i18n-html><code>pi install npm:@thinkrail/pi-ask-user-question</code> adds structured questions. <code>pi install npm:@thinkrail/pi-visualize</code> adds diagrams and previews. Versions in this repository: 0.1.0 and 0.2.0. Inside ThinkRail, Settings → Extensions can switch each ThinkRail extension off.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-zinc-800 bg-zinc-950">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+      <div class="lg:col-span-1">
+        <p class="font-display text-sm tracking-[0.14em] text-zinc-50">ThinkRail</p>
+        <p class="mt-3 text-sm leading-relaxed text-mist" data-i18n="footer.blurb">A JetBrains incubator project. The product site is thinkrail.ai. This page is a bilingual overview of the repository you have checked out.</p>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.product">Product</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="text-mist hover:text-acid" href="https://thinkrail.ai/" target="_blank" rel="noopener noreferrer" data-i18n="footer.site">thinkrail.ai</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://thinkrail.ai/blog" target="_blank" rel="noopener noreferrer" data-i18n="footer.blog">Blog</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://thinkrail.ai/discord" target="_blank" rel="noopener noreferrer" data-i18n="footer.discord">Discord</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.repo">Repository</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail" target="_blank" rel="noopener noreferrer" data-i18n="footer.repo">GitHub</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail/releases" target="_blank" rel="noopener noreferrer" data-i18n="footer.releases">Releases</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail/issues" target="_blank" rel="noopener noreferrer" data-i18n="footer.issues">Issues</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" data-i18n="footer.contributing">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.legal">Legal</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-i18n="footer.license">Apache-2.0</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://github.com/JetBrains/thinkrail/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer" data-i18n="footer.conduct">Code of Conduct</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer" data-i18n="footer.privacy">PostHog privacy</a></li>
+          <li><a class="text-mist hover:text-acid" href="https://www.jetbrains.com/ai/" target="_blank" rel="noopener noreferrer" data-i18n="footer.jbai">JetBrains AI</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-zinc-800">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+        <p class="font-mono text-[11px] text-fog" data-i18n="footer.copy">© 2026 JetBrains s.r.o.</p>
+        <a href="#top" class="inline-flex items-center gap-1.5 text-sm text-mist hover:text-acid">
+          <i data-lucide="arrow-up" class="h-4 w-4" aria-hidden="true"></i>
+          <span data-i18n="footer.top">Back to top</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-6 right-4 z-50 translate-y-20 opacity-0 transition-all duration-300 sm:right-6">
+    <div class="rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2.5 font-mono text-xs text-zinc-100 shadow-xl">
+      <span id="toast-text">Copied</span>
+    </div>
+  </div>
+
+  <script>
+    const shots = {
+      'workbench-dark': '../.github/readme-assets/workbench-dark.png',
+      'workbench-light': '../.github/readme-assets/workbench-light.png',
+      'specs-dark': '../.github/readme-assets/specs-dark.png',
+      'specs-light': '../.github/readme-assets/specs-light.png',
+    };
+
+    const commands = {
+      unix: 'curl -fsSL https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.sh | bash\n\nthinkrail ~/code/my-repo',
+      windows: 'powershell -c "irm https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.ps1 | iex"',
+      desktop: '# Linux desktop libraries (Ubuntu 24.04+)\nsudo apt install libgtk-3-0 libwebkit2gtk-4.1-0 libayatana-appindicator3-1 librsvg2-2\n\n# macOS 14+: thinkrail-desktop-darwin-arm64.dmg | thinkrail-desktop-darwin-x64.dmg\n# Windows x64: extract the setup ZIP and run its setup executable in place\n# Linux: extract the setup tarball and run installer\n# https://github.com/JetBrains/thinkrail/releases',
+      nightly: 'curl -fsSL https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.sh | bash -s -- --channel nightly\n\n# Windows PowerShell\n$env:THINKRAIL_CHANNEL=\'nightly\'; irm https://raw.githubusercontent.com/JetBrains/thinkrail/main/install.ps1 | iex',
+      source: 'git clone https://github.com/JetBrains/thinkrail.git\ncd thinkrail\nbun install\nbun run dev',
+    };
+
+    const translations = {
+      en: {
+        'meta.title': 'ThinkRail — The agentic IDE that gets better every time you use it',
+        'meta.description': 'ThinkRail is a workbench around the pi coding agent: git worktree workspaces, living SPEC.md files, reviewable diffs, and a desktop app or CLI.',
+        'nav.skip': 'Skip to content',
+        'nav.proof': 'Workbench',
+        'nav.architecture': 'Architecture',
+        'nav.capabilities': 'Features',
+        'nav.install': 'Install',
+        'nav.faq': 'FAQ',
+        'nav.star': 'Star',
+        'nav.star.label': 'Star ThinkRail on GitHub',
+        'nav.menu': 'Menu',
+        'aria.nav': 'Sections',
+        'aria.lang': 'Language',
+        'aria.surface': 'Screenshot surface',
+        'aria.theme': 'Screenshot theme',
+        'aria.rings': 'Architecture rings',
+        'aria.filters': 'Filter features',
+        'aria.tabs': 'Install methods',
+        'lang.zh': '繁體中文',
+        'lang.en': 'English',
+        'hero.kicker': 'In-process pi · JetBrains incubator',
+        'hero.title': 'The agentic IDE that gets better <em class="not-italic text-acid">every time</em> you use it.',
+        'hero.subtitle': 'A workbench around pi for people who build on real git repositories. Newcomers get a visual on-ramp. Experienced users keep pi\'s models, skills, and sessions. Agents work in isolated worktrees; you review, comment, and merge from the same desk.',
+        'hero.cta.install': 'Quick install',
+        'hero.cta.features': 'Browse features',
+        'hero.site': 'thinkrail.ai',
+        'hero.badge.license': 'Apache-2.0',
+        'hero.badge.incubator': 'JetBrains incubator',
+        'hero.badge.ship': 'Desktop + CLI',
+        'hero.badge.langs': 'EN · JA · 简中 · ES',
+        'proof.kicker': '01 — Workbench',
+        'proof.title': 'The desk around the agent',
+        'proof.lead': 'These are the README screenshots in this repository. Switch surface and theme to see the same product: a pi turn beside its diff, or the spec graph open in the editor.',
+        'proof.tab.workbench': 'Workbench',
+        'proof.tab.specs': 'Specs',
+        'proof.theme.dark': 'Dark',
+        'proof.theme.light': 'Light',
+        'proof.path': '.github/readme-assets/',
+        'proof.caption.workbench': 'A pi session and the change it made, scoped to an isolated git worktree. Projects and the Settled shelf sit on the left; the diff and the spec tree sit on the right.',
+        'proof.caption.specs': 'The project\'s spec graph as a tree, with the spec itself rendered in the editor.',
+        'proof.alt.workbench-dark': 'ThinkRail dark workbench: projects and worktree workspaces, a pi conversation, the diff it produced, and the spec tree beside the changes list.',
+        'proof.alt.workbench-light': 'ThinkRail workbench in the light theme.',
+        'proof.alt.specs-dark': 'ThinkRail Specs tool in the dark theme: the spec tree on the right and the product goal spec open in the editor.',
+        'proof.alt.specs-light': 'ThinkRail Specs tool in the light theme.',
+        'proof.matrix.title': 'What the workbench is for',
+        'proof.matrix.lead': 'From the product goal: the cost of driving pi from a terminal, and what ThinkRail puts on the desk.',
+        'proof.col.problem': 'Terminal cost',
+        'proof.col.answer': 'Workbench',
+        'proof.p1': 'Parallel agents collide in one working tree — with each other and with your own edits.',
+        'proof.a1': 'A workspace ThinkRail creates is a git worktree with its own branch and directory. The main checkout stays clean until you merge.',
+        'proof.p2': 'Reading diffs, commenting on exact lines, and handing that feedback back is clumsy from a CLI scrollback.',
+        'proof.a2': 'Anchored review comments sit on files and diffs, then go to a chat as structured context.',
+        'proof.p3': 'Decisions made in a chat end with the session. The next one re-derives them.',
+        'proof.a3': 'A graph of SPEC.md files lives beside the code. The agent reads, searches, and maintains it with spec_* tools.',
+        'arch.kicker': '02 — Three rings',
+        'arch.title': 'A thin host. pi stays the engine.',
+        'arch.lead': 'ThinkRail runs pi in-process and bridges it to this UI. pi owns models, skills, compaction, cost, and session state. ThinkRail owns the workspace, the editor, and the wire.',
+        'arch.flow': 'apps/cli and apps/desktop launch packages/server. packages/contracts is the wire. apps/web is the client.',
+        'arch.host.title': 'Engine host',
+        'arch.host.meta': 'packages/server + packages/shared',
+        'arch.host.body': 'A Bun.serve HTTP and WebSocket host with one in-process pi session per chat, launched by the CLI or the Electrobun desktop shell. App state lives under ~/.thinkrail. This repository\'s catalog pins @earendil-works/pi-coding-agent, pi-ai, pi-agent-core, and pi-tui at 1.4.0.',
+        'arch.wire.title': 'Wire',
+        'arch.wire.meta': 'packages/contracts',
+        'arch.wire.body': 'The typed, versioned protocol between host and UI, and the only coupling between them. The web client depends on contracts and presentation packages. It does not import the server.',
+        'arch.ui.title': 'UI client',
+        'arch.ui.meta': 'apps/web',
+        'arch.ui.body': 'React 19, Zustand, and Tailwind v4. It ships on its own and dials a host over the wire. The CLI opens it in a browser. The desktop app wraps the same host in an Electrobun webview. A phone can reach the selected host over Tailscale.',
+        'arch.p1.title': 'pi is the only engine',
+        'arch.p1.body': 'createAgentSession runs in-process. pi owns the model registry, system prompt, skills, extensions, compaction, cost, and session state.',
+        'arch.p2.title': 'Feed pi, then get out of the way',
+        'arch.p2.body': 'Features shape the agent through prompt context, files, pi\'s own skills and extensions, and the flags a session starts with. The host shows what pi reports.',
+        'arch.p3.title': 'Your tools, your credentials',
+        'arch.p3.body': 'git, gh, and model access go through your git, your gh, and pi\'s provider auth. ThinkRail keeps no accounts of its own. Who can reach a host is a network decision; the architecture names Tailscale ACLs.',
+        'arch.spec': 'Read architecture.md',
+        'arch.goal': 'Read the product goal',
+        'cap.kicker': '03 — Capabilities',
+        'cap.title': 'From a worktree to an open pull request',
+        'cap.lead': 'Every card is a capability described in the README or the product goal. This page leaves out anything those sources do not state.',
+        'cap.filter.all': 'All',
+        'cap.filter.isolation': 'Isolation',
+        'cap.filter.workbench': 'Workbench',
+        'cap.filter.agent': 'Agent',
+        'cap.filter.knowledge': 'Knowledge',
+        'cap.filter.trust': 'Trust',
+        'cap.filter.ship': 'Ship',
+        'cap.empty': 'Nothing in this group.',
+        'cap.workspaces.title': 'Isolated workspaces',
+        'cap.workspaces.body': 'Any git repository can be a project. A workspace ThinkRail creates is a git worktree with its own branch and directory, so agents work in parallel. You can attach an existing worktree, or explicitly work in the project folder itself — the Default workspace.',
+        'cap.shelf.title': 'Settled shelf and branch position',
+        'cap.shelf.body': 'Finished and dormant workspaces settle onto a per-project shelf when their pull request merges or closes, or after a quiet week, and return when you work in them. The top bar shows where the active branch stands against origin and its pull request.',
+        'cap.ide.title': 'An IDE around the agent',
+        'cap.ide.body': 'A splittable workbench of Monaco editor tabs, a Files tree with live git marks, a Changed view, terminals, and documents — scoped to the active workspace. You can also open the worktree in an IDE you already have installed.',
+        'cap.review.title': 'Anchored review',
+        'cap.review.body': 'Leave review comments on files and diffs and send them to a chat as structured context. It is local review on the worktree, collected even before the agent starts.',
+        'cap.chats.title': 'Chats that stream with the engine',
+        'cap.chats.body': 'Several concurrent pi sessions per workspace, each with its own model and the token and cost readout pi reports. Steer a running turn, or queue a follow-up.',
+        'cap.plans.title': 'Plans, subagents, background commands',
+        'cap.plans.body': 'You and the agent share a plan you can edit. A completed step can be committed and reviewed on its own. Subagents run in isolated child sessions. Background commands run without holding the turn. Each chat\'s Resources view can watch and stop them.',
+        'cap.specs.title': 'Specs as ground truth',
+        'cap.specs.body': 'A connected graph of SPEC.md files lives beside the code. The agent reads, searches, and maintains it through spec_* tools, so intent survives the session. The read-only Specs tool renders that graph as a tree.',
+        'cap.skills.title': 'Skills and workflows',
+        'cap.skills.body': 'Portable Agent Skills you already keep for other coding agents are read in place. Bundled workflows guide project setup, design brainstorming, and shipping a pull request through your own gh.',
+        'cap.tools.title': 'Tools beyond the shell',
+        'cap.tools.body': 'Web research, structured multiple-choice questions asked in chat, and inline diagrams, comparisons, and file previews. A proposed UI change shows up as a before/after you can comment on. The same two tools publish for vanilla pi: @thinkrail/pi-ask-user-question 0.1.0 and @thinkrail/pi-visualize 0.2.0.',
+        'cap.mcp.title': 'MCP, with a confirm on the call',
+        'cap.mcp.body': 'ThinkRail reads the MCP servers in your pi mcp.json, and you can add servers and a few presets from Settings. Calls a server does not mark read-only ask in the chat first. Tools you trust can be always allowed per project. Servers a repository defines stay off until you approve them. OAuth sign-in lives in Settings.',
+        'cap.providers.title': 'Your providers, your pi setup',
+        'cap.providers.body': 'Sign in with JetBrains AI, or connect any provider through pi\'s own auth. ThinkRail reads ~/.pi/agent. Another config directory, or extra environment variables for the agent, terminals, and MCP servers, is Settings → Environment, applied on the next start. A variable you set at launch still wins.',
+        'cap.privacy.title': 'Analytics with a narrow payload',
+        'cap.privacy.body': 'Basic usage events tie to a random installation ID and leave out prompts, code, files, credentials, and account identity. Error reports are always sent as a classifier — type, code, and ThinkRail stack frames — and leave out message text. Additional sharing lives in Settings → Privacy. thinkrail --no-analytics turns that extra sharing off for the run.',
+        'cap.pr.title': 'Publish, push, open the PR',
+        'cap.pr.body': 'The top bar\'s next step is publish, push, or open a PR described from the plan, the commits, your PR template, or an agent-written draft — through your gh. An open GitHub PR shows CI checks and the review decision: mark ready, hand failing checks or a diverged branch to the agent, merge with the repository\'s last-used method, reopen, or delete the remote branch.',
+        'cap.locale.title': 'Language and themes',
+        'cap.locale.body': 'Settings → Language follows the system or a language you pick. English, Japanese, Simplified Chinese, and Spanish ship built-in. A translated en.json in ~/.thinkrail/locales applies as you save. Appearance ships dark, light, minimal, and high-contrast themes; a copied *.theme.json in ~/.thinkrail/themes applies the same way. Agent replies stay as the agent wrote them.',
+        'install.kicker': '04 — Install',
+        'install.title': 'Desktop installer, or one command',
+        'install.lead': 'Two forms ship together: a native desktop installer and the self-contained <code>thinkrail</code> CLI, both with <code>SHA256SUMS</code> on the <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">releases page</a>. You need <code>git</code> on PATH and a model provider — JetBrains AI in the app, or pi\'s own auth. The first launch connects a provider and picks a project. <strong class="font-medium text-zinc-100">Start a new project</strong> creates an empty git repository under <code>~/thinkrail</code>. <strong class="font-medium text-zinc-100">Add project → Clone repository…</strong> clones a Git URL into a new folder on the computer running ThinkRail and leaves existing destination folders alone. Package manifests in this checkout read <code>0.0.0</code>; published version numbers live on the releases page.',
+        'install.tab.unix': 'macOS / Linux',
+        'install.tab.windows': 'Windows',
+        'install.tab.desktop': 'Desktop',
+        'install.tab.nightly': 'Nightly',
+        'install.tab.source': 'From source',
+        'install.copy': 'Copy',
+        'install.note.unix': 'The installer downloads the matching binary, checks its SHA-256, and puts <code>thinkrail</code> on your PATH. <code>thinkrail --help</code> lists flags. <code>thinkrail --version</code> prints the build. The same curl command works from Git Bash on Windows.',
+        'install.note.windows': 'The same command works from cmd and PowerShell. Channel, version, prefix, and PATH options are environment variables: <code>THINKRAIL_CHANNEL</code>, <code>THINKRAIL_VERSION</code>, <code>THINKRAIL_PREFIX</code>, <code>THINKRAIL_NO_MODIFY_PATH</code>.',
+        'install.note.desktop': 'Download the <code>thinkrail-desktop-*</code> asset from <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">releases</a>. macOS 14+ opens the DMG for Apple Silicon or Intel. Windows x64 extracts the setup ZIP and runs its setup executable in place, next to its payload. Linux extracts the setup tarball and runs <code>installer</code>. The command above is the Linux desktop library line for Ubuntu 24.04 or newer: glibc 2.38+, GTK 3, WebKitGTK 4.1, Ayatana AppIndicator 3, and librsvg 2. Packaged stable and nightly builds offer updates in Settings → Updates and apply them only after Install &amp; Restart.',
+        'install.note.nightly': '<code>--channel</code> is <code>stable</code> or <code>nightly</code>. A pinned <code>--version</code> has to belong to the selected channel. On Windows the same switches are <code>THINKRAIL_CHANNEL</code> and <code>THINKRAIL_VERSION</code>. Installed stable and nightly CLI hosts offer Run Update in Settings → Updates, which runs <code>thinkrail update</code> on the host machine. <code>thinkrail uninstall</code> removes the executable and the PATH entry the installer added. <code>~/.thinkrail</code> is kept unless you ask to delete it.',
+        'install.note.source': '<code>bun run dev</code> boots the host and the web client together; Ctrl+C stops both. Browser launcher: <code>bun run --filter @thinkrail/cli dev</code>. Desktop shell: <code>bun run desktop:dev</code>. Development needs Bun 1.4.4, Node.js ≥ 22.19, and an authenticated pi provider. A source checkout exposes no application updater — update it with git and rebuild.',
+        'install.platforms.title': 'Platform notes from the README',
+        'install.platforms.mac': 'DMG for Apple Silicon or Intel. The CLI is a signed binary and is not yet notarized. Signed and notarized desktop DMGs go through the JetBrains release pipeline; older published DMGs and local builds may still be unsigned, and Gatekeeper can block them.',
+        'install.platforms.win': 'JetBrains signs the CLI, the desktop setup executable, and every executable and DLL the desktop app installs.',
+        'install.platforms.linux': 'The setup tarball and the CLI are unsigned. Desktop builds need glibc 2.38+ with GTK 3, WebKitGTK 4.1, Ayatana AppIndicator 3, and librsvg 2 — Ubuntu 24.04 or newer.',
+        'toast.copied': 'Copied',
+        'toast.failed': 'Could not copy',
+        'faq.kicker': '05 — FAQ',
+        'faq.title': 'Licensing, pi, privacy, CI',
+        'faq.q1': 'What license is ThinkRail under?',
+        'faq.a1': 'Apache License 2.0. Copyright 2026 JetBrains s.r.o. Contributions are licensed the same way and follow the <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>. The license text is in <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE">LICENSE</a>.',
+        'faq.q2': 'How does this sit with pi in the terminal?',
+        'faq.a2': 'ThinkRail is a thin host around <a class="prose-link" href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent">pi</a>. pi keeps models, skills, compaction, cost, and session state, and ThinkRail reads your <code>~/.pi/agent</code> config. The workbench adds worktree isolation, Monaco, files, terminals, diffs, anchored review, and the spec graph. Two tools also ship as plain pi packages: <a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-ask-user-question">@thinkrail/pi-ask-user-question</a> 0.1.0 and <a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-visualize">@thinkrail/pi-visualize</a> 0.2.0. Settings → Extensions lists ThinkRail extensions and can switch each one off.',
+        'faq.q3': 'Does ThinkRail store prompts or require an account?',
+        'faq.a3': 'ThinkRail has no accounts of its own. Usage analytics carry a random installation ID and leave out prompts, code, files, credentials, and account identity. Error reports are always sent with the error type and code and ThinkRail stack frames, and they leave out message text, paths, names, and URLs. Additional product usage is shared only while Settings → Privacy is on. <code>thinkrail --no-analytics</code> or <code>THINKRAIL_NO_ANALYTICS=1</code> turns that extra sharing off for the run. With additional sharing on, a packaged build may open the ThinkRail blog once to link the installation to the site visit that brought you here — only where you accepted marketing cookies or no consent is required — and that link expires after 30 days. Analytics go through <a class="prose-link" href="https://posthog.com/privacy">PostHog</a>. The website\'s PostHog surveys can ask for an email after a desktop download if you choose to enter one.',
+        'faq.q4': 'What do I need to run it?',
+        'faq.a4': 'The CLI and desktop app need <code>git</code> on PATH and a model provider: JetBrains AI from the app, or pi\'s provider auth. Desktop targets are macOS 14+ (Apple Silicon or Intel), Windows x64, and Linux x64 / ARM64. Building from this repository needs Bun 1.4.4 and Node.js ≥ 22.19. The catalog pins <code>@earendil-works/pi-coding-agent</code> at 1.4.0.',
+        'faq.q5': 'How do updates work?',
+        'faq.a5': 'Packaged stable and nightly desktop builds check in the background and offer Download → Preparing update → Install &amp; Restart in Settings → Updates. Nothing is applied until you choose Install &amp; Restart. The updater appears when the package carries a valid HTTPS feed identity. Installed CLI hosts offer Run Update, which runs <code>thinkrail update</code> on the host machine and then asks you to restart the host. You can also run <code>thinkrail update</code> yourself.',
+        'faq.q6': 'Where do CI checks show up?',
+        'faq.a6': 'When a GitHub pull request is open, the top bar shows its CI checks and review decision. You can hand failing checks or a diverged branch to the agent, and merge with the repository\'s last-used method through your <code>gh</code>. People contributing to ThinkRail run <code>bun run lint</code>, <code>bun run typecheck</code>, <code>bun run test</code>, and the no-agent <code>bun run e2e</code> gate. The commands are in <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.',
+        'faq.q7': 'Which languages does the app ship?',
+        'faq.a7': 'The app ships English, Japanese, Simplified Chinese, and Spanish (<code>en</code>, <code>ja</code>, <code>zh-CN</code>, <code>es</code> in <code>packages/locales</code>). Drop a translated <code>en.json</code> into <code>~/.thinkrail/locales</code> and it applies as you save. Agent replies and tool output stay as written. Traditional Chinese on this page is the page\'s own switch, separate from the app catalog.',
+        'faq.q8': 'Can I use the tools from a stock pi?',
+        'faq.a8': '<code>pi install npm:@thinkrail/pi-ask-user-question</code> adds structured questions. <code>pi install npm:@thinkrail/pi-visualize</code> adds diagrams and previews. Versions in this repository: 0.1.0 and 0.2.0. Inside ThinkRail, Settings → Extensions can switch each ThinkRail extension off.',
+        'footer.blurb': 'A JetBrains incubator project. The product site is thinkrail.ai. This page is a bilingual overview of the repository you have checked out.',
+        'footer.col.product': 'Product',
+        'footer.col.repo': 'Repository',
+        'footer.col.legal': 'Legal',
+        'footer.site': 'thinkrail.ai',
+        'footer.blog': 'Blog',
+        'footer.discord': 'Discord',
+        'footer.repo': 'GitHub',
+        'footer.releases': 'Releases',
+        'footer.issues': 'Issues',
+        'footer.contributing': 'Contributing',
+        'footer.license': 'Apache-2.0',
+        'footer.conduct': 'Code of Conduct',
+        'footer.privacy': 'PostHog privacy',
+        'footer.jbai': 'JetBrains AI',
+        'footer.copy': '© 2026 JetBrains s.r.o.',
+        'footer.top': 'Back to top',
+      },
+      zh: {
+        'meta.title': 'ThinkRail — 越用越好的代理式 IDE',
+        'meta.description': 'ThinkRail 在 pi coding agent 之外加上工作台：git worktree 工作區、跟著程式維護的 SPEC.md、可審查的 diff，以及桌面版或 CLI。',
+        'nav.skip': '跳到內容',
+        'nav.proof': '工作台',
+        'nav.architecture': '架構',
+        'nav.capabilities': '功能',
+        'nav.install': '安裝',
+        'nav.faq': '問答',
+        'nav.star': '加星',
+        'nav.star.label': '到 GitHub 為 ThinkRail 加星',
+        'nav.menu': '選單',
+        'aria.nav': '頁面章節',
+        'aria.lang': '語言',
+        'aria.surface': '截圖表面',
+        'aria.theme': '截圖主題',
+        'aria.rings': '架構的三個環',
+        'aria.filters': '篩選功能',
+        'aria.tabs': '安裝方式',
+        'lang.zh': '繁體中文',
+        'lang.en': 'English',
+        'hero.kicker': '行程內的 pi · JetBrains 孵化',
+        'hero.title': '越用越好的<em class="not-italic text-acid">代理式 IDE</em>',
+        'hero.subtitle': '給在真實 git 儲存庫上用 pi 做東西的人。新手有看得到的入口；熟手繼續用 pi 的模型、技能與工作階段。代理在各自的 worktree 裡改程式，你在同一張工作台審查、留言、再合併。',
+        'hero.cta.install': '快速安裝',
+        'hero.cta.features': '看功能',
+        'hero.site': 'thinkrail.ai',
+        'hero.badge.license': 'Apache-2.0',
+        'hero.badge.incubator': 'JetBrains 孵化',
+        'hero.badge.ship': '桌面版 + CLI',
+        'hero.badge.langs': '英 · 日 · 簡中 · 西',
+        'proof.kicker': '01 — 工作台',
+        'proof.title': '代理外面的那張桌子',
+        'proof.lead': '這是儲存庫 README 裡的截圖。切換工作台或規格、深色或淺色，看的是同一個產品：一回合 pi 和它改出的 diff，或在編輯器裡打開的規格圖。',
+        'proof.tab.workbench': '工作台',
+        'proof.tab.specs': '規格',
+        'proof.theme.dark': '深色',
+        'proof.theme.light': '淺色',
+        'proof.path': '.github/readme-assets/',
+        'proof.caption.workbench': '一個 pi 工作階段，和它在獨立 git worktree 裡改出的內容。左側是專案與 Settled 架，右側是 diff 與規格樹。',
+        'proof.caption.specs': '專案的規格圖畫成樹，規格本文在編輯器裡打開。',
+        'proof.alt.workbench-dark': 'ThinkRail 深色工作台：專案與 worktree 工作區、一段 pi 對話、它產生的 diff，以及變更清單旁的規格樹。',
+        'proof.alt.workbench-light': 'ThinkRail 淺色主題的工作台。',
+        'proof.alt.specs-dark': 'ThinkRail 深色規格工具：右側是規格樹，編輯器打開產品目標規格。',
+        'proof.alt.specs-light': 'ThinkRail 淺色主題的規格工具。',
+        'proof.matrix.title': '這張工作台要解決什麼',
+        'proof.matrix.lead': '取自產品目標：在終端機裡驅動 pi 的代價，以及 ThinkRail 放到桌上的東西。',
+        'proof.col.problem': '終端機的代價',
+        'proof.col.answer': '工作台',
+        'proof.p1': '多個代理擠在同一棵工作樹裡，彼此碰撞，也撞上你自己的修改。',
+        'proof.a1': 'ThinkRail 建立的工作區是一個 git worktree，自有分支與目錄。主工作目錄保持乾淨，直到你合併。',
+        'proof.p2': '從 CLI 的捲動紀錄裡讀 diff、在某一行留言、再把意見交回代理，很笨重。',
+        'proof.a2': '審查留言錨在檔案與 diff 上，再以結構化上下文送進聊天。',
+        'proof.p3': '聊天裡做的決定會跟著工作階段一起結束。下一次又得重新推導。',
+        'proof.a3': 'SPEC.md 組成的圖放在程式旁邊。代理用 spec_* 工具讀取、搜尋、維護。',
+        'arch.kicker': '02 — 三個環',
+        'arch.title': '薄薄一層宿主，引擎仍是 pi。',
+        'arch.lead': 'ThinkRail 在行程內跑 pi，再接到這套介面。pi 掌管模型、技能、壓縮、費用與工作階段。ThinkRail 掌管工作區、編輯器與連線協定。',
+        'arch.flow': 'apps/cli 與 apps/desktop 啟動 packages/server。packages/contracts 是連線協定。apps/web 是介面。',
+        'arch.host.title': '引擎宿主',
+        'arch.host.meta': 'packages/server + packages/shared',
+        'arch.host.body': 'Bun.serve 的 HTTP 與 WebSocket 宿主。每個聊天一個行程內的 pi 工作階段，由 CLI 或 Electrobun 桌面殼啟動。應用狀態在 ~/.thinkrail。這份儲存庫的 catalog 把 @earendil-works/pi-coding-agent、pi-ai、pi-agent-core、pi-tui 釘在 1.4.0。',
+        'arch.wire.title': '連線協定',
+        'arch.wire.meta': 'packages/contracts',
+        'arch.wire.body': '宿主與介面之間有型別、有版本的協定，也是兩邊唯一的耦合。Web 介面依賴 contracts 與呈現用套件，不匯入 server。',
+        'arch.ui.title': '介面',
+        'arch.ui.meta': 'apps/web',
+        'arch.ui.body': 'React 19、Zustand、Tailwind v4。它可以獨立交付，透過協定連上宿主。CLI 用瀏覽器打開它。桌面版用 Electrobun webview 包同一套宿主。手機可以經 Tailscale 連到選中的宿主。',
+        'arch.p1.title': '引擎只有 pi',
+        'arch.p1.body': 'createAgentSession 在行程內執行。模型清單、系統提示、技能、擴充、壓縮、費用與工作階段狀態都由 pi 掌管。',
+        'arch.p2.title': '把資料餵給 pi',
+        'arch.p2.body': '功能透過交給 pi 的上下文、檔案、pi 自己的技能與擴充，以及工作階段的啟動旗標來影響代理。宿主顯示 pi 回報的內容。',
+        'arch.p3.title': '工具與憑證是你的',
+        'arch.p3.body': 'git、gh 與模型存取走你的 git、你的 gh，以及 pi 的提供者驗證。ThinkRail 不建立自己的帳號。誰能連上宿主由網路決定；架構文件點名 Tailscale ACL。',
+        'arch.spec': '閱讀 architecture.md',
+        'arch.goal': '閱讀產品目標',
+        'cap.kicker': '03 — 能力',
+        'cap.title': '從 worktree 到開出 pull request',
+        'cap.lead': '每張卡片都是 README 或產品目標寫過的能力。來源沒說的，這個頁面就不寫。',
+        'cap.filter.all': '全部',
+        'cap.filter.isolation': '隔離',
+        'cap.filter.workbench': '工作台',
+        'cap.filter.agent': '代理',
+        'cap.filter.knowledge': '知識',
+        'cap.filter.trust': '信任',
+        'cap.filter.ship': '交付',
+        'cap.empty': '這個分類沒有項目。',
+        'cap.workspaces.title': '隔離的工作區',
+        'cap.workspaces.body': '任何 git 儲存庫都可以當專案。ThinkRail 建立的工作區是 git worktree，自有分支與目錄，代理可以平行工作。你也可以掛上既有的 worktree，或明確選擇在專案資料夾裡工作，那就是 Default 工作區。',
+        'cap.shelf.title': 'Settled 架與分支位置',
+        'cap.shelf.body': '做完或閒置的工作區會收到專案自己的架上：pull request 合併或關閉，或安靜一週之後。你再去用它就回來。頂端列顯示目前分支相對 origin 與 pull request 的位置。',
+        'cap.ide.title': '代理外面的 IDE',
+        'cap.ide.body': '可分割的工作台：Monaco 分頁、帶即時 git 標記的檔案樹、Changed 檢視、終端機與文件，全部跟住目前的工作區。也可以把 worktree 開到你已經安裝的 IDE。',
+        'cap.review.title': '錨定的審查',
+        'cap.review.body': '在檔案與 diff 上留審查留言，再當成結構化上下文送進聊天。這是 worktree 上的本機審查，代理還沒開始跑也可以先收集。',
+        'cap.chats.title': '跟引擎一起串流的聊天',
+        'cap.chats.body': '每個工作區可以同時開多個 pi 工作階段，各自選模型，並顯示 pi 回報的 token 與費用。進行中可以 steer，或把下一則排進佇列。',
+        'cap.plans.title': '計畫、子代理、背景指令',
+        'cap.plans.body': '你和代理共用一份可以改的計畫。做完的步驟可以各自提交、各自審查。子代理在隔離的子工作階段裡跑。背景指令不佔住這一回合。每個聊天的 Resources 檢視可以看著它們，也可以停下。',
+        'cap.specs.title': '規格是依據',
+        'cap.specs.body': 'SPEC.md 串成一張圖，放在程式旁邊。代理用 spec_* 工具讀取、搜尋、維護，一次工作階段裡的決定會留下去。唯讀的 Specs 工具把這張圖畫成樹。',
+        'cap.skills.title': '技能與工作流程',
+        'cap.skills.body': '你為其他 coding agent 準備的 Agent Skills 會就地讀取。內建工作流程涵蓋專案設定、設計發想，以及透過你自己的 gh 送出 pull request。',
+        'cap.tools.title': '不只是殼層的工具',
+        'cap.tools.body': '網頁研究、在聊天裡問的結構化選擇題，以及內嵌的圖、比較與檔案預覽。提議的介面變更會做成 before/after，你可以留言。同樣兩個工具也發布給一般的 pi：@thinkrail/pi-ask-user-question 0.1.0 與 @thinkrail/pi-visualize 0.2.0。',
+        'cap.mcp.title': 'MCP，呼叫前先確認',
+        'cap.mcp.body': 'ThinkRail 讀取你 pi 的 mcp.json，也可以在設定裡加上伺服器與幾個預設。伺服器沒有標成唯讀的呼叫，會先在聊天裡問過。你信任的工具可以在專案裡一律允許。儲存庫自己定義的伺服器要等你核准才會開。OAuth 登入在設定裡。',
+        'cap.providers.title': '你的提供者，你的 pi 設定',
+        'cap.providers.body': '用 JetBrains AI 登入，或走 pi 自己的驗證接上提供者。ThinkRail 會讀 ~/.pi/agent。要換一個設定目錄，或替代理、終端機與 MCP 伺服器加環境變數，到 Settings → Environment，下次啟動生效。啟動當下設的變數仍然優先。',
+        'cap.privacy.title': '分析的內容很窄',
+        'cap.privacy.body': '基本使用事件綁一個隨機安裝 ID，不含 prompt、程式、檔案、憑證或帳號。錯誤報告一律送出，但是分類用的：型別、code、ThinkRail 自己的堆疊，不含 message 文字。額外分享在 Settings → Privacy。thinkrail --no-analytics 會關掉該次執行的額外分享。',
+        'cap.pr.title': '發布、推送、開 PR',
+        'cap.pr.body': '頂端列的下一步可以是發布、推送，或依計畫、提交、PR 範本或代理寫的草稿開 PR，走的是你的 gh。GitHub PR 開了之後會顯示 CI 檢查與審查決定：標成 ready、把失敗的檢查或分叉的分支交給代理、用這個儲存庫上次的方式合併、重開，或刪掉遠端分支。',
+        'cap.locale.title': '語言與主題',
+        'cap.locale.body': 'Settings → Language 跟隨系統，或跟你選的語言。內建英文、日文、簡體中文、西班牙文。把譯好的 en.json 放到 ~/.thinkrail/locales，存檔就生效。外觀有深色、淺色、minimal、高對比；把 *.theme.json 複製到 ~/.thinkrail/themes 也一樣。代理的回覆維持原文。',
+        'install.kicker': '04 — 安裝',
+        'install.title': '桌面安裝檔，或一行指令',
+        'install.lead': '兩種形式一起發布：原生桌面安裝檔，以及自帶的 <code>thinkrail</code> CLI，釋出時都附 <code>SHA256SUMS</code>，在 <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">Releases</a>。PATH 上要有 <code>git</code>，還要有一個模型提供者——應用裡的 JetBrains AI，或 pi 自己的驗證。第一次啟動會帶你接上提供者並選專案。<strong class="font-medium text-zinc-100">Start a new project</strong> 會在 <code>~/thinkrail</code> 底下建立空的 git 儲存庫。<strong class="font-medium text-zinc-100">Add project → Clone repository…</strong> 會把 Git URL clone 到執行 ThinkRail 的那台電腦上的新資料夾，既有的目的資料夾不會被覆蓋。這份 checkout 的 package manifest 寫著 <code>0.0.0</code>；發行版號在 Releases。',
+        'install.tab.unix': 'macOS / Linux',
+        'install.tab.windows': 'Windows',
+        'install.tab.desktop': '桌面版',
+        'install.tab.nightly': 'Nightly',
+        'install.tab.source': '從原始碼',
+        'install.copy': '複製',
+        'install.note.unix': '安裝器會下載對應的二進位、核對 SHA-256，並把 <code>thinkrail</code> 放到 PATH。<code>thinkrail --help</code> 列出旗標。<code>thinkrail --version</code> 印出這個組建。同一行 curl 在 Windows 的 Git Bash 也能用。',
+        'install.note.windows': '同一行在 cmd 與 PowerShell 都能用。頻道、版本、安裝前綴與 PATH 用環境變數：<code>THINKRAIL_CHANNEL</code>、<code>THINKRAIL_VERSION</code>、<code>THINKRAIL_PREFIX</code>、<code>THINKRAIL_NO_MODIFY_PATH</code>。',
+        'install.note.desktop': '從 <a class="prose-link" href="https://github.com/JetBrains/thinkrail/releases">Releases</a> 下載 <code>thinkrail-desktop-*</code>。macOS 14+ 開啟對應 Apple Silicon 或 Intel 的 DMG。Windows x64 解壓完整的 setup ZIP，在 payload 旁邊執行 setup。Linux 解壓 setup tarball 後執行 <code>installer</code>。上面的指令是 Ubuntu 24.04 或更新版本的 Linux 桌面相依：glibc 2.38+、GTK 3、WebKitGTK 4.1、Ayatana AppIndicator 3、librsvg 2。打包的穩定版與 nightly 會在 Settings → Updates 提供更新，要等你按 Install &amp; Restart 才會套用。',
+        'install.note.nightly': '<code>--channel</code> 是 <code>stable</code> 或 <code>nightly</code>。用 <code>--version</code> 釘版本時，該版本必須屬於所選頻道。Windows 上對應的是 <code>THINKRAIL_CHANNEL</code> 與 <code>THINKRAIL_VERSION</code>。已安裝的穩定版與 nightly CLI 會在 Settings → Updates 提供 Run Update，實際執行宿主機器上的 <code>thinkrail update</code>。<code>thinkrail uninstall</code> 會移除執行檔與安裝器加的 PATH。<code>~/.thinkrail</code> 預設保留，除非你要求刪除。',
+        'install.note.source': '<code>bun run dev</code> 同時起動宿主與 web client，Ctrl+C 一起停。瀏覽器啟動器：<code>bun run --filter @thinkrail/cli dev</code>。桌面殼：<code>bun run desktop:dev</code>。開發需要 Bun 1.4.4、Node.js ≥ 22.19，以及已驗證的 pi 提供者。從原始碼跑沒有應用程式更新器，用 git 更新再重建。',
+        'install.platforms.title': 'README 裡的平台說明',
+        'install.platforms.mac': 'Apple Silicon 或 Intel 的 DMG。CLI 是已簽名的二進位，尚未公證。已簽名並公證的桌面 DMG 走 JetBrains 的發布管線；較早的 DMG 與本機組建可能仍未簽名，Gatekeeper 可能擋住。',
+        'install.platforms.win': 'JetBrains 會簽名 CLI、桌面 setup 執行檔，以及桌面應用安裝的每一個執行檔與 DLL。',
+        'install.platforms.linux': 'setup tarball 與 CLI 未簽名。桌面版需要 glibc 2.38+，以及 GTK 3、WebKitGTK 4.1、Ayatana AppIndicator 3、librsvg 2，也就是 Ubuntu 24.04 或更新。',
+        'toast.copied': '已複製',
+        'toast.failed': '無法複製',
+        'faq.kicker': '05 — 問答',
+        'faq.title': '授權、pi、隱私、CI',
+        'faq.q1': 'ThinkRail 用什麼授權？',
+        'faq.a1': 'Apache License 2.0。著作權 2026 JetBrains s.r.o.。貢獻同樣以 Apache-2.0 授權，並遵守<a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CODE_OF_CONDUCT.md">行為準則</a>。授權全文在 <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/LICENSE">LICENSE</a>。',
+        'faq.q2': '它和終端機裡的 pi 是什麼關係？',
+        'faq.a2': 'ThinkRail 是包在 <a class="prose-link" href="https://www.npmjs.com/package/@earendil-works/pi-coding-agent">pi</a> 外面的薄宿主。模型、技能、壓縮、費用與工作階段仍由 pi 掌管，ThinkRail 會讀你的 <code>~/.pi/agent</code>。工作台加上 worktree 隔離、Monaco、檔案、終端機、diff、錨定審查與規格圖。兩個工具也以一般 pi 套件發布：<a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-ask-user-question">@thinkrail/pi-ask-user-question</a> 0.1.0 與 <a class="prose-link" href="https://www.npmjs.com/package/@thinkrail/pi-visualize">@thinkrail/pi-visualize</a> 0.2.0。Settings → Extensions 列出 ThinkRail 擴充，可以逐個關掉。',
+        'faq.q3': '會存 prompt 嗎？要註冊帳號嗎？',
+        'faq.a3': 'ThinkRail 沒有自己的帳號。使用分析帶一個隨機安裝 ID，不含 prompt、程式、檔案、憑證或帳號身分。錯誤報告一律送出，內容是錯誤型別、code 與 ThinkRail 的堆疊幀，不含 message 文字、路徑、名稱與 URL。額外的產品使用資料只在 Settings → Privacy 打開時分享。<code>thinkrail --no-analytics</code> 或 <code>THINKRAIL_NO_ANALYTICS=1</code> 會關掉該次執行的額外分享。額外分享打開時，打包版可能開一次 ThinkRail 部落格，把安裝與帶來你的那次網站造訪連起來——只在你接受了行銷 cookie，或不需要同意的情況——這個連結 30 天後失效。分析服務是 <a class="prose-link" href="https://posthog.com/privacy">PostHog</a>。網站上的 PostHog 調查會在桌面版下載之後，於你選擇留下時收集 email。',
+        'faq.q4': '跑起來需要什麼？',
+        'faq.a4': 'CLI 與桌面版需要 PATH 上的 <code>git</code>，以及模型提供者：應用內的 JetBrains AI，或 pi 的提供者驗證。桌面目錄是 macOS 14+（Apple Silicon 或 Intel）、Windows x64、Linux x64 / ARM64。從這份儲存庫建置需要 Bun 1.4.4 與 Node.js ≥ 22.19。catalog 把 <code>@earendil-works/pi-coding-agent</code> 釘在 1.4.0。',
+        'faq.q5': '更新怎麼進行？',
+        'faq.a5': '打包的穩定版與 nightly 桌面版會在背景檢查，於 Settings → Updates 提供 Download → Preparing update → Install &amp; Restart。你沒有按 Install &amp; Restart 就不會套用。更新器會在套件帶有有效的 HTTPS feed 身分時出現。已安裝的 CLI 會提供 Run Update，它在宿主機器上執行 <code>thinkrail update</code>，然後請你手動重啟宿主。你也可以自己執行 <code>thinkrail update</code>。',
+        'faq.q6': 'CI 檢查出現在哪裡？',
+        'faq.a6': 'GitHub pull request 打開之後，頂端列會顯示 CI 檢查與審查決定。你可以把失敗的檢查或分叉的分支交給代理，並用這個儲存庫上次的合併方式，透過你的 <code>gh</code> 合併。貢獻 ThinkRail 的人會跑 <code>bun run lint</code>、<code>bun run typecheck</code>、<code>bun run test</code>，以及無代理的 <code>bun run e2e</code>。指令寫在 <a class="prose-link" href="https://github.com/JetBrains/thinkrail/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>。',
+        'faq.q7': '應用程式內建哪些語言？',
+        'faq.a7': '應用程式內建英文、日文、簡體中文、西班牙文（<code>packages/locales</code> 的 <code>en</code>、<code>ja</code>、<code>zh-CN</code>、<code>es</code>）。把譯好的 <code>en.json</code> 放到 <code>~/.thinkrail/locales</code>，存檔即生效。代理回覆與工具輸出維持原文。這個頁面的繁體中文是頁面自己的切換，和應用程式的語系目錄是兩件事。',
+        'faq.q8': '可以只在一般的 pi 裡用這些工具嗎？',
+        'faq.a8': '<code>pi install npm:@thinkrail/pi-ask-user-question</code> 加上結構化提問。<code>pi install npm:@thinkrail/pi-visualize</code> 加上圖與預覽。這份儲存庫裡的版本是 0.1.0 與 0.2.0。在 ThinkRail 裡，Settings → Extensions 可以逐個關掉 ThinkRail 擴充。',
+        'footer.blurb': 'JetBrains 孵化專案。產品網站是 thinkrail.ai。這個頁面是你手上這份儲存庫的雙語介紹。',
+        'footer.col.product': '產品',
+        'footer.col.repo': '儲存庫',
+        'footer.col.legal': '法律',
+        'footer.site': 'thinkrail.ai',
+        'footer.blog': '部落格',
+        'footer.discord': 'Discord',
+        'footer.repo': 'GitHub',
+        'footer.releases': 'Releases',
+        'footer.issues': 'Issues',
+        'footer.contributing': '貢獻指南',
+        'footer.license': 'Apache-2.0',
+        'footer.conduct': '行為準則',
+        'footer.privacy': 'PostHog 隱私權',
+        'footer.jbai': 'JetBrains AI',
+        'footer.copy': '© 2026 JetBrains s.r.o.',
+        'footer.top': '回到頂端',
+      },
+    };
+
+    let lang = document.documentElement.dataset.lang === 'zh' ? 'zh' : 'en';
+    let tab = 'unix';
+    let surface = 'workbench';
+    let theme = 'dark';
+    let toastTimer = 0;
+
+    function applyLanguage(next) {
+      lang = next === 'zh' ? 'zh' : 'en';
+      try { localStorage.setItem('thinkrail-landing-lang', lang); } catch (e) {}
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+      document.documentElement.dataset.lang = lang;
+      document.title = translations[lang]['meta.title'];
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.setAttribute('content', translations[lang]['meta.description']);
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        const value = translations[lang][key];
+        if (typeof value !== 'string') {
+          console.error('Missing translation', lang, key);
+          return;
+        }
+        const attr = el.getAttribute('data-i18n-attr');
+        if (attr) el.setAttribute(attr, value);
+        else if (el.hasAttribute('data-i18n-html')) el.innerHTML = value;
+        else el.textContent = value;
+      });
+      document.querySelectorAll('[data-set-lang]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-set-lang') === lang ? 'true' : 'false');
+      });
+    }
+
+    function assertParity() {
+      const missingZh = Object.keys(translations.en).filter((key) => translations.zh[key] === undefined);
+      const missingEn = Object.keys(translations.zh).filter((key) => translations.en[key] === undefined);
+      const orphan = [];
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (translations.en[key] === undefined || translations.zh[key] === undefined) orphan.push(key);
+      });
+      ['workbench-dark', 'workbench-light', 'specs-dark', 'specs-light'].forEach((name) => {
+        const key = 'proof.alt.' + name;
+        if (translations.en[key] === undefined || translations.zh[key] === undefined) orphan.push(key);
+      });
+      if (missingZh.length || missingEn.length || orphan.length) {
+        console.error('i18n parity', { missingZh, missingEn, orphan });
+      }
+    }
+
+    function setTab(id) {
+      tab = id;
+      document.getElementById('install-code').textContent = commands[id];
+      document.querySelectorAll('[data-tab]').forEach((button) => {
+        const on = button.getAttribute('data-tab') === id;
+        button.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (on) document.getElementById('install-panel').setAttribute('aria-labelledby', button.id);
+      });
+      document.querySelectorAll('[data-note]').forEach((note) => {
+        note.classList.toggle('hidden', note.getAttribute('data-note') !== id);
+      });
+    }
+
+    function setRing(id) {
+      document.querySelectorAll('[data-ring]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-ring') === id ? 'true' : 'false');
+      });
+      document.getElementById('ring-title').setAttribute('data-i18n', 'arch.' + id + '.title');
+      document.getElementById('ring-meta').setAttribute('data-i18n', 'arch.' + id + '.meta');
+      document.getElementById('ring-body').setAttribute('data-i18n', 'arch.' + id + '.body');
+      applyLanguage(lang);
+    }
+
+    function setFilter(cat) {
+      let visible = 0;
+      document.querySelectorAll('[data-cat]').forEach((card) => {
+        const show = cat === 'all' || card.getAttribute('data-cat') === cat;
+        card.classList.toggle('hidden', !show);
+        if (show) visible += 1;
+      });
+      document.querySelectorAll('[data-filter]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-filter') === cat ? 'true' : 'false');
+      });
+      document.getElementById('cap-empty').classList.toggle('hidden', visible > 0);
+    }
+
+    function renderShot() {
+      const key = surface + '-' + theme;
+      const image = document.getElementById('proof-img');
+      image.src = shots[key];
+      image.setAttribute('data-i18n', 'proof.alt.' + key);
+      document.getElementById('proof-caption').setAttribute('data-i18n', 'proof.caption.' + surface);
+      document.getElementById('frame-label').setAttribute('data-i18n', surface === 'workbench' ? 'proof.tab.workbench' : 'proof.tab.specs');
+      applyLanguage(lang);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        try {
+          const area = document.createElement('textarea');
+          area.value = text;
+          area.setAttribute('readonly', '');
+          area.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;outline:0;opacity:0;';
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          const ok = document.execCommand('copy');
+          area.remove();
+          return ok;
+        } catch (fallbackError) {
+          return false;
+        }
+      }
+    }
+
+    function closeMenu() {
+      document.getElementById('mobile-nav').classList.add('hidden');
+      document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
+    }
+
+    function mountFavicon() {
+      const path = document.querySelector('#tr-logo path');
+      if (!path) return;
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -53.5 557 557"><rect x="-40" y="-90" width="640" height="640" rx="96" fill="#8dff4f"/><path fill="#102108" d="' + path.getAttribute('d') + '"/></svg>';
+      let link = document.querySelector('link[rel="icon"]');
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      link.type = 'image/svg+xml';
+      link.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    assertParity();
+    applyLanguage(lang);
+    setTab('unix');
+    mountFavicon();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+
+    document.querySelectorAll('[data-set-lang]').forEach((button) => {
+      button.addEventListener('click', () => applyLanguage(button.getAttribute('data-set-lang')));
+    });
+    document.querySelectorAll('[data-shot]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const kind = button.getAttribute('data-shot');
+        const value = button.getAttribute('data-value');
+        if (kind === 'surface') surface = value;
+        else theme = value;
+        document.querySelectorAll('[data-shot="' + kind + '"]').forEach((other) => {
+          other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+        });
+        renderShot();
+      });
+    });
+    document.querySelectorAll('[data-ring]').forEach((button) => {
+      button.addEventListener('click', () => setRing(button.getAttribute('data-ring')));
+    });
+    document.querySelectorAll('[data-filter]').forEach((button) => {
+      button.addEventListener('click', () => setFilter(button.getAttribute('data-filter')));
+    });
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => setTab(button.getAttribute('data-tab')));
+    });
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const ok = await copyText(commands[tab]);
+      showToast(translations[lang][ok ? 'toast.copied' : 'toast.failed']);
+    });
+    document.querySelectorAll('.faq-item button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach((other) => {
+          other.classList.remove('open');
+          other.querySelector('button').setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    const menuButton = document.getElementById('menu-btn');
+    menuButton.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') === 'true';
+      document.getElementById('mobile-nav').classList.toggle('hidden', open);
+      menuButton.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+    document.querySelectorAll('#mobile-nav a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
+    });
+  </script>
+</body>
+</html>

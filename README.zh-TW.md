@@ -8,6 +8,8 @@
 
 *上圖登陸頁由 Grok CLI 搭配本 skill 為 [JetBrains/thinkrail](https://github.com/JetBrains/thinkrail)(Apache-2.0)產生。GIF 內容為首屏、捲動瀏覽數個區塊,以及 繁體中文 / English 切換。*
 
+**線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/](https://malilion.github.io/github-repo-landing-page-skill/demo/)
+
 ## 特色
 
 - **單一檔案**:所有內容都在一個 `index.html`,不需建置流程,也不需 npm install。
@@ -69,3 +71,4 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `README.md` | 英文說明 |
 | `README.zh-TW.md` | 繁體中文說明 |
 | `assets/demo.gif` | 上方的示範動畫 |
+| `demo/index.html` | 產生的示範頁,以 GitHub Pages 提供 |
