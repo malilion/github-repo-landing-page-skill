@@ -8,6 +8,8 @@
 
 *上圖登陸頁由 Grok CLI 搭配本 skill 為 [JetBrains/thinkrail](https://github.com/JetBrains/thinkrail)(Apache-2.0)產生。GIF 內容為首屏、捲動瀏覽數個區塊,以及 繁體中文 / English 切換。*
 
+**線上示範入口:** [https://malilion.github.io/github-repo-landing-page-skill/](https://malilion.github.io/github-repo-landing-page-skill/),集中列出下方所有線上示範。
+
 **線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/](https://malilion.github.io/github-repo-landing-page-skill/demo/)
 
 **第二個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/macro/](https://malilion.github.io/github-repo-landing-page-skill/demo/macro/),由 Grok CLI 搭配本 skill 為 [macro-inc/macro](https://github.com/macro-inc/macro)(AGPL-3.0)產生。
@@ -79,6 +81,8 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `README.md` | 英文說明 |
 | `README.zh-TW.md` | 繁體中文說明 |
 | `assets/demo.gif` | 上方的示範動畫 |
+| `index.html` | 示範入口頁(所有示範頁的集中列表),作為 GitHub Pages 首頁 |
+| `portal/*.webp` | 入口頁使用的縮圖 |
 | `demo/index.html` | 產生的示範頁,以 GitHub Pages 提供 |
 | `demo/macro/index.html` | 第二個產生的示範頁(macro-inc/macro),以 GitHub Pages 提供 |
 | `demo/assistant-ui/index.html` | 另一個產生的示範頁(assistant-ui/assistant-ui),以 GitHub Pages 提供 |
