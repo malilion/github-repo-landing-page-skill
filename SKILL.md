@@ -88,7 +88,7 @@ When a user provides a GitHub repo URL (e.g., `https://github.com/owner/repo`):
    - Identify repo name, primary technology stack, core target users, and unique value proposition.
    - Read sources in the priority order from §1 (local `README*`, `LICENSE*`, manifest files, `docs/`, screenshots, then `gh`/API). Private or offline: local clone only.
    - When gathering facts, prefer file tools (`read_file`, `list_dir`, `grep`) over shell commands, and do not chain recon commands; headless permission modes can cancel compound shell calls.
-   - If details are missing, omit them or mark them as not provided (e.g. no `LICENSE` → say so). Do not infer features, install commands or stats from "standard" repo conventions.
+   - If details are missing, omit the element that would need them (a stat, a pricing block, a testimonial). Do not write sentences about the source material itself (see §6, rule 2), and do not infer features, install commands or stats from "standard" repo conventions. The one fact to state plainly is a missing `LICENSE`.
    - If only `landing/` gets deployed, copy the key image files it uses into `landing/` (e.g. `landing/assets/`) so relative image paths keep working; use absolute public raw URLs only for secondary images (see rule 4).
    - The install tabs may be adapted to the project (e.g. `git clone`, static server, open the file directly) instead of listing every package manager.
 2. **Determine Design Tokens**:
@@ -105,6 +105,7 @@ When a user provides a GitHub repo URL (e.g., `https://github.com/owner/repo`):
      - [ ] i18n: every `data-i18n` key exists in both `en` and `zh`; switching updates the page and `<html lang>`.
      - [ ] Every image/screenshot path exists, and key images are self-hosted per rule 4.
      - [ ] Images: before any screenshot or acceptance check, wait for network idle and until every `<img>` is `complete` with `naturalWidth > 0` (scroll to the bottom to trigger lazy-loading, then back to the top). For each broken image, say which it is: a bad URL (check with `curl -I`: status and `Content-Type`) or a browser block of a reachable URL (e.g. `net::ERR_BLOCKED_BY_ORB`), and report it instead of hiding it.
+     - [ ] Hero visual: it shows the product itself (§6, rule 1). If it is a `<video>`, check `readyState >= 2`, `videoWidth > 0` and that it plays. `curl -I` the `og:image` URL: status 200 and `Content-Type: image/*` (a Pages URL only resolves after the page is published).
      - [ ] If the repo is private: tell the user that GitHub links and the `og:image` URL return 404 to visitors until the repo is public.
 
 ---
@@ -169,3 +170,20 @@ Use this base boilerplate structure for rapid generation:
 </body>
 </html>
 ```
+
+---
+
+## 6. Using with a design skill (e.g. elayadesign/ai-design-skills landing-page-design)
+
+A general landing-page design skill can be used next to this one. When both apply, resolve conflicts like this:
+
+- **This skill wins on**: fonts (repository-personality fonts plus a Traditional Chinese font), colour and design direction including gradient rules, the i18n toggle, the single-file and CDN rules, asset and image rules, and factual accuracy.
+- **The design skill wins on**: page strategy and structure (one primary action; Hero, Benefits, How it works, Proof, FAQ, Final CTA), conversion copy, SEO and `og:` tags, spacing, radius, motion and states, the tagline reveal, and semantic HTML and accessibility.
+- **Skip** items that do not fit a single demo page: privacy and terms pages, a 404 page, cookie consent, form validation.
+- **Do not ask intake questions.** State the assumptions instead (audience, single primary action, traffic source, language default) in an HTML comment at the top of the file.
+
+Three things to get right when you combine them:
+
+1. **The hero visual shows the product itself.** Prefer the repo's own hero image or README demo GIF, or a screenshot of the product UI. Never use an incidental sample photo taken from a component demo. Large GIFs: convert them to animated WebP, or to MP4/WebM used as `<video muted autoplay loop playsinline>` with a static poster, and keep them within the size caps (about 500 KB per file; if it cannot get under about 1.5 MB, use a static WebP poster plus the video). Give the video a width, height, poster and accessible label, and pause it under `prefers-reduced-motion`. Self-host the files and the `og:image` (a static 1200x630 JPG frame is enough), and check that the `og:image` URL returns 200 with an `image/*` type.
+2. **No meta copy about the source material.** The page must not say things like "this checkout", "this repo has no pricing" or "not provided". If a fact is unknown, leave out the element that needs it instead of saying it is unknown.
+3. **Alt text and captions come from evidence.** Derive them from file names, README context and the surrounding headings. If you cannot view the images, keep each alt short and specific to the named item (for example the project name plus what the file is); never repeat one generic template sentence for every image. If you can view them, describe what is visible in one sentence.

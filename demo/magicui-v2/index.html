@@ -4,23 +4,23 @@
 <!-- Assumptions:
 - Primary action is one click to https://magicui.design/docs/installation (URL written in skills/magic-ui/SKILL.md). Audience is design engineers on React or Next.js with Tailwind CSS, as that skill and the README tagline state. Conversion is that click.
 - Traffic source is unknown. The offer is evergreen, so the page is indexable.
-- No testimonials, star counts, download totals, or customer quotes. Those numbers are not written in the local files. Showcase MDX is not in this checkout, so captions stay on file names.
+- No testimonials, star counts, download totals, or customer quotes. Those numbers are not written in the local files. Showcase captions are short and derived from the file names and the visible screenshot content.
 - "75 registry:ui items" is a count of top-level registry.json items whose type is registry:ui (magic-card through grid-beams). Demos are excluded. mode-toggle.tsx appears only inside a dock demo file list.
 - Root package.json is private version 0.1.0. This page does not invent an npm install command for the name magicui.
-- Risk reversal is the MIT license text. This checkout has no pricing, trial, or refund terms.
+- Risk reversal is the MIT license text. The page does not mention pricing, trial or refund terms.
 - The filled button is only the installation guide. The repository is a text link.
 - Default language is Traditional Chinese. The choice is stored in localStorage as magicui-landing-lang.
 - Colour is taken from the repository icon: #9E7AFF, #FE8BBB, #FFBD7A, #F8EAC3 on a warm plum field #141016.
-- Showcase frames use a 16:10 box and object-fit contain. The brief said those files are about 1400px wide. Heights were not recorded. pixel-image-demo.webp is 1400 by 1400.
-- .nvmrc in this checkout contains 22. package.json engines ask for Node >= 22.14.0 and pnpm >= 9. packageManager is pnpm@9.15.0.
+- Hero visual is the README bento-grid GIF, self-hosted as muted looping webm/mp4 with a static webp poster. og:image is a self-hosted 1200x630 jpg frame. Showcase frames use a 16:10 box and object-fit contain.
+- package.json engines ask for Node >= 22.14.0 and pnpm >= 9. packageManager is pnpm@9.15.0.
 - Time to contribute is quoted from both files: README says about 5 minutes, CONTRIBUTING.md says around 10 minutes and 5 files.
 -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Magic UI，給設計工程師的介面元件庫</title>
-  <meta name="description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
-  <meta name="description:zh-TW" content="Magic UI 是給設計工程師的介面元件庫。透過 shadcn registry 把 React 元件加進使用 Tailwind 的專案。本倉庫程式以 MIT 授權釋出。安裝說明在 magicui.design。">
+  <meta name="description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code is MIT licensed. Installation notes are on magicui.design.">
+  <meta name="description:zh-TW" content="Magic UI 是給設計工程師的介面元件庫。透過 shadcn registry 把 React 元件加進使用 Tailwind 的專案。程式碼以 MIT 授權釋出。安裝說明在 magicui.design。">
   <meta name="portal-name" content="Magic UI v2 (with ai-design-skills)">
   <meta name="portal-order" content="2.5">
   <meta name="upstream-repo" content="https://github.com/magicuidesign/magicui">
@@ -28,16 +28,19 @@
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#141016">
   <meta property="og:title" content="Magic UI, the UI library for design engineers">
-  <meta property="og:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
+  <meta property="og:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code is MIT licensed. Installation notes are on magicui.design.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://github.com/magicuidesign/magicui">
-  <meta property="og:image" content="https://cdn.magicui.design/bento-grid.gif">
+  <meta property="og:image" content="https://malilion.github.io/github-repo-landing-page-skill/demo/magicui-v2/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Magic UI bento grid preview">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:locale:alternate" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Magic UI, the UI library for design engineers">
-  <meta name="twitter:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
-  <meta name="twitter:image" content="https://cdn.magicui.design/bento-grid.gif">
+  <meta name="twitter:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code is MIT licensed. Installation notes are on magicui.design.">
+  <meta name="twitter:image" content="https://malilion.github.io/github-repo-landing-page-skill/demo/magicui-v2/assets/og.jpg">
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -168,8 +171,8 @@
       overflow: hidden;
       background: #1b1620;
     }
-    .frame-square { aspect-ratio: 1 / 1; border-radius: 16px; }
-    .frame img {
+    .frame-wide { aspect-ratio: 16 / 9; border-radius: 16px; background: #ffffff; }
+    .frame img, .frame video {
       position: relative;
       z-index: 1;
       width: 100%;
@@ -351,7 +354,6 @@
             <img src="./assets/icon.svg" width="32" height="32" alt="" decoding="async">
             <span>Magic UI</span>
           </a>
-          <span class="font-mono text-xs text-[#cbbba8]" data-i18n-aria="nav.version" aria-label="套件版本 0.1.0">v0.1.0</span>
           <a class="press rounded-full px-3 py-2 text-xs font-semibold" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
           <div class="desktop-links">
             <a class="press rounded-full px-3 py-2 text-sm font-semibold is-current" href="#overview" data-nav data-i18n="nav.overview" aria-current="true">概覽</a>
@@ -405,7 +407,7 @@
           <span class="block" data-i18n="hero.line1">給設計工程師的</span>
           <span class="mt-2 block italic text-[#ffbd7a]" data-i18n="hero.line2">介面元件庫</span>
         </h1>
-        <p class="measure mt-6 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。</p>
+        <p class="measure mt-6 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼以 MIT 授權釋出。</p>
         <div class="mt-6">
           <a class="btn btn-primary text-base" href="https://magicui.design/docs/installation">
             <span data-i18n="hero.cta">開啟安裝說明</span>
@@ -414,13 +416,16 @@
         </div>
         <p class="mt-4 text-sm text-[#cbbba8]">
           <a class="press font-semibold text-[#ffbd7a]" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
-          <span data-i18n="hero.proofRest"> · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目</span>
+          <span data-i18n="hero.proofRest"> · 75 個 registry:ui 元件</span>
         </p>
       </div>
       <div class="card p-2">
-        <div class="frame frame-square">
+        <div class="frame frame-wide">
           <div class="skeleton" aria-hidden="true"></div>
-          <img src="./assets/pixel-image-demo.webp" width="1400" height="1400" alt="Pixel Image 元件示範圖" data-i18n-alt="hero.visualAlt" decoding="async" fetchpriority="high">
+          <video id="hero-video" width="640" height="360" autoplay muted loop playsinline preload="auto" poster="./assets/hero-poster.webp" role="img" aria-label="Magic UI Bento Grid 動態預覽：檔案卡片、指令搜尋框、世界地圖與月曆" data-i18n-aria="hero.visualAlt">
+            <source src="./assets/hero.webm" type="video/webm">
+            <source src="./assets/hero.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
     </section>
@@ -428,32 +433,32 @@
     <section id="benefits" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
       <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="benefits.kicker">結果</p>
       <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="benefits.title">裝得進專案、也改得了的動效</h2>
-      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="benefits.intro">Magic UI 是這個倉庫裡給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。</p>
+      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="benefits.intro">Magic UI 是給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。</p>
       <div class="mt-8 grid gap-6 md:grid-cols-2">
         <article class="card p-4">
           <i data-lucide="sparkles" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b1.title">登錄檔裡已有名字的動效</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b1.body">Marquee 的說明是無限捲動，用來顯示文字、圖片或影片。Blur Fade 用來淡入淡出內容。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。以上都是 registry.json 的描述。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b1.body">Marquee 讓文字、圖片或影片無限捲動。Blur Fade 讓內容淡入淡出。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。</p>
         </article>
         <article class="card p-4">
           <i data-lucide="package" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b2.title">一條指令把原始碼加進專案</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b2.body">先初始化 shadcn，再用 add 指令指定 @magicui 的 slug。registry.json 把檔案 target 設在 components/magicui。skill 示範的 import 來自 @/components/ui，並說明 alias 不同時要自行調整。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b2.body">先初始化一次 shadcn，再加入任一 @magicui slug。原始碼會放進 components/magicui，由你擁有、可自行修改。若你的 import alias 不是 @/components/ui，請自行調整路徑。</p>
         </article>
         <article class="card p-4">
           <i data-lucide="book-open" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b3.title">文件涵蓋安裝、元件與 MCP</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b3.body">README 指向 magicui.design/docs。skill 另外列出元件文件、安裝頁，以及給 AI IDE 工作流程的 MCP 設定頁。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b3.body">magicui.design/docs 的文件涵蓋安裝、每個元件，以及給 AI IDE 工作流程的 MCP 設定。</p>
         </article>
         <article class="card p-4">
           <i data-lucide="git-pull-request" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b4.title">貢獻步驟寫在指南裡</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b4.body">貢獻指南寫新增元件或效果要寫 5 個檔案，再提交 pnpm build:registry 產生的產物，並說大約 10 分鐘。README 則說加上你自己的元件大約 5 分鐘。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b4.body">新增元件或效果大約要寫 5 個檔案，再加上 pnpm build:registry 產生的產物，大約花 5 到 10 分鐘。</p>
         </article>
       </div>
 
       <div class="card mt-8 p-4">
-        <h3 class="text-2xl font-semibold" data-i18n="filter.title">這份檢出的 registry slug</h3>
+        <h3 class="text-2xl font-semibold" data-i18n="filter.title">元件 slug</h3>
         <div class="mt-4 flex flex-wrap items-end gap-4">
           <div class="min-w-0 flex-1">
             <label class="block text-sm font-semibold" for="component-filter" data-i18n="filter.label">以 slug 篩選</label>
@@ -463,7 +468,7 @@
         </div>
         <p id="filter-count" class="mt-4 text-sm text-[#cbbba8]" aria-live="polite">75 個 slug 中顯示 75 個</p>
         <div id="filter-empty" class="is-hidden mt-4 rounded-lg bg-[#141016] p-4">
-          <p data-i18n="filter.empty">沒有符合的 slug。清除篩選可看到這份檢出的全部 registry:ui 名單。</p>
+          <p data-i18n="filter.empty">沒有符合的 slug。清除篩選可看到全部元件。</p>
         </div>
         <noscript>
           <p class="mt-4 text-sm text-[#cbbba8]" data-i18n="filter.needsjs">篩選需要 JavaScript。以下名單仍可閱讀。</p>
@@ -566,12 +571,12 @@
         <li class="card p-4">
           <p class="font-mono text-sm text-[#ffbd7a]">01</p>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="how.s1.title">初始化 shadcn</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s1.body">skill 要求專案是使用 Tailwind CSS 的 React 或 Next.js。在該專案執行一次 init。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s1.body">Magic UI 需要使用 Tailwind CSS 的 React 或 Next.js 專案。在該專案執行一次 init。</p>
         </li>
         <li class="card p-4">
           <p class="font-mono text-sm text-[#ffbd7a]">02</p>
           <h3 class="mt-4 text-2xl font-semibold" data-i18n="how.s2.title">加上元件 slug</h3>
-          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s2.body">用 registry 的 add 指令加上 @magicui 與 slug。skill 的範例指令使用 magic-card。Globe 在 registry.json 列出依賴 cobe 與 motion。Marquee 的 keyframes 也在同一份檔案。</p>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s2.body">用 registry add 指令加上 @magicui 與 slug，例如 magic-card。部分元件會列出自己的相依套件，例如 Globe 需要 cobe 與 motion，並自帶 keyframes。</p>
         </li>
         <li class="card p-4">
           <p class="font-mono text-sm text-[#ffbd7a]">03</p>
@@ -581,19 +586,19 @@
       </ol>
 
       <aside class="card mt-8 p-4" aria-labelledby="install-title">
-        <h3 id="install-title" class="text-2xl font-semibold" data-i18n="install.lead">下面的指令摘自倉庫 skill 與 CONTRIBUTING.md。</h3>
+        <h3 id="install-title" class="text-2xl font-semibold" data-i18n="install.lead">加入元件與參與貢獻的指令。</h3>
         <div class="mt-4 flex flex-wrap gap-2" role="tablist" data-i18n-aria="install.tabs" aria-label="安裝指令">
           <button type="button" class="btn btn-ghost text-sm" id="tab-add" role="tab" aria-selected="true" aria-controls="panel-add" tabindex="0" data-i18n="tab.add">加入元件</button>
-          <button type="button" class="btn btn-ghost text-sm" id="tab-run" role="tab" aria-selected="false" aria-controls="panel-run" tabindex="-1" data-i18n="tab.run">跑這個倉庫</button>
+          <button type="button" class="btn btn-ghost text-sm" id="tab-run" role="tab" aria-selected="false" aria-controls="panel-run" tabindex="-1" data-i18n="tab.run">本機執行</button>
           <button type="button" class="btn btn-ghost text-sm" id="tab-check" role="tab" aria-selected="false" aria-controls="panel-check" tabindex="-1" data-i18n="tab.check">執行檢查</button>
         </div>
         <div id="panel-add" role="tabpanel" aria-labelledby="tab-add" class="mt-4">
-          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.add">給使用元件的人。來自 Magic UI skill。</p>
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.add">給要把元件加進自己專案的人。</p>
           <pre class="mt-4 p-4 font-mono text-sm"><code>npx shadcn@latest init
 npx shadcn@latest add @magicui/magic-card</code></pre>
         </div>
         <div id="panel-run" role="tabpanel" aria-labelledby="tab-run" class="is-hidden mt-4">
-          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.run">給貢獻者。步驟來自 CONTRIBUTING.md。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。這份檢出的 .nvmrc 是 22。package.json 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 為 pnpm@9.15.0。</p>
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.run">給貢獻者。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。需要 Node 22.14.0 以上與 pnpm 9 以上。</p>
           <pre class="mt-4 p-4 font-mono text-sm"><code>git clone https://github.com/&lt;YOUR_USERNAME&gt;/magicui.git
 cd magicui
 pnpm i
@@ -601,7 +606,7 @@ touch .env.local &amp;&amp; echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" &gt
 pnpm dev</code></pre>
         </div>
         <div id="panel-check" role="tabpanel" aria-labelledby="tab-check" class="is-hidden mt-4">
-          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.check">開 pull request 之前，貢獻指南列出的本機檢查。package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。</p>
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.check">開 pull request 之前要跑的本機檢查：lint、型別檢查、格式檢查與 registry 相依檢查。</p>
           <pre class="mt-4 p-4 font-mono text-sm"><code>pnpm check
 pnpm build:registry
 pnpm build</code></pre>
@@ -615,50 +620,50 @@ pnpm build</code></pre>
 
     <section id="proof" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
       <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="proof.kicker">作品截圖</p>
-      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="proof.title">倉庫裡的作品截圖</h2>
-      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="proof.intro">圖檔位於倉庫 apps/www/public/showcase，此頁使用旁邊 assets 裡的複本。這份檢出沒有 showcase 的 MDX，所以圖說只標檔名，不描述畫面裡的內容。</p>
+      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="proof.title">用 Magic UI 做出的網站</h2>
+      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="proof.intro">Magic UI 作品展示中的精選。</p>
       <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-aryankarma.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：aryankarma" data-i18n-alt="proof.alt.aryankarma" loading="lazy" decoding="async">
+            <img src="./assets/showcase-aryankarma.webp" width="1400" height="875" alt="aryankarma.com 個人網站：「Hi, I&#x27;m Aryan.」、關於區塊與 GitHub 活動格" data-i18n-alt="proof.alt.aryankarma" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.aryankarma">使用 Magic UI 元件的作品截圖：aryankarma</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.aryankarma">aryankarma.com：個人作品集</figcaption>
         </figure>
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-d1rshan.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：d1rshan" data-i18n-alt="proof.alt.d1rshan" loading="lazy" decoding="async">
+            <img src="./assets/showcase-d1rshan.webp" width="1400" height="875" alt="深色終端機風格的個人網站，像素格背景上有專案清單" data-i18n-alt="proof.alt.d1rshan" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.d1rshan">使用 Magic UI 元件的作品截圖：d1rshan</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.d1rshan">d1rshan：終端機風格個人網站</figcaption>
         </figure>
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-miles.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：miles" data-i18n-alt="proof.alt.miles" loading="lazy" decoding="async">
+            <img src="./assets/showcase-miles.webp" width="1400" height="875" alt="Miles 個人部落格首頁，淺藍漸層上有手寫風大字姓名標題" data-i18n-alt="proof.alt.miles" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.miles">使用 Magic UI 元件的作品截圖：miles</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.miles">Miles：個人部落格</figcaption>
         </figure>
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-overlay-ui.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：overlay-ui" data-i18n-alt="proof.alt.overlay" loading="lazy" decoding="async">
+            <img src="./assets/showcase-overlay-ui.webp" width="1400" height="875" alt="Overlay UI 登陸頁：「Broadcast overlays, beautifully connected」與體育直播預覽" data-i18n-alt="proof.alt.overlay" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.overlay">使用 Magic UI 元件的作品截圖：overlay-ui</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.overlay">Overlay UI：直播疊加層</figcaption>
         </figure>
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-pulpsense.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：pulpsense" data-i18n-alt="proof.alt.pulpsense" loading="lazy" decoding="async">
+            <img src="./assets/showcase-pulpsense.webp" width="1400" height="875" alt="PulpSense 登陸頁：紫色漸層上的「Grow your business, not your payroll」與合作夥伴標誌" data-i18n-alt="proof.alt.pulpsense" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.pulpsense">使用 Magic UI 元件的作品截圖：pulpsense</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.pulpsense">PulpSense：薪資服務網站</figcaption>
         </figure>
         <figure class="card p-4">
           <div class="frame">
             <div class="skeleton" aria-hidden="true"></div>
-            <img src="./assets/showcase-robot-toast.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：robot-toast" data-i18n-alt="proof.alt.robot" loading="lazy" decoding="async">
+            <img src="./assets/showcase-robot-toast.webp" width="1400" height="875" alt="Robot toast 登陸頁：「Notifications, with character.」旁有機器人吉祥物，並有 Try a toast 與 Try in playground 按鈕" data-i18n-alt="proof.alt.robot" loading="lazy" decoding="async">
           </div>
-          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.robot">使用 Magic UI 元件的作品截圖：robot-toast</figcaption>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.robot">Robot toast：toast 通知元件庫</figcaption>
         </figure>
       </div>
     </section>
@@ -673,7 +678,7 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q1">Magic UI 是什麼？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a1">README 稱 Magic UI 為給設計工程師的介面元件庫（UI library for design engineers）。registry.json 的 homepage 是 https://magicui.design。倉庫內的 skill 說明這些元件用在已採用 Tailwind CSS 的 React 或 Next.js 專案。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a1">Magic UI 是給設計工程師的介面元件庫，提供給使用 Tailwind CSS 的 React 與 Next.js 專案的元件。官方網站是 https://magicui.design。</p>
           </details>
         </article>
         <article class="card">
@@ -682,7 +687,7 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q2">如何加入一個元件？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a2">skill 寫的是先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上元件 slug。範例是 @magicui/magic-card。skill 的 import 路徑寫 @/components/ui，registry.json 的檔案 target 則是 components/magicui。若專案的 alias 不同，請改 import。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a2">先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上 slug，例如 @magicui/magic-card。原始碼會複製到 components/magicui。若你的 alias 不是 @/components/ui，請調整 import 路徑。</p>
           </details>
         </article>
         <article class="card">
@@ -691,16 +696,16 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q3">授權是什麼？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a3">LICENSE.md 是 MIT 授權，著作權人寫 Magic UI。README 連到該檔。散佈複本時必須保留著作權聲明與許可聲明。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a3">Magic UI 以 MIT 授權釋出，著作權人為 Magic UI。複本必須保留著作權聲明與許可聲明。</p>
           </details>
         </article>
         <article class="card">
           <details class="p-4">
             <summary class="flex items-center justify-between gap-4">
-              <h3 class="text-lg font-semibold" data-i18n="faq.q4">如何在本機跑這個倉庫？</h3>
+              <h3 class="text-lg font-semibold" data-i18n="faq.q4">如何在本機執行這個專案？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a4">貢獻指南寫：fork、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。這份檢出的 .nvmrc 內容是 22。package.json 的 engines 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 是 pnpm@9.15.0。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a4">Fork 倉庫、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。需要 Node 22.14.0 以上與 pnpm 9 以上。</p>
           </details>
         </article>
         <article class="card">
@@ -709,7 +714,7 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q5">專案腳本會檢查什麼？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a5">package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。貢獻指南另外要求：改了 registry 或 config/site.ts 要執行 pnpm build:registry，以及執行 pnpm build，因為 CI 也會跑建置。提交訊息走 Conventional Commits，由 commitlint 檢查。git hooks 由 lefthook 安裝。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a5">check 指令會跑 lint、型別檢查、格式檢查與 registry 相依檢查。registry 檔案或 config/site.ts 有變動時請執行 pnpm build:registry，也請執行 pnpm build，因為 CI 也會跑它。Commit 訊息遵循 Conventional Commits。</p>
           </details>
         </article>
         <article class="card">
@@ -718,7 +723,7 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q6">文件在哪裡？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a6">README 寫前往 https://magicui.design/docs。skill 另外列出 https://magicui.design/docs/components、https://magicui.design/docs/installation 與 https://magicui.design/docs/mcp。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a6">請看 https://magicui.design/docs。元件頁在 https://magicui.design/docs/components，安裝頁在 https://magicui.design/docs/installation，MCP 設定在 https://magicui.design/docs/mcp。</p>
           </details>
         </article>
         <article class="card">
@@ -727,16 +732,16 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q7">可以在哪裡提問？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a7">README 的 Discord 是 http://magicui.design/discord，邀請連結是 https://discord.com/invite/87p2vpsat5，Twitter 是 https://twitter.com/magicuidesign。貢獻指南說需要協助就開 GitHub issue，並指向範例 pull request：https://github.com/magicuidesign/magicui/pull/780。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a7">可以加入 Discord：http://magicui.design/discord（邀請連結 https://discord.com/invite/87p2vpsat5），或追蹤 https://twitter.com/magicuidesign。回報問題或提出想法請開 GitHub issue。可參考的 pull request 範例是 https://github.com/magicuidesign/magicui/pull/780。</p>
           </details>
         </article>
         <article class="card">
           <details class="p-4">
             <summary class="flex items-center justify-between gap-4">
-              <h3 class="text-lg font-semibold" data-i18n="faq.q8">版本 0.1.0 是不是可以直接用套件名稱安裝？</h3>
+              <h3 class="text-lg font-semibold" data-i18n="faq.q8">可以搭配 Next.js 嗎？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a8">根目錄 package.json 的 name 是 magicui、version 是 0.1.0、private 是 true。這頁不把該版本寫成以套件名稱安裝的指令。skill 記載的使用者安裝方式是 shadcn registry 的 add 指令。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a8">可以。元件是為使用 Tailwind CSS 的 React 與 Next.js 專案寫的。先在你的專案執行 shadcn init，再加入需要的元件。</p>
           </details>
         </article>
         <article class="card">
@@ -745,16 +750,16 @@ pnpm build</code></pre>
               <h3 class="text-lg font-semibold" data-i18n="faq.q9">元件無法 import 或沒有畫面時呢？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a9">skill 寫：若 components.json 或 registry 初始化失敗，先執行 shadcn init；alias 不符就改 import；文件若要求全域 CSS keyframes 就補上；並安裝該元件列出的依賴。例如 Globe 在 registry.json 列出 cobe 與 motion。Marquee 的 keyframes 寫在 registry.json。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a9">如果 components.json 或 registry init 失敗，請先執行 shadcn init；對齊你專案的 import alias；文件要求時加入全域 CSS keyframes；並安裝該元件列出的相依套件。例如 Globe 需要 cobe 與 motion。</p>
           </details>
         </article>
         <article class="card">
           <details class="p-4">
             <summary class="flex items-center justify-between gap-4">
-              <h3 class="text-lg font-semibold" data-i18n="faq.q10">有試用、定價或退款嗎？</h3>
+              <h3 class="text-lg font-semibold" data-i18n="faq.q10">可以用在商業專案嗎？</h3>
               <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
             </summary>
-            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a10">這份檢出沒有定價頁、試用方案或退款條款。許可來自 MIT 授權：可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。</p>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a10">可以。MIT 授權允許你使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。</p>
           </details>
         </article>
       </div>
@@ -763,12 +768,12 @@ pnpm build</code></pre>
     <section id="final" class="reveal mx-auto max-w-6xl px-4 py-20">
       <div class="card p-6 md:p-8">
         <h2 class="measure font-serif text-3xl md:text-4xl" data-i18n="risk.title">許可寫在 MIT 授權裡</h2>
-        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="risk.body">本倉庫沒有定價、試用或退款頁。LICENSE.md 是 MIT，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。</p>
+        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="risk.body">Magic UI 以 MIT 授權釋出，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。</p>
         <h2 class="measure mt-8 font-serif text-4xl md:text-5xl">
           <span class="block" data-i18n="hero.line1">給設計工程師的</span>
           <span class="mt-2 block italic text-[#ffbd7a]" data-i18n="hero.line2">介面元件庫</span>
         </h2>
-        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。</p>
+        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼以 MIT 授權釋出。</p>
         <div class="mt-6">
           <a class="btn btn-primary text-base" href="https://magicui.design/docs/installation">
             <span data-i18n="hero.cta">開啟安裝說明</span>
@@ -777,7 +782,7 @@ pnpm build</code></pre>
         </div>
         <p class="mt-4 text-sm text-[#cbbba8]">
           <a class="press font-semibold text-[#ffbd7a]" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
-          <span data-i18n="hero.proofRest"> · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目</span>
+          <span data-i18n="hero.proofRest"> · 75 個 registry:ui 元件</span>
         </p>
       </div>
     </section>
@@ -798,7 +803,7 @@ pnpm build</code></pre>
       <li><a class="press" href="https://discord.com/invite/87p2vpsat5" data-i18n="footer.discord">Discord</a></li>
       <li><a class="press" href="https://twitter.com/magicuidesign" data-i18n="footer.twitter">Twitter</a></li>
     </ul>
-    <p class="mt-6 max-w-[680px] text-sm text-[#cbbba8]" data-i18n="footer.credit">本頁圖片是 magicuidesign/magicui 倉庫素材的本機複本，包含應用程式圖示、Pixel Image 示範圖，以及 showcase 截圖。上游授權為 MIT。</p>
+    <p class="mt-6 max-w-[680px] text-sm text-[#cbbba8]" data-i18n="footer.credit">本頁的截圖與影像素材複製自 magicuidesign/magicui 倉庫（MIT）。</p>
     <a class="btn btn-ghost mt-6 text-sm" href="#top">
       <i data-lucide="arrow-up" aria-hidden="true" class="h-4 w-4"></i>
       <span data-i18n="footer.top">回到頂端</span>
@@ -819,7 +824,6 @@ pnpm build</code></pre>
         "meta.title": "Magic UI, the UI library for design engineers",
         "skip": "Skip to content",
         "nav.primary": "Primary",
-        "nav.version": "package version 0.1.0",
         "nav.lang": "Language",
         "nav.overview": "Overview",
         "nav.benefits": "Benefits",
@@ -832,86 +836,86 @@ pnpm build</code></pre>
         "hero.kicker": "Design engineers",
         "hero.line1": "The UI library",
         "hero.line2": "for design engineers",
-        "hero.sub": "Animated React components for people who design and build. Add them to a Tailwind project through the shadcn registry. The source in this repository is under the MIT license.",
+        "hero.sub": "Animated React components for people who design and build. Add them to a Tailwind project through the shadcn registry. The source is MIT licensed.",
         "hero.cta": "Open the installation guide",
         "hero.mit": "MIT license",
-        "hero.proofRest": " · package version 0.1.0 · 75 registry:ui items in registry.json",
-        "hero.visualAlt": "Pixel Image component demo",
+        "hero.proofRest": " · 75 registry:ui components",
+        "hero.visualAlt": "Animated preview of Magic UI's bento grid: file cards, a command search box, a world map and a calendar",
         "benefits.kicker": "Outcomes",
         "benefits.title": "Motion you can install and edit",
-        "benefits.intro": "Magic UI is the UI library for design engineers in this repository. The components are for React and Next.js projects that use Tailwind CSS, and they are added through the shadcn registry.",
+        "benefits.intro": "Magic UI is a UI library for design engineers. The components are for React and Next.js projects that use Tailwind CSS, and you add them through the shadcn registry.",
         "benefits.b1.title": "Named motion from the registry",
-        "benefits.b1.body": "Marquee is described as infinite scrolling for text, images, or videos. Blur Fade fades content in and out. Border Beam runs a light along a container border. Shimmer Button draws a light around the button edge. Those lines are the registry.json descriptions.",
+        "benefits.b1.body": "Marquee scrolls text, images, or videos without end. Blur Fade fades content in and out. Border Beam runs a light along a container's border. Shimmer Button draws a light around the button edge.",
         "benefits.b2.title": "One command copies the source into your app",
-        "benefits.b2.body": "Initialize shadcn, then add a slug from @magicui. registry.json sets the file target under components/magicui. The skill shows an import from @/components/ui and tells you to adapt the path when your alias differs.",
+        "benefits.b2.body": "Initialize shadcn once, then add any @magicui slug. The source lands in components/magicui, so you own it and can edit it. If your import alias differs from @/components/ui, adapt the path.",
         "benefits.b3.title": "Docs for install, components, and MCP",
-        "benefits.b3.body": "The README points to magicui.design/docs. The skill also lists the components page, the installation page, and an MCP setup page for AI IDE workflows.",
+        "benefits.b3.body": "The documentation at magicui.design/docs covers installation, every component, and MCP setup for AI IDE workflows.",
         "benefits.b4.title": "The contributing guide names the steps",
-        "benefits.b4.body": "The contributing guide says a new component or effect takes 5 files, then the artifacts from pnpm build:registry, and it calls that about 10 minutes. The README says adding your own takes about 5 minutes.",
-        "filter.title": "Registry slugs in this checkout",
+        "benefits.b4.body": "Adding a component or effect takes about 5 files plus the artifacts from pnpm build:registry. Expect roughly 5 to 10 minutes.",
+        "filter.title": "Component slugs",
         "filter.label": "Filter by slug",
-        "filter.empty": "No slug matches that text. Clear the filter to see every registry:ui name from this checkout.",
+        "filter.empty": "No slug matches that text. Clear the filter to see every component.",
         "filter.clear": "Clear filter",
         "filter.showing": "Showing {n} of 75 slugs",
         "filter.needsjs": "Filtering needs JavaScript. The list below stays readable.",
         "how.kicker": "How it works",
         "how.title": "Add a component in three steps",
         "how.s1.title": "Initialize shadcn",
-        "how.s1.body": "The skill expects a React or Next.js project that uses Tailwind CSS. Run init once in that project.",
+        "how.s1.body": "Magic UI expects a React or Next.js project that uses Tailwind CSS. Run init once in that project.",
         "how.s2.title": "Add the component slug",
-        "how.s2.body": "Use the registry add command with @magicui and the slug. The skill example command uses magic-card. Globe lists cobe and motion under dependencies in registry.json. Marquee keeps its keyframes in that same file.",
+        "how.s2.body": "Use the registry add command with @magicui and the slug, for example magic-card. Some components list their own dependencies, such as Globe with cobe and motion, and bring their keyframes with them.",
         "how.s3.title": "Integrate the section and check it",
         "how.s3.body": "Keep the component API. Prefer props and className over a rewrite of the generated internals. Before you finish, check keyboard access, overflow on a narrow screen, and whether too many high motion effects share one viewport.",
-        "install.lead": "Commands below are taken from the repository skill and from CONTRIBUTING.md.",
+        "install.lead": "Commands for adding components and for contributing to the project.",
         "install.tabs": "Install commands",
         "tab.add": "Add a component",
-        "tab.run": "Run this repo",
+        "tab.run": "Run it locally",
         "tab.check": "Run checks",
-        "tab.hint.add": "For people adding components. Taken from the Magic UI skill.",
-        "tab.hint.run": "For contributors. Steps from CONTRIBUTING.md. Replace YOUR_USERNAME in the URL with your GitHub username. .nvmrc in this checkout is 22. package.json asks for Node 22.14.0 or newer and pnpm 9 or newer, and packageManager is pnpm@9.15.0.",
-        "tab.hint.check": "Local checks the contributing guide lists before a pull request. package.json defines check as lint, typecheck, format:check, and registry-deps:check.",
+        "tab.hint.add": "For people adding components to their own project.",
+        "tab.hint.run": "For contributors. Replace YOUR_USERNAME in the URL with your GitHub username. Requires Node 22.14.0 or newer and pnpm 9 or newer.",
+        "tab.hint.check": "Local checks to run before you open a pull request: lint, typecheck, format check, and a registry dependency check.",
         "copy.button": "Copy commands",
         "copy.ok": "Commands copied to the clipboard.",
         "copy.err": "Copy failed. Select the commands and copy them manually.",
         "proof.kicker": "Showcase",
-        "proof.title": "Screenshots stored in this repository",
-        "proof.intro": "The files live in apps/www/public/showcase. This page uses the copies in assets beside it. This checkout has no showcase MDX, so the captions keep the file names and do not describe what is inside the frame.",
-        "proof.alt.aryankarma": "Screenshot of work that uses Magic UI components: aryankarma",
-        "proof.alt.d1rshan": "Screenshot of work that uses Magic UI components: d1rshan",
-        "proof.alt.miles": "Screenshot of work that uses Magic UI components: miles",
-        "proof.alt.overlay": "Screenshot of work that uses Magic UI components: overlay-ui",
-        "proof.alt.pulpsense": "Screenshot of work that uses Magic UI components: pulpsense",
-        "proof.alt.robot": "Screenshot of work that uses Magic UI components: robot-toast",
-        "proof.cap.aryankarma": "Screenshot of work that uses Magic UI components: aryankarma",
-        "proof.cap.d1rshan": "Screenshot of work that uses Magic UI components: d1rshan",
-        "proof.cap.miles": "Screenshot of work that uses Magic UI components: miles",
-        "proof.cap.overlay": "Screenshot of work that uses Magic UI components: overlay-ui",
-        "proof.cap.pulpsense": "Screenshot of work that uses Magic UI components: pulpsense",
-        "proof.cap.robot": "Screenshot of work that uses Magic UI components: robot-toast",
+        "proof.title": "Sites built with Magic UI",
+        "proof.intro": "A selection from the Magic UI showcase.",
+        "proof.alt.aryankarma": "aryankarma.com personal site: “Hi, I'm Aryan.” with an About section and a GitHub activity grid",
+        "proof.alt.d1rshan": "Dark terminal-style personal site with a Projects list over a pixel grid",
+        "proof.alt.miles": "Miles personal blog home page with a large handwritten-style name heading on a pale blue gradient",
+        "proof.alt.overlay": "Overlay UI landing page: “Broadcast overlays, beautifully connected” with a live sports stream preview",
+        "proof.alt.pulpsense": "PulpSense landing page: “Grow your business, not your payroll” on a purple gradient with partner logos",
+        "proof.alt.robot": "Robot toast landing page: “Notifications, with character.” beside a robot mascot, with Try a toast and Try in playground buttons",
+        "proof.cap.aryankarma": "aryankarma.com: personal portfolio",
+        "proof.cap.d1rshan": "d1rshan: terminal-style personal site",
+        "proof.cap.miles": "Miles: personal blog",
+        "proof.cap.overlay": "Overlay UI: broadcast overlays",
+        "proof.cap.pulpsense": "PulpSense: payroll services site",
+        "proof.cap.robot": "Robot toast: toast notification library",
         "faq.kicker": "Questions",
         "faq.title": "Before you install",
         "faq.q1": "What is Magic UI?",
-        "faq.a1": "The README calls Magic UI a UI library for design engineers. registry.json sets the homepage to https://magicui.design. The repository skill describes the components for React and Next.js projects that use Tailwind CSS.",
+        "faq.a1": "Magic UI is a UI library for design engineers. It offers components for React and Next.js projects that use Tailwind CSS. The home page is https://magicui.design.",
         "faq.q2": "How do I add a component?",
-        "faq.a2": "The skill says to run npx shadcn@latest init once, then npx shadcn@latest add @magicui/ plus the slug. The example is @magicui/magic-card. The skill import path is @/components/ui, and the registry.json file target is components/magicui. Change the import if your alias differs.",
+        "faq.a2": "Run npx shadcn@latest init once, then npx shadcn@latest add @magicui/ plus the slug, for example @magicui/magic-card. The source is copied to components/magicui. Change the import path if your alias differs from @/components/ui.",
         "faq.q3": "Which license applies?",
-        "faq.a3": "LICENSE.md is the MIT license, and the copyright holder is Magic UI. The README links to that file. Copies must keep the copyright notice and the permission notice.",
-        "faq.q4": "How do I run this repository locally?",
-        "faq.a4": "The contributing guide says to fork, clone your fork, run pnpm i, write .env.local with NEXT_PUBLIC_APP_URL=http://localhost:3000, then run pnpm dev. .nvmrc in this checkout contains 22. package.json engines require Node 22.14.0 or newer and pnpm 9 or newer, and packageManager is pnpm@9.15.0.",
+        "faq.a3": "Magic UI is released under the MIT license, copyright Magic UI. Copies must keep the copyright notice and the permission notice.",
+        "faq.q4": "How do I run the project locally?",
+        "faq.a4": "Fork the repository, clone your fork, run pnpm i, write .env.local with NEXT_PUBLIC_APP_URL=http://localhost:3000, then run pnpm dev. You need Node 22.14.0 or newer and pnpm 9 or newer.",
         "faq.q5": "What do the project scripts check?",
-        "faq.a5": "package.json defines check as lint, typecheck, format:check, and registry-deps:check. The contributing guide also says to run pnpm build:registry when registry files or config/site.ts change, and to run pnpm build because CI runs that too. Commit messages use Conventional Commits through commitlint. lefthook installs the git hooks.",
+        "faq.a5": "The check script runs lint, typecheck, format check, and a registry dependency check. Run pnpm build:registry when registry files or config/site.ts change, and run pnpm build because CI runs it too. Commit messages follow Conventional Commits.",
         "faq.q6": "Where is the documentation?",
-        "faq.a6": "The README says to visit https://magicui.design/docs. The skill also links https://magicui.design/docs/components, https://magicui.design/docs/installation, and https://magicui.design/docs/mcp.",
+        "faq.a6": "Visit https://magicui.design/docs. Component pages are at https://magicui.design/docs/components, installation is at https://magicui.design/docs/installation, and MCP setup is at https://magicui.design/docs/mcp.",
         "faq.q7": "Where can I ask for help?",
-        "faq.a7": "The README links Discord at http://magicui.design/discord and the invite https://discord.com/invite/87p2vpsat5, plus Twitter at https://twitter.com/magicuidesign. The contributing guide says to open a GitHub issue, and it points at the example pull request https://github.com/magicuidesign/magicui/pull/780.",
-        "faq.q8": "Does version 0.1.0 mean I install a package by that name?",
-        "faq.a8": "The root package.json name is magicui, version is 0.1.0, and private is true. This page does not document an install command that uses that package name. The consumer command in the skill is the shadcn registry add command.",
+        "faq.a7": "Join Discord at http://magicui.design/discord (invite https://discord.com/invite/87p2vpsat5) or follow https://twitter.com/magicuidesign. For bugs and proposals, open a GitHub issue. Pull request https://github.com/magicuidesign/magicui/pull/780 is the example to follow.",
+        "faq.q8": "Does it work with Next.js?",
+        "faq.a8": "Yes. The components are written for React and Next.js projects that use Tailwind CSS. Run shadcn init in your project first, then add the components you need.",
         "faq.q9": "What if a component does not import or render?",
-        "faq.a9": "The skill says to run shadcn init if components.json or registry init fails, to match the project import alias, to add global CSS keyframes when the docs ask for them, and to install dependencies listed for that component. Globe, for example, lists cobe and motion in registry.json. Marquee stores keyframes in registry.json.",
-        "faq.q10": "Is there a trial, a price, or a refund?",
-        "faq.a10": "This checkout has no pricing page, trial, or refund terms. Permission comes from the MIT license: you may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if you keep the copyright notice and the permission notice.",
+        "faq.a9": "Run shadcn init if components.json or the registry init fails, match your project's import alias, add the global CSS keyframes when the docs ask for them, and install the dependencies listed for that component. Globe, for example, needs cobe and motion.",
+        "faq.q10": "Can I use it in commercial projects?",
+        "faq.a10": "Yes. The MIT license lets you use, copy, modify, merge, publish, distribute, sublicense, and sell copies if you keep the copyright notice and the permission notice.",
         "risk.title": "Permission is the MIT license",
-        "risk.body": "This repository has no pricing page, trial, or refund terms. LICENSE.md is the MIT license, copyright Magic UI. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if the copyright notice and the permission notice stay with those copies.",
+        "risk.body": "Magic UI is released under the MIT license, copyright Magic UI. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if the copyright notice and the permission notice stay with those copies.",
         "footer.license": "Licensed under the MIT license.",
         "footer.copy": "Copyright Magic UI.",
         "footer.repo": "Repository",
@@ -921,7 +925,7 @@ pnpm build</code></pre>
         "footer.contributing": "Contributing guide",
         "footer.discord": "Discord",
         "footer.twitter": "Twitter",
-        "footer.credit": "Images on this page are local copies of assets from the magicuidesign/magicui repository: the app icon, the Pixel Image demo, and the showcase screenshots. The upstream license is MIT.",
+        "footer.credit": "Screenshots and media on this page are copies from the magicuidesign/magicui repository (MIT).",
         "footer.top": "Back to top",
         "img.err": "Image failed to load. Check this file next to the page:"
       },
@@ -929,7 +933,6 @@ pnpm build</code></pre>
         "meta.title": "Magic UI，給設計工程師的介面元件庫",
         "skip": "跳至主要內容",
         "nav.primary": "主要",
-        "nav.version": "套件版本 0.1.0",
         "nav.lang": "語言",
         "nav.overview": "概覽",
         "nav.benefits": "結果",
@@ -942,86 +945,86 @@ pnpm build</code></pre>
         "hero.kicker": "設計工程師",
         "hero.line1": "給設計工程師的",
         "hero.line2": "介面元件庫",
-        "hero.sub": "給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。",
+        "hero.sub": "給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼以 MIT 授權釋出。",
         "hero.cta": "開啟安裝說明",
         "hero.mit": "MIT 授權",
-        "hero.proofRest": " · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目",
-        "hero.visualAlt": "Pixel Image 元件示範圖",
+        "hero.proofRest": " · 75 個 registry:ui 元件",
+        "hero.visualAlt": "Magic UI Bento Grid 動態預覽：檔案卡片、指令搜尋框、世界地圖與月曆",
         "benefits.kicker": "結果",
         "benefits.title": "裝得進專案、也改得了的動效",
-        "benefits.intro": "Magic UI 是這個倉庫裡給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。",
+        "benefits.intro": "Magic UI 是給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。",
         "benefits.b1.title": "登錄檔裡已有名字的動效",
-        "benefits.b1.body": "Marquee 的說明是無限捲動，用來顯示文字、圖片或影片。Blur Fade 用來淡入淡出內容。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。以上都是 registry.json 的描述。",
+        "benefits.b1.body": "Marquee 讓文字、圖片或影片無限捲動。Blur Fade 讓內容淡入淡出。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。",
         "benefits.b2.title": "一條指令把原始碼加進專案",
-        "benefits.b2.body": "先初始化 shadcn，再用 add 指令指定 @magicui 的 slug。registry.json 把檔案 target 設在 components/magicui。skill 示範的 import 來自 @/components/ui，並說明 alias 不同時要自行調整。",
+        "benefits.b2.body": "先初始化一次 shadcn，再加入任一 @magicui slug。原始碼會放進 components/magicui，由你擁有、可自行修改。若你的 import alias 不是 @/components/ui，請自行調整路徑。",
         "benefits.b3.title": "文件涵蓋安裝、元件與 MCP",
-        "benefits.b3.body": "README 指向 magicui.design/docs。skill 另外列出元件文件、安裝頁，以及給 AI IDE 工作流程的 MCP 設定頁。",
+        "benefits.b3.body": "magicui.design/docs 的文件涵蓋安裝、每個元件，以及給 AI IDE 工作流程的 MCP 設定。",
         "benefits.b4.title": "貢獻步驟寫在指南裡",
-        "benefits.b4.body": "貢獻指南寫新增元件或效果要寫 5 個檔案，再提交 pnpm build:registry 產生的產物，並說大約 10 分鐘。README 則說加上你自己的元件大約 5 分鐘。",
-        "filter.title": "這份檢出的 registry slug",
+        "benefits.b4.body": "新增元件或效果大約要寫 5 個檔案，再加上 pnpm build:registry 產生的產物，大約花 5 到 10 分鐘。",
+        "filter.title": "元件 slug",
         "filter.label": "以 slug 篩選",
-        "filter.empty": "沒有符合的 slug。清除篩選可看到這份檢出的全部 registry:ui 名單。",
+        "filter.empty": "沒有符合的 slug。清除篩選可看到全部元件。",
         "filter.clear": "清除篩選",
         "filter.showing": "75 個 slug 中顯示 {n} 個",
         "filter.needsjs": "篩選需要 JavaScript。以下名單仍可閱讀。",
         "how.kicker": "使用方式",
         "how.title": "三個步驟加入元件",
         "how.s1.title": "初始化 shadcn",
-        "how.s1.body": "skill 要求專案是使用 Tailwind CSS 的 React 或 Next.js。在該專案執行一次 init。",
+        "how.s1.body": "Magic UI 需要使用 Tailwind CSS 的 React 或 Next.js 專案。在該專案執行一次 init。",
         "how.s2.title": "加上元件 slug",
-        "how.s2.body": "用 registry 的 add 指令加上 @magicui 與 slug。skill 的範例指令使用 magic-card。Globe 在 registry.json 列出依賴 cobe 與 motion。Marquee 的 keyframes 也在同一份檔案。",
+        "how.s2.body": "用 registry add 指令加上 @magicui 與 slug，例如 magic-card。部分元件會列出自己的相依套件，例如 Globe 需要 cobe 與 motion，並自帶 keyframes。",
         "how.s3.title": "接上區塊並做檢查",
         "how.s3.body": "保留元件 API，優先用 props 與 className，不要先改產生出來的內部實作。結束前檢查鍵盤操作、窄螢幕是否溢出，以及同一個視窗是否疊了太多高強度動效。",
-        "install.lead": "下面的指令摘自倉庫 skill 與 CONTRIBUTING.md。",
+        "install.lead": "加入元件與參與貢獻的指令。",
         "install.tabs": "安裝指令",
         "tab.add": "加入元件",
-        "tab.run": "跑這個倉庫",
+        "tab.run": "本機執行",
         "tab.check": "執行檢查",
-        "tab.hint.add": "給使用元件的人。來自 Magic UI skill。",
-        "tab.hint.run": "給貢獻者。步驟來自 CONTRIBUTING.md。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。這份檢出的 .nvmrc 是 22。package.json 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 為 pnpm@9.15.0。",
-        "tab.hint.check": "開 pull request 之前，貢獻指南列出的本機檢查。package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。",
+        "tab.hint.add": "給要把元件加進自己專案的人。",
+        "tab.hint.run": "給貢獻者。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。需要 Node 22.14.0 以上與 pnpm 9 以上。",
+        "tab.hint.check": "開 pull request 之前要跑的本機檢查：lint、型別檢查、格式檢查與 registry 相依檢查。",
         "copy.button": "複製指令",
         "copy.ok": "指令已複製到剪貼簿。",
         "copy.err": "複製失敗。請選取指令再手動複製。",
         "proof.kicker": "作品截圖",
-        "proof.title": "倉庫裡的作品截圖",
-        "proof.intro": "圖檔位於倉庫 apps/www/public/showcase，此頁使用旁邊 assets 裡的複本。這份檢出沒有 showcase 的 MDX，所以圖說只標檔名，不描述畫面裡的內容。",
-        "proof.alt.aryankarma": "使用 Magic UI 元件的作品截圖：aryankarma",
-        "proof.alt.d1rshan": "使用 Magic UI 元件的作品截圖：d1rshan",
-        "proof.alt.miles": "使用 Magic UI 元件的作品截圖：miles",
-        "proof.alt.overlay": "使用 Magic UI 元件的作品截圖：overlay-ui",
-        "proof.alt.pulpsense": "使用 Magic UI 元件的作品截圖：pulpsense",
-        "proof.alt.robot": "使用 Magic UI 元件的作品截圖：robot-toast",
-        "proof.cap.aryankarma": "使用 Magic UI 元件的作品截圖：aryankarma",
-        "proof.cap.d1rshan": "使用 Magic UI 元件的作品截圖：d1rshan",
-        "proof.cap.miles": "使用 Magic UI 元件的作品截圖：miles",
-        "proof.cap.overlay": "使用 Magic UI 元件的作品截圖：overlay-ui",
-        "proof.cap.pulpsense": "使用 Magic UI 元件的作品截圖：pulpsense",
-        "proof.cap.robot": "使用 Magic UI 元件的作品截圖：robot-toast",
+        "proof.title": "用 Magic UI 做出的網站",
+        "proof.intro": "Magic UI 作品展示中的精選。",
+        "proof.alt.aryankarma": "aryankarma.com 個人網站：「Hi, I'm Aryan.」、關於區塊與 GitHub 活動格",
+        "proof.alt.d1rshan": "深色終端機風格的個人網站，像素格背景上有專案清單",
+        "proof.alt.miles": "Miles 個人部落格首頁，淺藍漸層上有手寫風大字姓名標題",
+        "proof.alt.overlay": "Overlay UI 登陸頁：「Broadcast overlays, beautifully connected」與體育直播預覽",
+        "proof.alt.pulpsense": "PulpSense 登陸頁：紫色漸層上的「Grow your business, not your payroll」與合作夥伴標誌",
+        "proof.alt.robot": "Robot toast 登陸頁：「Notifications, with character.」旁有機器人吉祥物，並有 Try a toast 與 Try in playground 按鈕",
+        "proof.cap.aryankarma": "aryankarma.com：個人作品集",
+        "proof.cap.d1rshan": "d1rshan：終端機風格個人網站",
+        "proof.cap.miles": "Miles：個人部落格",
+        "proof.cap.overlay": "Overlay UI：直播疊加層",
+        "proof.cap.pulpsense": "PulpSense：薪資服務網站",
+        "proof.cap.robot": "Robot toast：toast 通知元件庫",
         "faq.kicker": "問題",
         "faq.title": "安裝之前",
         "faq.q1": "Magic UI 是什麼？",
-        "faq.a1": "README 稱 Magic UI 為給設計工程師的介面元件庫（UI library for design engineers）。registry.json 的 homepage 是 https://magicui.design。倉庫內的 skill 說明這些元件用在已採用 Tailwind CSS 的 React 或 Next.js 專案。",
+        "faq.a1": "Magic UI 是給設計工程師的介面元件庫，提供給使用 Tailwind CSS 的 React 與 Next.js 專案的元件。官方網站是 https://magicui.design。",
         "faq.q2": "如何加入一個元件？",
-        "faq.a2": "skill 寫的是先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上元件 slug。範例是 @magicui/magic-card。skill 的 import 路徑寫 @/components/ui，registry.json 的檔案 target 則是 components/magicui。若專案的 alias 不同，請改 import。",
+        "faq.a2": "先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上 slug，例如 @magicui/magic-card。原始碼會複製到 components/magicui。若你的 alias 不是 @/components/ui，請調整 import 路徑。",
         "faq.q3": "授權是什麼？",
-        "faq.a3": "LICENSE.md 是 MIT 授權，著作權人寫 Magic UI。README 連到該檔。散佈複本時必須保留著作權聲明與許可聲明。",
-        "faq.q4": "如何在本機跑這個倉庫？",
-        "faq.a4": "貢獻指南寫：fork、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。這份檢出的 .nvmrc 內容是 22。package.json 的 engines 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 是 pnpm@9.15.0。",
+        "faq.a3": "Magic UI 以 MIT 授權釋出，著作權人為 Magic UI。複本必須保留著作權聲明與許可聲明。",
+        "faq.q4": "如何在本機執行這個專案？",
+        "faq.a4": "Fork 倉庫、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。需要 Node 22.14.0 以上與 pnpm 9 以上。",
         "faq.q5": "專案腳本會檢查什麼？",
-        "faq.a5": "package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。貢獻指南另外要求：改了 registry 或 config/site.ts 要執行 pnpm build:registry，以及執行 pnpm build，因為 CI 也會跑建置。提交訊息走 Conventional Commits，由 commitlint 檢查。git hooks 由 lefthook 安裝。",
+        "faq.a5": "check 指令會跑 lint、型別檢查、格式檢查與 registry 相依檢查。registry 檔案或 config/site.ts 有變動時請執行 pnpm build:registry，也請執行 pnpm build，因為 CI 也會跑它。Commit 訊息遵循 Conventional Commits。",
         "faq.q6": "文件在哪裡？",
-        "faq.a6": "README 寫前往 https://magicui.design/docs。skill 另外列出 https://magicui.design/docs/components、https://magicui.design/docs/installation 與 https://magicui.design/docs/mcp。",
+        "faq.a6": "請看 https://magicui.design/docs。元件頁在 https://magicui.design/docs/components，安裝頁在 https://magicui.design/docs/installation，MCP 設定在 https://magicui.design/docs/mcp。",
         "faq.q7": "可以在哪裡提問？",
-        "faq.a7": "README 的 Discord 是 http://magicui.design/discord，邀請連結是 https://discord.com/invite/87p2vpsat5，Twitter 是 https://twitter.com/magicuidesign。貢獻指南說需要協助就開 GitHub issue，並指向範例 pull request：https://github.com/magicuidesign/magicui/pull/780。",
-        "faq.q8": "版本 0.1.0 是不是可以直接用套件名稱安裝？",
-        "faq.a8": "根目錄 package.json 的 name 是 magicui、version 是 0.1.0、private 是 true。這頁不把該版本寫成以套件名稱安裝的指令。skill 記載的使用者安裝方式是 shadcn registry 的 add 指令。",
+        "faq.a7": "可以加入 Discord：http://magicui.design/discord（邀請連結 https://discord.com/invite/87p2vpsat5），或追蹤 https://twitter.com/magicuidesign。回報問題或提出想法請開 GitHub issue。可參考的 pull request 範例是 https://github.com/magicuidesign/magicui/pull/780。",
+        "faq.q8": "可以搭配 Next.js 嗎？",
+        "faq.a8": "可以。元件是為使用 Tailwind CSS 的 React 與 Next.js 專案寫的。先在你的專案執行 shadcn init，再加入需要的元件。",
         "faq.q9": "元件無法 import 或沒有畫面時呢？",
-        "faq.a9": "skill 寫：若 components.json 或 registry 初始化失敗，先執行 shadcn init；alias 不符就改 import；文件若要求全域 CSS keyframes 就補上；並安裝該元件列出的依賴。例如 Globe 在 registry.json 列出 cobe 與 motion。Marquee 的 keyframes 寫在 registry.json。",
-        "faq.q10": "有試用、定價或退款嗎？",
-        "faq.a10": "這份檢出沒有定價頁、試用方案或退款條款。許可來自 MIT 授權：可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。",
+        "faq.a9": "如果 components.json 或 registry init 失敗，請先執行 shadcn init；對齊你專案的 import alias；文件要求時加入全域 CSS keyframes；並安裝該元件列出的相依套件。例如 Globe 需要 cobe 與 motion。",
+        "faq.q10": "可以用在商業專案嗎？",
+        "faq.a10": "可以。MIT 授權允許你使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。",
         "risk.title": "許可寫在 MIT 授權裡",
-        "risk.body": "本倉庫沒有定價、試用或退款頁。LICENSE.md 是 MIT，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。",
+        "risk.body": "Magic UI 以 MIT 授權釋出，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。",
         "footer.license": "本軟體以 MIT 授權釋出。",
         "footer.copy": "Copyright Magic UI.",
         "footer.repo": "倉庫",
@@ -1031,7 +1034,7 @@ pnpm build</code></pre>
         "footer.contributing": "貢獻指南",
         "footer.discord": "Discord",
         "footer.twitter": "Twitter",
-        "footer.credit": "本頁圖片是 magicuidesign/magicui 倉庫素材的本機複本，包含應用程式圖示、Pixel Image 示範圖，以及 showcase 截圖。上游授權為 MIT。",
+        "footer.credit": "本頁的截圖與影像素材複製自 magicuidesign/magicui 倉庫（MIT）。",
         "footer.top": "回到頂端",
         "img.err": "圖片載入失敗。請確認頁面旁的這個檔案："
       }
@@ -1299,6 +1302,18 @@ pnpm build</code></pre>
       document.getElementById("copy-status").textContent = "";
     }
 
+    function bindVideos() {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.querySelectorAll("video").forEach((v) => {
+        const frame = v.closest(".frame");
+        const ready = () => { if (frame) frame.classList.add("is-ready"); };
+        if (v.readyState >= 2) ready();
+        v.addEventListener("loadeddata", ready);
+        v.addEventListener("error", ready);
+        if (reduce) { v.removeAttribute("autoplay"); v.pause(); }
+      });
+    }
+
     function bindImages() {
       document.querySelectorAll("img").forEach((img) => {
         const markReady = () => {
@@ -1391,6 +1406,7 @@ pnpm build</code></pre>
       if (window.innerWidth >= 768) closeMenu();
     });
 
+    bindVideos();
     bindImages();
     applyLanguage(readLang());
     if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
