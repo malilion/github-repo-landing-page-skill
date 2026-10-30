@@ -18,6 +18,8 @@
 
 **再一個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/magicui/](https://malilion.github.io/github-repo-landing-page-skill/demo/magicui/),由 Grok CLI 搭配本 skill 為 [magicuidesign/magicui](https://github.com/magicuidesign/magicui)(MIT)產生。
 
+**對照示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/magicui-v2/](https://malilion.github.io/github-repo-landing-page-skill/demo/magicui-v2/),為同一個 repo([magicuidesign/magicui](https://github.com/magicuidesign/magicui),MIT)搭配本 skill 與 [ai-design-skills](https://github.com/elayadesign/ai-design-skills) 的 landing-page-design skill(MIT)產生,可與上方示範並排比較。
+
 **還有一個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/agenui/](https://malilion.github.io/github-repo-landing-page-skill/demo/agenui/),由 Grok CLI 搭配本 skill 為 [AGenUI/AGenUI](https://github.com/AGenUI/AGenUI)(Apache-2.0)產生。
 
 ## 特色
@@ -90,6 +92,7 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `demo/macro/index.html` | 第二個產生的示範頁(macro-inc/macro),以 GitHub Pages 提供 |
 | `demo/assistant-ui/index.html` | 另一個產生的示範頁(assistant-ui/assistant-ui),以 GitHub Pages 提供 |
 | `demo/magicui/index.html` | 再一個產生的示範頁(magicuidesign/magicui),以 GitHub Pages 提供 |
+| `demo/magicui-v2/` | magicuidesign/magicui 的對照示範(本 skill + ai-design-skills),含自架 `assets/` 與記錄假設與衝突取捨的 `NOTES.md` |
 | `demo/agenui/index.html` | 還有一個產生的示範頁(AGenUI/AGenUI),以 GitHub Pages 提供 |
 
 入口頁為自動產生:要新增示範,只要在 `demo/<名稱>/index.html` 放入頁面並 push,Action 就會加入對應卡片。示範頁可選用的 `<meta>`:`portal-name`、`portal-order`、`upstream-repo`、`upstream-license`、`description:zh-TW`。縮圖可選:`portal/<名稱>.webp`。

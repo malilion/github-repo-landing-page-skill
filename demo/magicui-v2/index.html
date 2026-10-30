@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<!-- Structure and conversion copy follow elayadesign/ai-design-skills landing-page-design (MIT, https://github.com/elayadesign/ai-design-skills); fonts, colour, i18n and asset rules follow github-repo-landing-page-skill. -->
+<!-- Assumptions:
+- Primary action is one click to https://magicui.design/docs/installation (URL written in skills/magic-ui/SKILL.md). Audience is design engineers on React or Next.js with Tailwind CSS, as that skill and the README tagline state. Conversion is that click.
+- Traffic source is unknown. The offer is evergreen, so the page is indexable.
+- No testimonials, star counts, download totals, or customer quotes. Those numbers are not written in the local files. Showcase MDX is not in this checkout, so captions stay on file names.
+- "75 registry:ui items" is a count of top-level registry.json items whose type is registry:ui (magic-card through grid-beams). Demos are excluded. mode-toggle.tsx appears only inside a dock demo file list.
+- Root package.json is private version 0.1.0. This page does not invent an npm install command for the name magicui.
+- Risk reversal is the MIT license text. This checkout has no pricing, trial, or refund terms.
+- The filled button is only the installation guide. The repository is a text link.
+- Default language is Traditional Chinese. The choice is stored in localStorage as magicui-landing-lang.
+- Colour is taken from the repository icon: #9E7AFF, #FE8BBB, #FFBD7A, #F8EAC3 on a warm plum field #141016.
+- Showcase frames use a 16:10 box and object-fit contain. The brief said those files are about 1400px wide. Heights were not recorded. pixel-image-demo.webp is 1400 by 1400.
+- .nvmrc in this checkout contains 22. package.json engines ask for Node >= 22.14.0 and pnpm >= 9. packageManager is pnpm@9.15.0.
+- Time to contribute is quoted from both files: README says about 5 minutes, CONTRIBUTING.md says around 10 minutes and 5 files.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magic UI，給設計工程師的介面元件庫</title>
+  <meta name="description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
+  <meta name="description:zh-TW" content="Magic UI 是給設計工程師的介面元件庫。透過 shadcn registry 把 React 元件加進使用 Tailwind 的專案。本倉庫程式以 MIT 授權釋出。安裝說明在 magicui.design。">
+  <meta name="portal-name" content="Magic UI v2 (with ai-design-skills)">
+  <meta name="portal-order" content="2.5">
+  <meta name="upstream-repo" content="https://github.com/magicuidesign/magicui">
+  <meta name="upstream-license" content="MIT">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#141016">
+  <meta property="og:title" content="Magic UI, the UI library for design engineers">
+  <meta property="og:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/magicuidesign/magicui">
+  <meta property="og:image" content="https://cdn.magicui.design/bento-grid.gif">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Magic UI, the UI library for design engineers">
+  <meta name="twitter:description" content="Magic UI is a UI library for design engineers. Add React components to a Tailwind project from the shadcn registry. The code in this repository is under the MIT license. Installation notes are on magicui.design.">
+  <meta name="twitter:image" content="https://cdn.magicui.design/bento-grid.gif">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600;1,9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Fraunces', '"Noto Sans TC"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <script>
+    document.documentElement.classList.add("js");
+  </script>
+  <style>
+    :root {
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --bg: #141016;
+      --raised: #231c28;
+      --text: #f7f0e6;
+      --muted: #cbbba8;
+      --line: rgba(248, 234, 195, 0.16);
+      --amber: #ffbd7a;
+      --amber-deep: #1a120c;
+      --violet: #9e7aff;
+      --rose: #fe8bbb;
+      --cream: #f8eac3;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: "Plus Jakarta Sans", "Noto Sans TC", sans-serif;
+      background-image:
+        radial-gradient(880px 420px at 8% -8%, rgba(158, 122, 255, 0.28), transparent 62%),
+        radial-gradient(720px 380px at 100% 0%, rgba(254, 139, 187, 0.16), transparent 58%),
+        linear-gradient(rgba(248, 234, 195, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(248, 234, 195, 0.045) 1px, transparent 1px);
+      background-size: auto, auto, 64px 64px, 64px 64px;
+    }
+
+    h1, h2, h3 { text-wrap: balance; }
+    p, li, figcaption, summary { text-wrap: pretty; }
+    img { max-width: 100%; }
+    :focus-visible {
+      outline: 2px solid var(--violet);
+      outline-offset: 2px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 80;
+      transform: translateY(-200%);
+      background: var(--amber);
+      color: var(--amber-deep);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .skip:focus { transform: none; }
+
+    .measure { max-width: 680px; }
+
+    .bar {
+      background: rgba(20, 16, 22, 0.78);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .is-current { color: var(--amber-deep); background: var(--amber); }
+    [data-set-lang][aria-pressed="true"] {
+      background: var(--amber);
+      color: var(--amber-deep);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background-color 300ms var(--ease), color 300ms var(--ease), transform 500ms var(--ease), opacity 300ms var(--ease);
+    }
+    .btn-primary { background: var(--amber); color: var(--amber-deep); }
+    .btn-primary:hover { background: #ffd7a8; transform: scale(1.02); }
+    .btn-primary:active { transform: translateY(1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .btn-ghost:hover { background: #2c2433; }
+    .btn-ghost:active { transform: translateY(1px); }
+    button:disabled, .btn:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .press { transition: background-color 300ms var(--ease), color 300ms var(--ease), transform 500ms var(--ease); }
+    .press:hover { color: var(--amber); }
+    .press:active { transform: translateY(1px); }
+    .is-current.press:hover { color: var(--amber-deep); }
+
+    .card {
+      background: var(--raised);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+
+    .frame {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #1b1620;
+    }
+    .frame-square { aspect-ratio: 1 / 1; border-radius: 16px; }
+    .frame img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .skeleton {
+      position: absolute;
+      inset: 0;
+      background: #2c2433;
+      animation: skeleton-pulse 800ms var(--ease) infinite alternate;
+    }
+    .frame.is-ready .skeleton {
+      opacity: 0;
+      animation: none;
+      transition: opacity 300ms var(--ease);
+    }
+    @keyframes skeleton-pulse {
+      from { opacity: 0.45; }
+      to { opacity: 1; }
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--amber);
+      animation: pulse 1600ms var(--ease) infinite;
+    }
+    @keyframes pulse {
+      from { opacity: 1; }
+      to { opacity: 0.35; }
+    }
+
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+    }
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .tagline-line { display: block; }
+    .tagline-accent { margin-top: 12px; }
+    #tagline-text { text-wrap: balance; }
+    .tagline-word {
+      color: var(--text);
+      opacity: 0.3;
+      transition: opacity 500ms var(--ease);
+    }
+    .tagline-word.is-on { opacity: 1; }
+    .tagline-accent .tagline-word { color: var(--amber); }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .desktop-links { display: none; }
+    #menu-btn { display: inline-flex; }
+    input[type="search"] {
+      transition: background-color 300ms var(--ease), transform 500ms var(--ease);
+    }
+    input[type="search"]:hover { background: #1c1722; }
+    input[type="search"]:active { transform: translateY(1px); }
+    @media (max-width: 767px) {
+      a.btn.hidden { display: none; }
+    }
+    @media (min-width: 768px) {
+      .desktop-links { display: flex; align-items: center; gap: 8px; }
+      #menu-btn { display: none; }
+    }
+
+    .menu-lines {
+      position: relative;
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+    .menu-lines span {
+      position: absolute;
+      left: 0;
+      top: calc(50% - 1px);
+      width: 16px;
+      height: 2px;
+      background: currentColor;
+      transition: transform 500ms var(--ease), opacity 300ms var(--ease);
+    }
+    .menu-lines span:nth-child(1) { transform: translateY(-8px); }
+    .menu-lines span:nth-child(3) { transform: translateY(8px); }
+    .menu-lines.is-open span:nth-child(1) { transform: rotate(45deg); }
+    .menu-lines.is-open span:nth-child(2) { opacity: 0; }
+    .menu-lines.is-open span:nth-child(3) { transform: rotate(-45deg); }
+
+    #mobile-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(20, 16, 22, 0.94);
+      backdrop-filter: blur(24px);
+      padding: 96px 16px 32px;
+      overflow: auto;
+    }
+    #mobile-panel.is-open { display: block; }
+    #mobile-panel li {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+    }
+    #mobile-panel.is-shown li { opacity: 1; transform: none; }
+    #mobile-panel.is-shown li:nth-child(1) { transition-delay: 0ms; }
+    #mobile-panel.is-shown li:nth-child(2) { transition-delay: 60ms; }
+    #mobile-panel.is-shown li:nth-child(3) { transition-delay: 120ms; }
+    #mobile-panel.is-shown li:nth-child(4) { transition-delay: 180ms; }
+    #mobile-panel.is-shown li:nth-child(5) { transition-delay: 240ms; }
+    #mobile-panel.is-shown li:nth-child(6) { transition-delay: 300ms; }
+    #mobile-panel.is-shown li:nth-child(7) { transition-delay: 360ms; }
+
+    body.menu-lock { overflow: hidden; }
+
+    [role="tab"][aria-selected="true"] {
+      background: var(--amber);
+      color: var(--amber-deep);
+    }
+    pre {
+      overflow-x: auto;
+      max-width: 100%;
+      background: #141016;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .is-hidden { display: none !important; }
+    .img-error { color: var(--rose); margin-top: 8px; }
+    summary { list-style: none; cursor: pointer; }
+    summary::-webkit-details-marker { display: none; }
+    .chev { transition: transform 500ms var(--ease); }
+    details[open] .chev { transform: rotate(45deg); }
+    section[id], [data-spy] { scroll-margin-top: 96px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .js .reveal {
+        transform: none;
+        transition: opacity 300ms var(--ease);
+      }
+      .tagline-word,
+      .tagline-accent .tagline-word {
+        opacity: 1;
+        transition: none;
+      }
+      .pulse, .skeleton { animation: none; }
+      .menu-lines span { transition: opacity 300ms var(--ease); }
+      #mobile-panel li {
+        transform: none;
+        transition: opacity 300ms var(--ease);
+        transition-delay: 0ms !important;
+      }
+      .chev { transition: none; }
+    }
+  </style>
+  <script type="application/ld+json" id="faq-schema"></script>
+</head>
+<body class="font-sans antialiased">
+  <a class="skip press" href="#main" data-i18n="skip">跳至主要內容</a>
+
+  <header id="top">
+    <nav data-i18n-aria="nav.primary" aria-label="主要">
+      <div class="sticky top-4 z-40 px-4">
+        <div class="bar mx-auto flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-2 py-2">
+          <a href="#overview" class="press flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold">
+            <img src="./assets/icon.svg" width="32" height="32" alt="" decoding="async">
+            <span>Magic UI</span>
+          </a>
+          <span class="font-mono text-xs text-[#cbbba8]" data-i18n-aria="nav.version" aria-label="套件版本 0.1.0">v0.1.0</span>
+          <a class="press rounded-full px-3 py-2 text-xs font-semibold" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
+          <div class="desktop-links">
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold is-current" href="#overview" data-nav data-i18n="nav.overview" aria-current="true">概覽</a>
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold" href="#benefits" data-nav data-i18n="nav.benefits">結果</a>
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold" href="#how" data-nav data-i18n="nav.how">使用方式</a>
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold" href="#proof" data-nav data-i18n="nav.proof">作品截圖</a>
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold" href="#faq" data-nav data-i18n="nav.faq">常見問題</a>
+            <a class="press rounded-full px-3 py-2 text-sm font-semibold" href="https://github.com/magicuidesign/magicui" data-i18n="nav.repo">倉庫</a>
+          </div>
+          <div class="flex items-center gap-2" role="group" data-i18n-aria="nav.lang" aria-label="語言">
+            <button type="button" class="press rounded-full px-3 py-2 text-sm font-semibold" data-set-lang="zh" aria-pressed="true">繁體中文</button>
+            <button type="button" class="press rounded-full px-3 py-2 text-sm font-semibold" data-set-lang="en" aria-pressed="false">English</button>
+          </div>
+          <a class="btn btn-primary hidden text-sm md:inline-flex" href="https://magicui.design/docs/installation">
+            <span data-i18n="hero.cta">開啟安裝說明</span>
+            <i data-lucide="arrow-up-right" aria-hidden="true" class="h-4 w-4"></i>
+          </a>
+          <button type="button" id="menu-btn" class="press rounded-full p-2 md:hidden" aria-expanded="false" aria-controls="mobile-panel">
+            <span class="sr-only" id="menu-label" data-i18n="nav.menuOpen">開啟選單</span>
+            <span class="menu-lines" id="menu-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+          </button>
+        </div>
+      </div>
+      <div id="mobile-panel">
+        <ul class="mx-auto flex max-w-6xl flex-col gap-2">
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="#overview" data-nav data-i18n="nav.overview">概覽</a></li>
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="#benefits" data-nav data-i18n="nav.benefits">結果</a></li>
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="#how" data-nav data-i18n="nav.how">使用方式</a></li>
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="#proof" data-nav data-i18n="nav.proof">作品截圖</a></li>
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="#faq" data-nav data-i18n="nav.faq">常見問題</a></li>
+          <li><a class="press block rounded-lg px-3 py-2 text-lg font-semibold" href="https://github.com/magicuidesign/magicui" data-i18n="nav.repo">倉庫</a></li>
+          <li>
+            <a class="btn btn-primary text-base" href="https://magicui.design/docs/installation">
+              <span data-i18n="hero.cta">開啟安裝說明</span>
+              <i data-lucide="arrow-up-right" aria-hidden="true" class="h-4 w-4"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="overview" data-spy class="reveal mx-auto grid max-w-6xl items-center gap-8 px-4 pb-20 pt-12 md:grid-cols-2">
+      <div class="measure">
+        <p class="inline-flex items-center gap-2 rounded-full border border-[#f8eac3]/20 px-3 py-2 text-sm font-semibold">
+          <span class="pulse" aria-hidden="true"></span>
+          <span data-i18n="hero.kicker">設計工程師</span>
+        </p>
+        <h1 class="measure mt-6 font-serif text-4xl text-[#f7f0e6] md:text-6xl">
+          <span class="block" data-i18n="hero.line1">給設計工程師的</span>
+          <span class="mt-2 block italic text-[#ffbd7a]" data-i18n="hero.line2">介面元件庫</span>
+        </h1>
+        <p class="measure mt-6 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。</p>
+        <div class="mt-6">
+          <a class="btn btn-primary text-base" href="https://magicui.design/docs/installation">
+            <span data-i18n="hero.cta">開啟安裝說明</span>
+            <i data-lucide="arrow-up-right" aria-hidden="true" class="h-4 w-4"></i>
+          </a>
+        </div>
+        <p class="mt-4 text-sm text-[#cbbba8]">
+          <a class="press font-semibold text-[#ffbd7a]" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
+          <span data-i18n="hero.proofRest"> · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目</span>
+        </p>
+      </div>
+      <div class="card p-2">
+        <div class="frame frame-square">
+          <div class="skeleton" aria-hidden="true"></div>
+          <img src="./assets/pixel-image-demo.webp" width="1400" height="1400" alt="Pixel Image 元件示範圖" data-i18n-alt="hero.visualAlt" decoding="async" fetchpriority="high">
+        </div>
+      </div>
+    </section>
+
+    <section id="benefits" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
+      <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="benefits.kicker">結果</p>
+      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="benefits.title">裝得進專案、也改得了的動效</h2>
+      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="benefits.intro">Magic UI 是這個倉庫裡給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。</p>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <article class="card p-4">
+          <i data-lucide="sparkles" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b1.title">登錄檔裡已有名字的動效</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b1.body">Marquee 的說明是無限捲動，用來顯示文字、圖片或影片。Blur Fade 用來淡入淡出內容。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。以上都是 registry.json 的描述。</p>
+        </article>
+        <article class="card p-4">
+          <i data-lucide="package" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b2.title">一條指令把原始碼加進專案</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b2.body">先初始化 shadcn，再用 add 指令指定 @magicui 的 slug。registry.json 把檔案 target 設在 components/magicui。skill 示範的 import 來自 @/components/ui，並說明 alias 不同時要自行調整。</p>
+        </article>
+        <article class="card p-4">
+          <i data-lucide="book-open" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b3.title">文件涵蓋安裝、元件與 MCP</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b3.body">README 指向 magicui.design/docs。skill 另外列出元件文件、安裝頁，以及給 AI IDE 工作流程的 MCP 設定頁。</p>
+        </article>
+        <article class="card p-4">
+          <i data-lucide="git-pull-request" aria-hidden="true" class="h-4 w-4 text-[#ffbd7a]"></i>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="benefits.b4.title">貢獻步驟寫在指南裡</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="benefits.b4.body">貢獻指南寫新增元件或效果要寫 5 個檔案，再提交 pnpm build:registry 產生的產物，並說大約 10 分鐘。README 則說加上你自己的元件大約 5 分鐘。</p>
+        </article>
+      </div>
+
+      <div class="card mt-8 p-4">
+        <h3 class="text-2xl font-semibold" data-i18n="filter.title">這份檢出的 registry slug</h3>
+        <div class="mt-4 flex flex-wrap items-end gap-4">
+          <div class="min-w-0 flex-1">
+            <label class="block text-sm font-semibold" for="component-filter" data-i18n="filter.label">以 slug 篩選</label>
+            <input id="component-filter" class="mt-2 w-full rounded-lg border border-[#f8eac3]/20 bg-[#141016] px-3 py-2 text-base text-[#f7f0e6]" type="search" autocomplete="off" spellcheck="false">
+          </div>
+          <button type="button" id="filter-clear" class="btn btn-ghost text-sm" disabled data-i18n="filter.clear">清除篩選</button>
+        </div>
+        <p id="filter-count" class="mt-4 text-sm text-[#cbbba8]" aria-live="polite">75 個 slug 中顯示 75 個</p>
+        <div id="filter-empty" class="is-hidden mt-4 rounded-lg bg-[#141016] p-4">
+          <p data-i18n="filter.empty">沒有符合的 slug。清除篩選可看到這份檢出的全部 registry:ui 名單。</p>
+        </div>
+        <noscript>
+          <p class="mt-4 text-sm text-[#cbbba8]" data-i18n="filter.needsjs">篩選需要 JavaScript。以下名單仍可閱讀。</p>
+        </noscript>
+        <ul id="component-list" class="mt-4 flex flex-wrap gap-2">
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>magic-card</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>android</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>warp-background</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>line-shadow-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>aurora-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>morphing-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>scroll-progress</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>lens</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>pointer</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>smooth-cursor</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>progressive-blur</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>neon-gradient-card</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>meteors</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>grid-pattern</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>striped-pattern</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>interactive-grid-pattern</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>dot-pattern</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>flickering-grid</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>hero-video-dialog</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>code-comparison</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>script-copy-btn</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>marquee</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>glyph-matrix</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>globe</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>shimmer-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>tweet-card</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>client-tweet-card</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>bento-grid</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>particles</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>number-ticker</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>ripple</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>retro-grid</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-list</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-shiny-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-grid-pattern</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>border-beam</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-beam</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>text-reveal</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>hyper-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-gradient-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>orbiting-circles</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>dock</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>word-rotate</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>avatar-circles</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>typing-animation</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>sparkles-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>spinning-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>flip-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>comic-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>icon-cloud</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>text-animate</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>scroll-based-velocity</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>scratch-to-reveal</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>shiny-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>box-reveal</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>shine-border</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-circular-progress-bar</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>confetti</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-subscribe-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>cool-mode</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>pulsating-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>ripple-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>file-tree</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>blur-fade</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>safari</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>iphone-15-pro</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>rainbow-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>interactive-hover-button</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>terminal</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>video-text</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>pixel-image</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>highlighter</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>arc-timeline</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>animated-theme-toggler</code></li>
+          <li class="rounded-lg border border-[#f8eac3]/20 px-3 py-2 font-mono text-sm"><code>grid-beams</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="tagline" class="reveal mx-auto max-w-6xl px-4 py-20" aria-labelledby="tagline-text">
+      <p id="tagline-text" class="measure font-serif text-4xl md:text-5xl">
+        <span class="tagline-line">
+          <span class="tagline-word">把</span><span class="tagline-word">動效</span><span class="tagline-word">留在</span><span class="tagline-word">介面上。</span>
+        </span>
+        <span class="tagline-line tagline-accent">
+          <span class="tagline-word">把</span><span class="tagline-word">元件</span><span class="tagline-word">原始碼</span><span class="tagline-word">留在</span><span class="tagline-word">你的</span><span class="tagline-word">專案裡。</span>
+        </span>
+      </p>
+    </section>
+
+    <section id="how" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
+      <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="how.kicker">使用方式</p>
+      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="how.title">三個步驟加入元件</h2>
+      <ol class="mt-8 grid gap-6 md:grid-cols-3">
+        <li class="card p-4">
+          <p class="font-mono text-sm text-[#ffbd7a]">01</p>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="how.s1.title">初始化 shadcn</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s1.body">skill 要求專案是使用 Tailwind CSS 的 React 或 Next.js。在該專案執行一次 init。</p>
+        </li>
+        <li class="card p-4">
+          <p class="font-mono text-sm text-[#ffbd7a]">02</p>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="how.s2.title">加上元件 slug</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s2.body">用 registry 的 add 指令加上 @magicui 與 slug。skill 的範例指令使用 magic-card。Globe 在 registry.json 列出依賴 cobe 與 motion。Marquee 的 keyframes 也在同一份檔案。</p>
+        </li>
+        <li class="card p-4">
+          <p class="font-mono text-sm text-[#ffbd7a]">03</p>
+          <h3 class="mt-4 text-2xl font-semibold" data-i18n="how.s3.title">接上區塊並做檢查</h3>
+          <p class="mt-4 text-base text-[#cbbba8]" data-i18n="how.s3.body">保留元件 API，優先用 props 與 className，不要先改產生出來的內部實作。結束前檢查鍵盤操作、窄螢幕是否溢出，以及同一個視窗是否疊了太多高強度動效。</p>
+        </li>
+      </ol>
+
+      <aside class="card mt-8 p-4" aria-labelledby="install-title">
+        <h3 id="install-title" class="text-2xl font-semibold" data-i18n="install.lead">下面的指令摘自倉庫 skill 與 CONTRIBUTING.md。</h3>
+        <div class="mt-4 flex flex-wrap gap-2" role="tablist" data-i18n-aria="install.tabs" aria-label="安裝指令">
+          <button type="button" class="btn btn-ghost text-sm" id="tab-add" role="tab" aria-selected="true" aria-controls="panel-add" tabindex="0" data-i18n="tab.add">加入元件</button>
+          <button type="button" class="btn btn-ghost text-sm" id="tab-run" role="tab" aria-selected="false" aria-controls="panel-run" tabindex="-1" data-i18n="tab.run">跑這個倉庫</button>
+          <button type="button" class="btn btn-ghost text-sm" id="tab-check" role="tab" aria-selected="false" aria-controls="panel-check" tabindex="-1" data-i18n="tab.check">執行檢查</button>
+        </div>
+        <div id="panel-add" role="tabpanel" aria-labelledby="tab-add" class="mt-4">
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.add">給使用元件的人。來自 Magic UI skill。</p>
+          <pre class="mt-4 p-4 font-mono text-sm"><code>npx shadcn@latest init
+npx shadcn@latest add @magicui/magic-card</code></pre>
+        </div>
+        <div id="panel-run" role="tabpanel" aria-labelledby="tab-run" class="is-hidden mt-4">
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.run">給貢獻者。步驟來自 CONTRIBUTING.md。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。這份檢出的 .nvmrc 是 22。package.json 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 為 pnpm@9.15.0。</p>
+          <pre class="mt-4 p-4 font-mono text-sm"><code>git clone https://github.com/&lt;YOUR_USERNAME&gt;/magicui.git
+cd magicui
+pnpm i
+touch .env.local &amp;&amp; echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" &gt; .env.local
+pnpm dev</code></pre>
+        </div>
+        <div id="panel-check" role="tabpanel" aria-labelledby="tab-check" class="is-hidden mt-4">
+          <p class="text-base text-[#cbbba8]" data-i18n="tab.hint.check">開 pull request 之前，貢獻指南列出的本機檢查。package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。</p>
+          <pre class="mt-4 p-4 font-mono text-sm"><code>pnpm check
+pnpm build:registry
+pnpm build</code></pre>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center gap-4">
+          <button type="button" id="copy-btn" class="btn btn-primary text-base" data-i18n="copy.button">複製指令</button>
+          <p id="copy-status" class="text-sm text-[#cbbba8]" aria-live="polite"></p>
+        </div>
+      </aside>
+    </section>
+
+    <section id="proof" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
+      <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="proof.kicker">作品截圖</p>
+      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="proof.title">倉庫裡的作品截圖</h2>
+      <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="proof.intro">圖檔位於倉庫 apps/www/public/showcase，此頁使用旁邊 assets 裡的複本。這份檢出沒有 showcase 的 MDX，所以圖說只標檔名，不描述畫面裡的內容。</p>
+      <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-aryankarma.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：aryankarma" data-i18n-alt="proof.alt.aryankarma" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.aryankarma">使用 Magic UI 元件的作品截圖：aryankarma</figcaption>
+        </figure>
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-d1rshan.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：d1rshan" data-i18n-alt="proof.alt.d1rshan" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.d1rshan">使用 Magic UI 元件的作品截圖：d1rshan</figcaption>
+        </figure>
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-miles.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：miles" data-i18n-alt="proof.alt.miles" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.miles">使用 Magic UI 元件的作品截圖：miles</figcaption>
+        </figure>
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-overlay-ui.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：overlay-ui" data-i18n-alt="proof.alt.overlay" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.overlay">使用 Magic UI 元件的作品截圖：overlay-ui</figcaption>
+        </figure>
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-pulpsense.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：pulpsense" data-i18n-alt="proof.alt.pulpsense" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.pulpsense">使用 Magic UI 元件的作品截圖：pulpsense</figcaption>
+        </figure>
+        <figure class="card p-4">
+          <div class="frame">
+            <div class="skeleton" aria-hidden="true"></div>
+            <img src="./assets/showcase-robot-toast.webp" width="1400" height="875" alt="使用 Magic UI 元件的作品截圖：robot-toast" data-i18n-alt="proof.alt.robot" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="mt-4 text-sm" data-i18n="proof.cap.robot">使用 Magic UI 元件的作品截圖：robot-toast</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="faq" data-spy class="reveal mx-auto max-w-6xl px-4 py-20">
+      <p class="text-sm font-semibold text-[#ffbd7a]" data-i18n="faq.kicker">問題</p>
+      <h2 class="measure mt-4 font-serif text-4xl md:text-5xl" data-i18n="faq.title">安裝之前</h2>
+      <div class="mt-8 grid gap-4">
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q1">Magic UI 是什麼？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a1">README 稱 Magic UI 為給設計工程師的介面元件庫（UI library for design engineers）。registry.json 的 homepage 是 https://magicui.design。倉庫內的 skill 說明這些元件用在已採用 Tailwind CSS 的 React 或 Next.js 專案。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q2">如何加入一個元件？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a2">skill 寫的是先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上元件 slug。範例是 @magicui/magic-card。skill 的 import 路徑寫 @/components/ui，registry.json 的檔案 target 則是 components/magicui。若專案的 alias 不同，請改 import。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q3">授權是什麼？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a3">LICENSE.md 是 MIT 授權，著作權人寫 Magic UI。README 連到該檔。散佈複本時必須保留著作權聲明與許可聲明。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q4">如何在本機跑這個倉庫？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a4">貢獻指南寫：fork、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。這份檢出的 .nvmrc 內容是 22。package.json 的 engines 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 是 pnpm@9.15.0。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q5">專案腳本會檢查什麼？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a5">package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。貢獻指南另外要求：改了 registry 或 config/site.ts 要執行 pnpm build:registry，以及執行 pnpm build，因為 CI 也會跑建置。提交訊息走 Conventional Commits，由 commitlint 檢查。git hooks 由 lefthook 安裝。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q6">文件在哪裡？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a6">README 寫前往 https://magicui.design/docs。skill 另外列出 https://magicui.design/docs/components、https://magicui.design/docs/installation 與 https://magicui.design/docs/mcp。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q7">可以在哪裡提問？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a7">README 的 Discord 是 http://magicui.design/discord，邀請連結是 https://discord.com/invite/87p2vpsat5，Twitter 是 https://twitter.com/magicuidesign。貢獻指南說需要協助就開 GitHub issue，並指向範例 pull request：https://github.com/magicuidesign/magicui/pull/780。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q8">版本 0.1.0 是不是可以直接用套件名稱安裝？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a8">根目錄 package.json 的 name 是 magicui、version 是 0.1.0、private 是 true。這頁不把該版本寫成以套件名稱安裝的指令。skill 記載的使用者安裝方式是 shadcn registry 的 add 指令。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q9">元件無法 import 或沒有畫面時呢？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a9">skill 寫：若 components.json 或 registry 初始化失敗，先執行 shadcn init；alias 不符就改 import；文件若要求全域 CSS keyframes 就補上；並安裝該元件列出的依賴。例如 Globe 在 registry.json 列出 cobe 與 motion。Marquee 的 keyframes 寫在 registry.json。</p>
+          </details>
+        </article>
+        <article class="card">
+          <details class="p-4">
+            <summary class="flex items-center justify-between gap-4">
+              <h3 class="text-lg font-semibold" data-i18n="faq.q10">有試用、定價或退款嗎？</h3>
+              <i data-lucide="plus" aria-hidden="true" class="chev h-4 w-4 shrink-0"></i>
+            </summary>
+            <p class="mt-4 text-base text-[#cbbba8]" data-i18n="faq.a10">這份檢出沒有定價頁、試用方案或退款條款。許可來自 MIT 授權：可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。</p>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section id="final" class="reveal mx-auto max-w-6xl px-4 py-20">
+      <div class="card p-6 md:p-8">
+        <h2 class="measure font-serif text-3xl md:text-4xl" data-i18n="risk.title">許可寫在 MIT 授權裡</h2>
+        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="risk.body">本倉庫沒有定價、試用或退款頁。LICENSE.md 是 MIT，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。</p>
+        <h2 class="measure mt-8 font-serif text-4xl md:text-5xl">
+          <span class="block" data-i18n="hero.line1">給設計工程師的</span>
+          <span class="mt-2 block italic text-[#ffbd7a]" data-i18n="hero.line2">介面元件庫</span>
+        </h2>
+        <p class="measure mt-4 text-lg text-[#cbbba8]" data-i18n="hero.sub">給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。</p>
+        <div class="mt-6">
+          <a class="btn btn-primary text-base" href="https://magicui.design/docs/installation">
+            <span data-i18n="hero.cta">開啟安裝說明</span>
+            <i data-lucide="arrow-up-right" aria-hidden="true" class="h-4 w-4"></i>
+          </a>
+        </div>
+        <p class="mt-4 text-sm text-[#cbbba8]">
+          <a class="press font-semibold text-[#ffbd7a]" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="hero.mit">MIT 授權</a>
+          <span data-i18n="hero.proofRest"> · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mx-auto max-w-6xl px-4 py-16">
+    <p class="text-base">
+      <span data-i18n="footer.license">本軟體以 MIT 授權釋出。</span>
+      <a class="press ml-2 font-semibold text-[#ffbd7a]" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md">LICENSE.md</a>
+    </p>
+    <p class="mt-2 text-sm text-[#cbbba8]" data-i18n="footer.copy">Copyright Magic UI.</p>
+    <ul class="mt-6 flex flex-wrap gap-4 text-sm font-semibold">
+      <li><a class="press" href="https://github.com/magicuidesign/magicui" data-i18n="footer.repo">倉庫</a></li>
+      <li><a class="press" href="https://magicui.design/docs" data-i18n="footer.docs">文件</a></li>
+      <li><a class="press" href="https://magicui.design/docs/components" data-i18n="footer.components">元件文件</a></li>
+      <li><a class="press" href="https://magicui.design/docs/installation" data-i18n="footer.install">安裝說明</a></li>
+      <li><a class="press" href="https://github.com/magicuidesign/magicui/blob/main/CONTRIBUTING.md" data-i18n="footer.contributing">貢獻指南</a></li>
+      <li><a class="press" href="https://discord.com/invite/87p2vpsat5" data-i18n="footer.discord">Discord</a></li>
+      <li><a class="press" href="https://twitter.com/magicuidesign" data-i18n="footer.twitter">Twitter</a></li>
+    </ul>
+    <p class="mt-6 max-w-[680px] text-sm text-[#cbbba8]" data-i18n="footer.credit">本頁圖片是 magicuidesign/magicui 倉庫素材的本機複本，包含應用程式圖示、Pixel Image 示範圖，以及 showcase 截圖。上游授權為 MIT。</p>
+    <a class="btn btn-ghost mt-6 text-sm" href="#top">
+      <i data-lucide="arrow-up" aria-hidden="true" class="h-4 w-4"></i>
+      <span data-i18n="footer.top">回到頂端</span>
+    </a>
+  </footer>
+
+  <noscript>
+    <style>
+      .tagline-word { opacity: 1 !important; color: #f7f0e6 !important; }
+      .tagline-accent .tagline-word { color: #ffbd7a !important; }
+    </style>
+  </noscript>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" integrity="sha384-hJnF5AwidE18GSWTAGHv3ByzzvfNZ1Tcx5y1UUV3WkauuMCEzBJBMSwSt/PUPXnM" crossorigin="anonymous"></script>
+  <script>
+    const translations = {
+      en: {
+        "meta.title": "Magic UI, the UI library for design engineers",
+        "skip": "Skip to content",
+        "nav.primary": "Primary",
+        "nav.version": "package version 0.1.0",
+        "nav.lang": "Language",
+        "nav.overview": "Overview",
+        "nav.benefits": "Benefits",
+        "nav.how": "How it works",
+        "nav.proof": "Showcase",
+        "nav.faq": "Questions",
+        "nav.repo": "Repository",
+        "nav.menuOpen": "Open menu",
+        "nav.menuClose": "Close menu",
+        "hero.kicker": "Design engineers",
+        "hero.line1": "The UI library",
+        "hero.line2": "for design engineers",
+        "hero.sub": "Animated React components for people who design and build. Add them to a Tailwind project through the shadcn registry. The source in this repository is under the MIT license.",
+        "hero.cta": "Open the installation guide",
+        "hero.mit": "MIT license",
+        "hero.proofRest": " · package version 0.1.0 · 75 registry:ui items in registry.json",
+        "hero.visualAlt": "Pixel Image component demo",
+        "benefits.kicker": "Outcomes",
+        "benefits.title": "Motion you can install and edit",
+        "benefits.intro": "Magic UI is the UI library for design engineers in this repository. The components are for React and Next.js projects that use Tailwind CSS, and they are added through the shadcn registry.",
+        "benefits.b1.title": "Named motion from the registry",
+        "benefits.b1.body": "Marquee is described as infinite scrolling for text, images, or videos. Blur Fade fades content in and out. Border Beam runs a light along a container border. Shimmer Button draws a light around the button edge. Those lines are the registry.json descriptions.",
+        "benefits.b2.title": "One command copies the source into your app",
+        "benefits.b2.body": "Initialize shadcn, then add a slug from @magicui. registry.json sets the file target under components/magicui. The skill shows an import from @/components/ui and tells you to adapt the path when your alias differs.",
+        "benefits.b3.title": "Docs for install, components, and MCP",
+        "benefits.b3.body": "The README points to magicui.design/docs. The skill also lists the components page, the installation page, and an MCP setup page for AI IDE workflows.",
+        "benefits.b4.title": "The contributing guide names the steps",
+        "benefits.b4.body": "The contributing guide says a new component or effect takes 5 files, then the artifacts from pnpm build:registry, and it calls that about 10 minutes. The README says adding your own takes about 5 minutes.",
+        "filter.title": "Registry slugs in this checkout",
+        "filter.label": "Filter by slug",
+        "filter.empty": "No slug matches that text. Clear the filter to see every registry:ui name from this checkout.",
+        "filter.clear": "Clear filter",
+        "filter.showing": "Showing {n} of 75 slugs",
+        "filter.needsjs": "Filtering needs JavaScript. The list below stays readable.",
+        "how.kicker": "How it works",
+        "how.title": "Add a component in three steps",
+        "how.s1.title": "Initialize shadcn",
+        "how.s1.body": "The skill expects a React or Next.js project that uses Tailwind CSS. Run init once in that project.",
+        "how.s2.title": "Add the component slug",
+        "how.s2.body": "Use the registry add command with @magicui and the slug. The skill example command uses magic-card. Globe lists cobe and motion under dependencies in registry.json. Marquee keeps its keyframes in that same file.",
+        "how.s3.title": "Integrate the section and check it",
+        "how.s3.body": "Keep the component API. Prefer props and className over a rewrite of the generated internals. Before you finish, check keyboard access, overflow on a narrow screen, and whether too many high motion effects share one viewport.",
+        "install.lead": "Commands below are taken from the repository skill and from CONTRIBUTING.md.",
+        "install.tabs": "Install commands",
+        "tab.add": "Add a component",
+        "tab.run": "Run this repo",
+        "tab.check": "Run checks",
+        "tab.hint.add": "For people adding components. Taken from the Magic UI skill.",
+        "tab.hint.run": "For contributors. Steps from CONTRIBUTING.md. Replace YOUR_USERNAME in the URL with your GitHub username. .nvmrc in this checkout is 22. package.json asks for Node 22.14.0 or newer and pnpm 9 or newer, and packageManager is pnpm@9.15.0.",
+        "tab.hint.check": "Local checks the contributing guide lists before a pull request. package.json defines check as lint, typecheck, format:check, and registry-deps:check.",
+        "copy.button": "Copy commands",
+        "copy.ok": "Commands copied to the clipboard.",
+        "copy.err": "Copy failed. Select the commands and copy them manually.",
+        "proof.kicker": "Showcase",
+        "proof.title": "Screenshots stored in this repository",
+        "proof.intro": "The files live in apps/www/public/showcase. This page uses the copies in assets beside it. This checkout has no showcase MDX, so the captions keep the file names and do not describe what is inside the frame.",
+        "proof.alt.aryankarma": "Screenshot of work that uses Magic UI components: aryankarma",
+        "proof.alt.d1rshan": "Screenshot of work that uses Magic UI components: d1rshan",
+        "proof.alt.miles": "Screenshot of work that uses Magic UI components: miles",
+        "proof.alt.overlay": "Screenshot of work that uses Magic UI components: overlay-ui",
+        "proof.alt.pulpsense": "Screenshot of work that uses Magic UI components: pulpsense",
+        "proof.alt.robot": "Screenshot of work that uses Magic UI components: robot-toast",
+        "proof.cap.aryankarma": "Screenshot of work that uses Magic UI components: aryankarma",
+        "proof.cap.d1rshan": "Screenshot of work that uses Magic UI components: d1rshan",
+        "proof.cap.miles": "Screenshot of work that uses Magic UI components: miles",
+        "proof.cap.overlay": "Screenshot of work that uses Magic UI components: overlay-ui",
+        "proof.cap.pulpsense": "Screenshot of work that uses Magic UI components: pulpsense",
+        "proof.cap.robot": "Screenshot of work that uses Magic UI components: robot-toast",
+        "faq.kicker": "Questions",
+        "faq.title": "Before you install",
+        "faq.q1": "What is Magic UI?",
+        "faq.a1": "The README calls Magic UI a UI library for design engineers. registry.json sets the homepage to https://magicui.design. The repository skill describes the components for React and Next.js projects that use Tailwind CSS.",
+        "faq.q2": "How do I add a component?",
+        "faq.a2": "The skill says to run npx shadcn@latest init once, then npx shadcn@latest add @magicui/ plus the slug. The example is @magicui/magic-card. The skill import path is @/components/ui, and the registry.json file target is components/magicui. Change the import if your alias differs.",
+        "faq.q3": "Which license applies?",
+        "faq.a3": "LICENSE.md is the MIT license, and the copyright holder is Magic UI. The README links to that file. Copies must keep the copyright notice and the permission notice.",
+        "faq.q4": "How do I run this repository locally?",
+        "faq.a4": "The contributing guide says to fork, clone your fork, run pnpm i, write .env.local with NEXT_PUBLIC_APP_URL=http://localhost:3000, then run pnpm dev. .nvmrc in this checkout contains 22. package.json engines require Node 22.14.0 or newer and pnpm 9 or newer, and packageManager is pnpm@9.15.0.",
+        "faq.q5": "What do the project scripts check?",
+        "faq.a5": "package.json defines check as lint, typecheck, format:check, and registry-deps:check. The contributing guide also says to run pnpm build:registry when registry files or config/site.ts change, and to run pnpm build because CI runs that too. Commit messages use Conventional Commits through commitlint. lefthook installs the git hooks.",
+        "faq.q6": "Where is the documentation?",
+        "faq.a6": "The README says to visit https://magicui.design/docs. The skill also links https://magicui.design/docs/components, https://magicui.design/docs/installation, and https://magicui.design/docs/mcp.",
+        "faq.q7": "Where can I ask for help?",
+        "faq.a7": "The README links Discord at http://magicui.design/discord and the invite https://discord.com/invite/87p2vpsat5, plus Twitter at https://twitter.com/magicuidesign. The contributing guide says to open a GitHub issue, and it points at the example pull request https://github.com/magicuidesign/magicui/pull/780.",
+        "faq.q8": "Does version 0.1.0 mean I install a package by that name?",
+        "faq.a8": "The root package.json name is magicui, version is 0.1.0, and private is true. This page does not document an install command that uses that package name. The consumer command in the skill is the shadcn registry add command.",
+        "faq.q9": "What if a component does not import or render?",
+        "faq.a9": "The skill says to run shadcn init if components.json or registry init fails, to match the project import alias, to add global CSS keyframes when the docs ask for them, and to install dependencies listed for that component. Globe, for example, lists cobe and motion in registry.json. Marquee stores keyframes in registry.json.",
+        "faq.q10": "Is there a trial, a price, or a refund?",
+        "faq.a10": "This checkout has no pricing page, trial, or refund terms. Permission comes from the MIT license: you may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if you keep the copyright notice and the permission notice.",
+        "risk.title": "Permission is the MIT license",
+        "risk.body": "This repository has no pricing page, trial, or refund terms. LICENSE.md is the MIT license, copyright Magic UI. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if the copyright notice and the permission notice stay with those copies.",
+        "footer.license": "Licensed under the MIT license.",
+        "footer.copy": "Copyright Magic UI.",
+        "footer.repo": "Repository",
+        "footer.docs": "Documentation",
+        "footer.components": "Component docs",
+        "footer.install": "Installation guide",
+        "footer.contributing": "Contributing guide",
+        "footer.discord": "Discord",
+        "footer.twitter": "Twitter",
+        "footer.credit": "Images on this page are local copies of assets from the magicuidesign/magicui repository: the app icon, the Pixel Image demo, and the showcase screenshots. The upstream license is MIT.",
+        "footer.top": "Back to top",
+        "img.err": "Image failed to load. Check this file next to the page:"
+      },
+      zh: {
+        "meta.title": "Magic UI，給設計工程師的介面元件庫",
+        "skip": "跳至主要內容",
+        "nav.primary": "主要",
+        "nav.version": "套件版本 0.1.0",
+        "nav.lang": "語言",
+        "nav.overview": "概覽",
+        "nav.benefits": "結果",
+        "nav.how": "使用方式",
+        "nav.proof": "作品截圖",
+        "nav.faq": "常見問題",
+        "nav.repo": "倉庫",
+        "nav.menuOpen": "開啟選單",
+        "nav.menuClose": "關閉選單",
+        "hero.kicker": "設計工程師",
+        "hero.line1": "給設計工程師的",
+        "hero.line2": "介面元件庫",
+        "hero.sub": "給同時做設計與實作的人。把 React 動效元件，透過 shadcn registry 加進已使用 Tailwind 的專案。原始碼在這個倉庫，授權為 MIT。",
+        "hero.cta": "開啟安裝說明",
+        "hero.mit": "MIT 授權",
+        "hero.proofRest": " · 套件版本 0.1.0 · registry.json 有 75 個 registry:ui 項目",
+        "hero.visualAlt": "Pixel Image 元件示範圖",
+        "benefits.kicker": "結果",
+        "benefits.title": "裝得進專案、也改得了的動效",
+        "benefits.intro": "Magic UI 是這個倉庫裡給設計工程師的介面元件庫。元件給已使用 Tailwind CSS 的 React 與 Next.js 專案，並透過 shadcn registry 加入。",
+        "benefits.b1.title": "登錄檔裡已有名字的動效",
+        "benefits.b1.body": "Marquee 的說明是無限捲動，用來顯示文字、圖片或影片。Blur Fade 用來淡入淡出內容。Border Beam 讓一道光沿容器邊緣移動。Shimmer Button 讓光沿著按鈕周圍走。以上都是 registry.json 的描述。",
+        "benefits.b2.title": "一條指令把原始碼加進專案",
+        "benefits.b2.body": "先初始化 shadcn，再用 add 指令指定 @magicui 的 slug。registry.json 把檔案 target 設在 components/magicui。skill 示範的 import 來自 @/components/ui，並說明 alias 不同時要自行調整。",
+        "benefits.b3.title": "文件涵蓋安裝、元件與 MCP",
+        "benefits.b3.body": "README 指向 magicui.design/docs。skill 另外列出元件文件、安裝頁，以及給 AI IDE 工作流程的 MCP 設定頁。",
+        "benefits.b4.title": "貢獻步驟寫在指南裡",
+        "benefits.b4.body": "貢獻指南寫新增元件或效果要寫 5 個檔案，再提交 pnpm build:registry 產生的產物，並說大約 10 分鐘。README 則說加上你自己的元件大約 5 分鐘。",
+        "filter.title": "這份檢出的 registry slug",
+        "filter.label": "以 slug 篩選",
+        "filter.empty": "沒有符合的 slug。清除篩選可看到這份檢出的全部 registry:ui 名單。",
+        "filter.clear": "清除篩選",
+        "filter.showing": "75 個 slug 中顯示 {n} 個",
+        "filter.needsjs": "篩選需要 JavaScript。以下名單仍可閱讀。",
+        "how.kicker": "使用方式",
+        "how.title": "三個步驟加入元件",
+        "how.s1.title": "初始化 shadcn",
+        "how.s1.body": "skill 要求專案是使用 Tailwind CSS 的 React 或 Next.js。在該專案執行一次 init。",
+        "how.s2.title": "加上元件 slug",
+        "how.s2.body": "用 registry 的 add 指令加上 @magicui 與 slug。skill 的範例指令使用 magic-card。Globe 在 registry.json 列出依賴 cobe 與 motion。Marquee 的 keyframes 也在同一份檔案。",
+        "how.s3.title": "接上區塊並做檢查",
+        "how.s3.body": "保留元件 API，優先用 props 與 className，不要先改產生出來的內部實作。結束前檢查鍵盤操作、窄螢幕是否溢出，以及同一個視窗是否疊了太多高強度動效。",
+        "install.lead": "下面的指令摘自倉庫 skill 與 CONTRIBUTING.md。",
+        "install.tabs": "安裝指令",
+        "tab.add": "加入元件",
+        "tab.run": "跑這個倉庫",
+        "tab.check": "執行檢查",
+        "tab.hint.add": "給使用元件的人。來自 Magic UI skill。",
+        "tab.hint.run": "給貢獻者。步驟來自 CONTRIBUTING.md。請把網址裡的 YOUR_USERNAME 換成你的 GitHub 使用者名稱。這份檢出的 .nvmrc 是 22。package.json 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 為 pnpm@9.15.0。",
+        "tab.hint.check": "開 pull request 之前，貢獻指南列出的本機檢查。package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。",
+        "copy.button": "複製指令",
+        "copy.ok": "指令已複製到剪貼簿。",
+        "copy.err": "複製失敗。請選取指令再手動複製。",
+        "proof.kicker": "作品截圖",
+        "proof.title": "倉庫裡的作品截圖",
+        "proof.intro": "圖檔位於倉庫 apps/www/public/showcase，此頁使用旁邊 assets 裡的複本。這份檢出沒有 showcase 的 MDX，所以圖說只標檔名，不描述畫面裡的內容。",
+        "proof.alt.aryankarma": "使用 Magic UI 元件的作品截圖：aryankarma",
+        "proof.alt.d1rshan": "使用 Magic UI 元件的作品截圖：d1rshan",
+        "proof.alt.miles": "使用 Magic UI 元件的作品截圖：miles",
+        "proof.alt.overlay": "使用 Magic UI 元件的作品截圖：overlay-ui",
+        "proof.alt.pulpsense": "使用 Magic UI 元件的作品截圖：pulpsense",
+        "proof.alt.robot": "使用 Magic UI 元件的作品截圖：robot-toast",
+        "proof.cap.aryankarma": "使用 Magic UI 元件的作品截圖：aryankarma",
+        "proof.cap.d1rshan": "使用 Magic UI 元件的作品截圖：d1rshan",
+        "proof.cap.miles": "使用 Magic UI 元件的作品截圖：miles",
+        "proof.cap.overlay": "使用 Magic UI 元件的作品截圖：overlay-ui",
+        "proof.cap.pulpsense": "使用 Magic UI 元件的作品截圖：pulpsense",
+        "proof.cap.robot": "使用 Magic UI 元件的作品截圖：robot-toast",
+        "faq.kicker": "問題",
+        "faq.title": "安裝之前",
+        "faq.q1": "Magic UI 是什麼？",
+        "faq.a1": "README 稱 Magic UI 為給設計工程師的介面元件庫（UI library for design engineers）。registry.json 的 homepage 是 https://magicui.design。倉庫內的 skill 說明這些元件用在已採用 Tailwind CSS 的 React 或 Next.js 專案。",
+        "faq.q2": "如何加入一個元件？",
+        "faq.a2": "skill 寫的是先執行一次 npx shadcn@latest init，再執行 npx shadcn@latest add @magicui/ 加上元件 slug。範例是 @magicui/magic-card。skill 的 import 路徑寫 @/components/ui，registry.json 的檔案 target 則是 components/magicui。若專案的 alias 不同，請改 import。",
+        "faq.q3": "授權是什麼？",
+        "faq.a3": "LICENSE.md 是 MIT 授權，著作權人寫 Magic UI。README 連到該檔。散佈複本時必須保留著作權聲明與許可聲明。",
+        "faq.q4": "如何在本機跑這個倉庫？",
+        "faq.a4": "貢獻指南寫：fork、clone 你的 fork、執行 pnpm i、建立 .env.local 並寫入 NEXT_PUBLIC_APP_URL=http://localhost:3000，然後執行 pnpm dev。這份檢出的 .nvmrc 內容是 22。package.json 的 engines 要求 Node 大於等於 22.14.0、pnpm 大於等於 9，packageManager 是 pnpm@9.15.0。",
+        "faq.q5": "專案腳本會檢查什麼？",
+        "faq.a5": "package.json 把 check 定義為 lint、typecheck、format:check 與 registry-deps:check。貢獻指南另外要求：改了 registry 或 config/site.ts 要執行 pnpm build:registry，以及執行 pnpm build，因為 CI 也會跑建置。提交訊息走 Conventional Commits，由 commitlint 檢查。git hooks 由 lefthook 安裝。",
+        "faq.q6": "文件在哪裡？",
+        "faq.a6": "README 寫前往 https://magicui.design/docs。skill 另外列出 https://magicui.design/docs/components、https://magicui.design/docs/installation 與 https://magicui.design/docs/mcp。",
+        "faq.q7": "可以在哪裡提問？",
+        "faq.a7": "README 的 Discord 是 http://magicui.design/discord，邀請連結是 https://discord.com/invite/87p2vpsat5，Twitter 是 https://twitter.com/magicuidesign。貢獻指南說需要協助就開 GitHub issue，並指向範例 pull request：https://github.com/magicuidesign/magicui/pull/780。",
+        "faq.q8": "版本 0.1.0 是不是可以直接用套件名稱安裝？",
+        "faq.a8": "根目錄 package.json 的 name 是 magicui、version 是 0.1.0、private 是 true。這頁不把該版本寫成以套件名稱安裝的指令。skill 記載的使用者安裝方式是 shadcn registry 的 add 指令。",
+        "faq.q9": "元件無法 import 或沒有畫面時呢？",
+        "faq.a9": "skill 寫：若 components.json 或 registry 初始化失敗，先執行 shadcn init；alias 不符就改 import；文件若要求全域 CSS keyframes 就補上；並安裝該元件列出的依賴。例如 Globe 在 registry.json 列出 cobe 與 motion。Marquee 的 keyframes 寫在 registry.json。",
+        "faq.q10": "有試用、定價或退款嗎？",
+        "faq.a10": "這份檢出沒有定價頁、試用方案或退款條款。許可來自 MIT 授權：可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本，但必須保留著作權聲明與許可聲明。",
+        "risk.title": "許可寫在 MIT 授權裡",
+        "risk.body": "本倉庫沒有定價、試用或退款頁。LICENSE.md 是 MIT，著作權人為 Magic UI。在保留著作權聲明與許可聲明的前提下，可以使用、複製、修改、合併、公開發表、散佈、再授權與販售複本。",
+        "footer.license": "本軟體以 MIT 授權釋出。",
+        "footer.copy": "Copyright Magic UI.",
+        "footer.repo": "倉庫",
+        "footer.docs": "文件",
+        "footer.components": "元件文件",
+        "footer.install": "安裝說明",
+        "footer.contributing": "貢獻指南",
+        "footer.discord": "Discord",
+        "footer.twitter": "Twitter",
+        "footer.credit": "本頁圖片是 magicuidesign/magicui 倉庫素材的本機複本，包含應用程式圖示、Pixel Image 示範圖，以及 showcase 截圖。上游授權為 MIT。",
+        "footer.top": "回到頂端",
+        "img.err": "圖片載入失敗。請確認頁面旁的這個檔案："
+      }
+    };
+
+    const taglines = {
+      zh: [
+        ["把", "動效", "留在", "介面上。"],
+        ["把", "元件", "原始碼", "留在", "你的", "專案裡。"]
+      ],
+      en: [
+        ["Keep", "the", "motion", "in", "the", "interface."],
+        ["Keep", "the", "component", "source", "in", "your", "project."]
+      ]
+    };
+
+    const STORAGE_KEY = "magicui-landing-lang";
+    let currentLang = "zh";
+    let copyStatusKey = "";
+    let taglineGeneration = 0;
+    let taglineQueued = false;
+
+    function readLang() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved === "en" || saved === "zh") return saved;
+      } catch (err) {
+        return "zh";
+      }
+      return "zh";
+    }
+
+    function rememberLang(lang) {
+      try {
+        localStorage.setItem(STORAGE_KEY, lang);
+      } catch (err) {
+        /* keep the in-memory choice when storage is blocked */
+      }
+    }
+
+    function renderTagline(lang) {
+      taglineGeneration += 1;
+      taglineQueued = false;
+      const root = document.getElementById("tagline-text");
+      root.replaceChildren();
+      taglines[lang].forEach((words, lineIndex) => {
+        const line = document.createElement("span");
+        line.className = lineIndex === 1 ? "tagline-line tagline-accent" : "tagline-line";
+        words.forEach((word, wordIndex) => {
+          if (lang === "en" && wordIndex > 0) {
+            line.appendChild(document.createTextNode(" "));
+          }
+          const span = document.createElement("span");
+          span.className = "tagline-word";
+          span.textContent = word;
+          line.appendChild(span);
+        });
+        root.appendChild(line);
+      });
+      bindWordObserver();
+    }
+
+    let wordObserver = null;
+
+    function bindWordObserver() {
+      if (wordObserver) wordObserver.disconnect();
+      const words = [...document.querySelectorAll(".tagline-word")];
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        words.forEach((word) => word.classList.add("is-on"));
+        return;
+      }
+      wordObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.dataset.crossed = "1";
+          wordObserver.unobserve(entry.target);
+        });
+        pumpTagline();
+      }, {
+        root: null,
+        rootMargin: "0px 0px -28% 0px",
+        threshold: 0
+      });
+      words.forEach((word) => {
+        word.dataset.crossed = "0";
+        wordObserver.observe(word);
+      });
+    }
+
+    function pumpTagline() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll(".tagline-word").forEach((word) => word.classList.add("is-on"));
+        return;
+      }
+      if (taglineQueued) return;
+      const words = [...document.querySelectorAll(".tagline-word")];
+      for (const word of words) {
+        if (word.classList.contains("is-on")) continue;
+        if (word.dataset.crossed === "1") {
+          word.classList.add("is-on");
+          taglineQueued = true;
+          const generation = taglineGeneration;
+          window.setTimeout(() => {
+            if (generation !== taglineGeneration) return;
+            taglineQueued = false;
+            pumpTagline();
+          }, 80);
+        }
+        return;
+      }
+    }
+
+    function writeSchema(lang) {
+      const dict = translations[lang];
+      const mainEntity = [];
+      for (let i = 1; i <= 10; i += 1) {
+        mainEntity.push({
+          "@type": "Question",
+          name: dict["faq.q" + i],
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: dict["faq.a" + i]
+          }
+        });
+      }
+      document.getElementById("faq-schema").textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity
+      });
+    }
+
+    function updateFilter() {
+      const input = document.getElementById("component-filter");
+      const empty = document.getElementById("filter-empty");
+      const countEl = document.getElementById("filter-count");
+      const clearBtn = document.getElementById("filter-clear");
+      const query = input.value.trim().toLowerCase();
+      let shown = 0;
+      document.querySelectorAll("#component-list li").forEach((item) => {
+        const slug = item.textContent.trim().toLowerCase();
+        const match = slug.includes(query);
+        item.classList.toggle("is-hidden", !match);
+        if (match) shown += 1;
+      });
+      empty.classList.toggle("is-hidden", shown !== 0);
+      countEl.textContent = translations[currentLang]["filter.showing"].replace("{n}", String(shown));
+      clearBtn.disabled = query.length === 0;
+    }
+
+    function syncMenuLabel() {
+      const open = document.getElementById("menu-btn").getAttribute("aria-expanded") === "true";
+      const key = open ? "nav.menuClose" : "nav.menuOpen";
+      const label = document.getElementById("menu-label");
+      label.setAttribute("data-i18n", key);
+      label.textContent = translations[currentLang][key];
+    }
+
+    function refreshImageErrors() {
+      document.querySelectorAll("[data-img-error]").forEach((note) => {
+        note.textContent = translations[currentLang]["img.err"] + " " + note.getAttribute("data-img-error");
+      });
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang];
+      document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
+      document.title = dict["meta.title"];
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.textContent = dict[key];
+        }
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-alt");
+        if (Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("alt", dict[key]);
+        }
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-aria");
+        if (Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("aria-label", dict[key]);
+        }
+      });
+      document.querySelectorAll("[data-set-lang]").forEach((btn) => {
+        btn.setAttribute("aria-pressed", btn.getAttribute("data-set-lang") === lang ? "true" : "false");
+      });
+      renderTagline(lang);
+      writeSchema(lang);
+      updateFilter();
+      syncMenuLabel();
+      refreshImageErrors();
+      if (copyStatusKey) {
+        document.getElementById("copy-status").textContent = dict[copyStatusKey];
+      }
+      rememberLang(lang);
+      pumpTagline();
+    }
+
+    function setCurrent(id) {
+      document.querySelectorAll("[data-nav]").forEach((link) => {
+        const on = link.getAttribute("href") === "#" + id;
+        link.classList.toggle("is-current", on);
+        if (on) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    const sectionRatios = new Map();
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        sectionRatios.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+      });
+      let best = null;
+      let bestRatio = 0;
+      sectionRatios.forEach((ratio, el) => {
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          best = el;
+        }
+      });
+      if (best) setCurrent(best.id);
+    }, { rootMargin: "-20% 0px -35% 0px", threshold: [0.15, 0.35, 0.6] });
+
+    function openMenu() {
+      const panel = document.getElementById("mobile-panel");
+      const btn = document.getElementById("menu-btn");
+      panel.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+      document.getElementById("menu-lines").classList.add("is-open");
+      document.body.classList.add("menu-lock");
+      syncMenuLabel();
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => panel.classList.add("is-shown"));
+      });
+    }
+
+    function closeMenu() {
+      const panel = document.getElementById("mobile-panel");
+      const btn = document.getElementById("menu-btn");
+      if (btn.getAttribute("aria-expanded") !== "true") return;
+      panel.classList.remove("is-shown");
+      btn.setAttribute("aria-expanded", "false");
+      document.getElementById("menu-lines").classList.remove("is-open");
+      document.body.classList.remove("menu-lock");
+      syncMenuLabel();
+      const wait = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 500;
+      window.setTimeout(() => {
+        if (btn.getAttribute("aria-expanded") === "false") panel.classList.remove("is-open");
+      }, wait);
+    }
+
+    function selectTab(tab) {
+      document.querySelectorAll("[role='tab']").forEach((item) => {
+        const selected = item === tab;
+        item.setAttribute("aria-selected", selected ? "true" : "false");
+        item.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(item.getAttribute("aria-controls"));
+        panel.classList.toggle("is-hidden", !selected);
+      });
+      copyStatusKey = "";
+      document.getElementById("copy-status").textContent = "";
+    }
+
+    function bindImages() {
+      document.querySelectorAll("img").forEach((img) => {
+        const markReady = () => {
+          const frame = img.closest(".frame");
+          if (frame) frame.classList.add("is-ready");
+        };
+        if (img.complete && img.naturalWidth > 0) markReady();
+        img.addEventListener("load", markReady);
+        img.addEventListener("error", () => {
+          if (img.getAttribute("data-err") === "1") return;
+          img.setAttribute("data-err", "1");
+          const note = document.createElement("p");
+          note.className = "img-error text-sm";
+          const src = img.getAttribute("src") || "";
+          note.setAttribute("data-img-error", src);
+          note.textContent = translations[currentLang]["img.err"] + " " + src;
+          img.insertAdjacentElement("afterend", note);
+        });
+      });
+    }
+
+    document.querySelectorAll("[data-set-lang]").forEach((btn) => {
+      btn.addEventListener("click", () => applyLanguage(btn.getAttribute("data-set-lang")));
+    });
+
+    document.getElementById("menu-btn").addEventListener("click", () => {
+      if (document.getElementById("menu-btn").getAttribute("aria-expanded") === "true") closeMenu();
+      else openMenu();
+    });
+
+    document.querySelectorAll("#mobile-panel a").forEach((link) => {
+      link.addEventListener("click", () => closeMenu());
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+
+    const tabs = [...document.querySelectorAll("[role='tab']")];
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => selectTab(tab));
+      tab.addEventListener("keydown", (event) => {
+        let next = index;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        tabs[next].focus();
+        selectTab(tabs[next]);
+      });
+    });
+
+    document.getElementById("copy-btn").addEventListener("click", async () => {
+      const selected = document.querySelector("[role='tab'][aria-selected='true']");
+      const panel = document.getElementById(selected.getAttribute("aria-controls"));
+      const text = panel.querySelector("code").textContent;
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          throw new Error("clipboard unavailable");
+        }
+        await navigator.clipboard.writeText(text);
+        copyStatusKey = "copy.ok";
+      } catch (err) {
+        copyStatusKey = "copy.err";
+      }
+      document.getElementById("copy-status").textContent = translations[currentLang][copyStatusKey];
+    });
+
+    const filterInput = document.getElementById("component-filter");
+    filterInput.addEventListener("input", updateFilter);
+    document.getElementById("filter-clear").addEventListener("click", () => {
+      filterInput.value = "";
+      updateFilter();
+      filterInput.focus();
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.16 });
+    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+    document.querySelectorAll("[data-spy]").forEach((section) => sectionObserver.observe(section));
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) closeMenu();
+    });
+
+    bindImages();
+    applyLanguage(readLang());
+    if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+  </script>
+</body>
+</html>
