@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark" data-lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Macro — The all-in-one workspace for your team</title>
+  <meta name="description" content="Macro unifies email, messages, docs, tasks, agents, and CRM into a single fast interface with shared team-level memory. Fully open source under AGPL-3.0.">
+  <meta name="theme-color" content="#0b0d12">
+  <meta property="og:title" content="Macro — The all-in-one workspace for your team">
+  <meta property="og:description" content="Email, messages, docs, tasks, agents, and CRM in one @linked workspace. SolidJS and Rust. Fully open source under the GNU Affero GPL v3.0.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/macro-inc/macro">
+  <meta property="og:image" content="https://raw.githubusercontent.com/macro-inc/macro/main/.github/readme/email-thread.jpg">
+  <meta property="og:image:alt" content="A Macro team test email with the email navigation sidebar open">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Macro — The all-in-one workspace for your team">
+  <meta name="twitter:description" content="Email, messages, docs, tasks, agents, and CRM in one @linked workspace. Fully open source under AGPL-3.0.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/macro-inc/macro/main/.github/readme/email-thread.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" integrity="sha384-hJnF5AwidE18GSWTAGHv3ByzzvfNZ1Tcx5y1UUV3WkauuMCEzBJBMSwSt/PUPXnM" crossorigin="anonymous"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', '"Noto Serif TC"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'monospace'],
+          },
+          colors: {
+            ice: '#7dd3fc',
+            iceink: '#082f49',
+            mist: '#b4b0a8',
+            fog: '#8b8680',
+            ink: '#0b0d12',
+            panel: '#12151c',
+          }
+        }
+      }
+    };
+  </script>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('macro-landing-lang');
+        var lang = saved === 'en' || saved === 'zh' ? saved : 'en';
+        document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+        document.documentElement.dataset.lang = lang;
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body { overflow-x: clip; }
+    ::selection { background: rgba(125, 211, 252, 0.28); color: #f5f5f4; }
+    .mesh {
+      background-image:
+        radial-gradient(ellipse at 18% -10%, rgba(125, 211, 252, 0.16), transparent 46%),
+        radial-gradient(ellipse at 92% 8%, rgba(129, 140, 248, 0.14), transparent 42%),
+        linear-gradient(to right, rgba(125, 211, 252, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: auto, auto, 72px 72px, 72px 72px;
+      mask-image: radial-gradient(ellipse at 50% 0%, black 18%, transparent 78%);
+    }
+    .glass {
+      background: rgba(11, 13, 18, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .hairline { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+    .prose-link {
+      color: #7dd3fc;
+      text-decoration: underline;
+      text-decoration-color: rgba(125, 211, 252, 0.38);
+      text-underline-offset: 4px;
+      overflow-wrap: anywhere;
+    }
+    .prose-link:hover { text-decoration-color: #7dd3fc; }
+    .faq-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 200ms ease; }
+    .faq-item.open .faq-panel { grid-template-rows: 1fr; }
+    .faq-panel > div { overflow: hidden; min-height: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-item code, p code, .install-code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      overflow-wrap: anywhere;
+    }
+    .faq-item code, p code { font-size: 0.92em; color: #e7e5e4; }
+    [data-filter][aria-pressed="true"],
+    [data-set-lang][aria-pressed="true"] {
+      background: #7dd3fc !important;
+      color: #082f49 !important;
+      border-color: transparent !important;
+    }
+    [data-tab][aria-selected="true"] {
+      background: rgba(125, 211, 252, 0.1) !important;
+      color: #7dd3fc !important;
+      box-shadow: inset 2px 0 0 #7dd3fc;
+    }
+    [data-shot][aria-pressed="true"] {
+      color: #f5f5f4 !important;
+      background: rgba(125, 211, 252, 0.08) !important;
+      box-shadow: inset 2px 0 0 #7dd3fc;
+    }
+    [data-ring][aria-pressed="true"] {
+      border-color: #7dd3fc !important;
+      background: rgba(125, 211, 252, 0.08) !important;
+      color: #e7e5e4 !important;
+    }
+    [data-block][aria-pressed="true"] {
+      border-color: #7dd3fc !important;
+      background: rgba(125, 211, 252, 0.1) !important;
+    }
+    #menu-btn[aria-expanded="true"] .menu-open-icon { display: none; }
+    #menu-btn[aria-expanded="true"] .menu-close-icon { display: block; }
+    @media (min-width: 1024px) {
+      #mobile-nav { display: none !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-ping, .faq-panel { animation: none !important; transition: none !important; }
+    }
+    :focus-visible { outline: 2px solid #7dd3fc; outline-offset: 2px; }
+  </style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237dd3fc'/%3E%3Cpath d='M8 24V8h3.2l4.8 10.4L20.8 8H24v16h-3.1V13.2L16.6 24h-1.2L11.1 13.2V24H8z' fill='%23082f49'/%3E%3C/svg%3E">
+</head>
+<body class="bg-ink font-sans text-stone-200 antialiased min-h-screen flex flex-col justify-between">
+  <a href="#product" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-ice focus:px-3 focus:py-2 focus:text-iceink" data-i18n="nav.skip">Skip to content</a>
+
+  <header id="top" class="sticky top-0 z-50 border-b border-white/10 glass">
+    <span class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ice/80 to-transparent" aria-hidden="true"></span>
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+      <a href="#top" class="flex shrink-0 items-center gap-2.5">
+        <span class="grid h-9 w-9 place-items-center rounded-lg bg-ice text-iceink" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path d="M4 19V5h2.4l3.7 8.2L14 5h2.4v14h-2.3V9.6L11.1 19h-1.2L6.3 9.6V19H4z"/></svg>
+        </span>
+        <span class="text-sm font-semibold tracking-tight text-stone-50">Macro</span>
+      </a>
+      <a href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt" class="hidden rounded-full border border-white/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-mist hover:border-ice hover:text-ice xl:inline-flex" data-i18n="hero.badge.license">AGPL-3.0</a>
+      <a href="#install" class="hidden rounded-full border border-white/10 px-2.5 py-1 font-mono text-[10px] tracking-[0.08em] text-mist hover:border-ice hover:text-ice md:inline-flex" data-i18n="hero.badge.version">v2026.4.28.0</a>
+      <nav class="hidden items-center gap-5 text-sm text-mist lg:flex" data-i18n="aria.nav" data-i18n-attr="aria-label" aria-label="Sections">
+        <a href="#proof" class="hover:text-stone-50" data-i18n="nav.proof">Product</a>
+        <a href="#architecture" class="hover:text-stone-50" data-i18n="nav.architecture">System</a>
+        <a href="#capabilities" class="hover:text-stone-50" data-i18n="nav.capabilities">Features</a>
+        <a href="#install" class="hover:text-stone-50" data-i18n="nav.install">Start</a>
+        <a href="#faq" class="hover:text-stone-50" data-i18n="nav.faq">FAQ</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="flex rounded-full border border-white/10 p-0.5" role="group" data-i18n="aria.lang" data-i18n-attr="aria-label" aria-label="Language">
+          <button type="button" data-set-lang="zh" class="rounded-full px-2.5 py-1 text-xs text-mist sm:px-3" aria-pressed="false"><span data-i18n="lang.zh">繁體中文</span></button>
+          <button type="button" data-set-lang="en" class="rounded-full px-2.5 py-1 text-xs text-mist sm:px-3" aria-pressed="true"><span data-i18n="lang.en">English</span></button>
+        </div>
+        <a href="https://github.com/macro-inc/macro" class="inline-flex items-center gap-1.5 rounded-full bg-ice px-3 py-1.5 text-sm font-semibold text-iceink hover:bg-sky-200" target="_blank" rel="noopener noreferrer" data-i18n="nav.star.label" data-i18n-attr="aria-label" aria-label="Star Macro on GitHub">
+          <i data-lucide="star" class="h-4 w-4" aria-hidden="true"></i>
+          <span class="hidden sm:inline" data-i18n="nav.star">Star</span>
+        </a>
+        <button type="button" id="menu-btn" class="grid h-9 w-9 place-items-center rounded-full border border-white/10 text-mist lg:hidden" aria-expanded="false" aria-controls="mobile-nav" data-i18n="nav.menu" data-i18n-attr="aria-label" aria-label="Menu">
+          <i data-lucide="menu" class="menu-open-icon h-4 w-4" aria-hidden="true"></i>
+          <i data-lucide="x" class="menu-close-icon hidden h-4 w-4" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-nav" class="hidden border-t border-white/10 px-4 py-3 lg:hidden">
+      <div class="mx-auto flex max-w-6xl flex-col gap-1 text-sm">
+        <a href="#proof" class="rounded-lg px-2 py-2 text-mist hover:bg-white/5 hover:text-stone-50" data-i18n="nav.proof">Product</a>
+        <a href="#architecture" class="rounded-lg px-2 py-2 text-mist hover:bg-white/5 hover:text-stone-50" data-i18n="nav.architecture">System</a>
+        <a href="#capabilities" class="rounded-lg px-2 py-2 text-mist hover:bg-white/5 hover:text-stone-50" data-i18n="nav.capabilities">Features</a>
+        <a href="#install" class="rounded-lg px-2 py-2 text-mist hover:bg-white/5 hover:text-stone-50" data-i18n="nav.install">Start</a>
+        <a href="#faq" class="rounded-lg px-2 py-2 text-mist hover:bg-white/5 hover:text-stone-50" data-i18n="nav.faq">FAQ</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="product" class="relative scroll-mt-28 overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 mesh" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-6xl px-4 pb-10 pt-16 sm:px-6 sm:pt-24">
+        <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-mist">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-ice opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-ice"></span>
+          </span>
+          <span data-i18n="hero.kicker">Open source · NYC &amp; Toronto</span>
+        </p>
+        <h1 class="font-serif mt-6 max-w-4xl text-[2.35rem] font-semibold leading-[1.15] text-stone-50 sm:text-6xl sm:leading-[1.08]" data-i18n="hero.title" data-i18n-html>Unify email, chat, docs, tasks, agents, and CRM in <em class="italic text-ice">one fast interface</em>.</h1>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-mist sm:text-lg" data-i18n="hero.subtitle">Macro is the all-in-one workspace for you and your team. Everything is @linked and searchable so your team — and your agents — never have to switch tools. Designed in NYC and Toronto, built in SolidJS and Rust, fully open source under AGPL-3.0.</p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#install" class="inline-flex items-center gap-2 rounded-full bg-ice px-5 py-2.5 text-sm font-semibold text-iceink hover:bg-sky-200">
+            <i data-lucide="zap" class="h-4 w-4" aria-hidden="true"></i>
+            <span data-i18n="hero.cta.install">Get started</span>
+          </a>
+          <a href="#capabilities" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-semibold text-stone-100 hover:border-ice hover:text-ice">
+            <span data-i18n="hero.cta.features">Browse features</span>
+          </a>
+          <a href="https://docs.macro.com" class="inline-flex items-center gap-1.5 px-2 py-2 text-sm text-mist hover:text-ice" target="_blank" rel="noopener noreferrer">
+            <span data-i18n="hero.cta.docs">Docs</span>
+            <i data-lucide="external-link" class="h-3.5 w-3.5" aria-hidden="true"></i>
+          </a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-2">
+          <li><a href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt" class="inline-flex rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] text-mist hover:border-ice hover:text-ice" data-i18n="hero.badge.license">AGPL-3.0</a></li>
+          <li><span class="inline-flex rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] text-mist" data-i18n="hero.badge.version">v2026.4.28.0</span></li>
+          <li><span class="inline-flex rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] text-mist" data-i18n="hero.badge.stack">SolidJS + Rust</span></li>
+          <li><span class="inline-flex rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] text-mist" data-i18n="hero.badge.oss">Fully open source</span></li>
+          <li><span class="inline-flex rounded-full border border-white/10 bg-panel/80 px-3 py-1 font-mono text-[11px] text-mist" data-i18n="hero.badge.security">SOC 2 Type II · ISO 27001</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="proof" class="relative scroll-mt-28 border-t border-white/10 py-20">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ice" data-i18n="proof.kicker">01 — Product</p>
+        <h2 class="font-serif mt-3 max-w-3xl text-3xl font-semibold text-stone-50 sm:text-4xl" data-i18n="proof.title">Six surfaces, one bidirectional graph</h2>
+        <p class="mt-4 max-w-2xl text-mist" data-i18n="proof.lead">Live UI captures from a signed-in Macro workspace on 29 October 2026. The CRM board uses fictional sample companies and deal values.</p>
+
+        <div class="mt-10 grid gap-4 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <div class="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible" role="tablist" data-i18n="proof.tabs" data-i18n-attr="aria-label" aria-label="Product screenshots">
+            <button type="button" data-shot="email" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="true">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.email">Email</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.email.meta">Unified inbox</span>
+            </button>
+            <button type="button" data-shot="messages" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="false">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.messages">Messages</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.messages.meta">Focused channels</span>
+            </button>
+            <button type="button" data-shot="tasks" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="false">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.tasks">Tasks</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.tasks.meta">Tied to chat</span>
+            </button>
+            <button type="button" data-shot="docs" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="false">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.docs">Docs</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.docs.meta">CRDT markdown</span>
+            </button>
+            <button type="button" data-shot="crm" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="false">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.crm">CRM</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.crm.meta">Lives next to mail</span>
+            </button>
+            <button type="button" data-shot="agents" class="shrink-0 rounded-xl border border-white/10 bg-panel/60 px-3 py-2.5 text-left text-sm text-mist hover:border-white/20" aria-pressed="false">
+              <span class="block font-medium text-stone-100" data-i18n="proof.tab.agents">Agents</span>
+              <span class="mt-0.5 hidden text-xs text-fog lg:block" data-i18n="proof.tab.agents.meta">Team memory</span>
+            </button>
+          </div>
+
+          <figure class="min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-panel hairline">
+            <div class="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+              <span class="flex gap-1.5" aria-hidden="true">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-400/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-300/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/80"></span>
+              </span>
+              <span id="frame-label" class="truncate font-mono text-[11px] text-fog" data-i18n="proof.tab.email">Email</span>
+            </div>
+            <div class="bg-[#0a0c11]">
+              <img id="proof-img" src="https://raw.githubusercontent.com/macro-inc/macro/main/.github/readme/email-thread.jpg" alt="A Macro team test email with the email navigation sidebar open" class="h-auto w-full" width="1144" height="720" data-i18n="proof.alt.email" data-i18n-attr="alt">
+            </div>
+            <figcaption id="proof-caption" class="border-t border-white/10 px-4 py-3 text-sm leading-relaxed text-mist" data-i18n="proof.caption.email">A Macro team test email with the email navigation sidebar open. Multi-account unified inbox, keyboard-first, Gmail.</figcaption>
+          </figure>
+        </div>
+
+        <div class="mt-12 grid gap-4 md:grid-cols-2">
+          <article class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-fog" data-i18n="proof.before.kicker">Before</p>
+            <h3 class="mt-2 text-lg font-semibold text-stone-50" data-i18n="proof.before.title">Five excellent products that do not form a system</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.before.body">The Macro team used Slack, Linear, Notion, HubSpot, and Superhuman. As a prior venture scaled toward about 20 people, every team got its own tools and the company was held together by MCP and Zapier. The company was not computable.</p>
+          </article>
+          <article class="rounded-2xl border border-ice/30 bg-ice/5 p-5">
+            <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-ice" data-i18n="proof.after.kicker">After</p>
+            <h3 class="mt-2 text-lg font-semibold text-stone-50" data-i18n="proof.after.title">One operating system, redesigned from the ground up</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="proof.after.body">Macro is a complete redesign of work software as a single system. Each surface is purpose-built, and every one of them shares the same backend. Cross-references between a doc and a task, or a channel message and an email, are stored as a bidirectional graph.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="relative scroll-mt-28 border-t border-white/10 py-20">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ice" data-i18n="arch.kicker">02 — System</p>
+        <h2 class="font-serif mt-3 max-w-3xl text-3xl font-semibold text-stone-50 sm:text-4xl" data-i18n="arch.title">How the blocks become one workspace</h2>
+        <p class="mt-4 max-w-2xl text-mist" data-i18n="arch.lead">Each block is designed to be best in class on its own. Where it comes together is how they work together: @links, channel permissions, team memory, and one inbox.</p>
+
+        <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="tablist" data-i18n="arch.principles" data-i18n-attr="aria-label" aria-label="System principles">
+          <button type="button" data-ring="linking" class="rounded-2xl border border-white/10 bg-panel/70 p-4 text-left hover:border-white/20" aria-pressed="true">
+            <i data-lucide="git-fork" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <p class="mt-3 font-medium text-stone-50" data-i18n="arch.linking.title">Bidirectional @linking</p>
+            <p class="mt-1 text-xs text-fog" data-i18n="arch.linking.meta">Docs, mail, tasks, CRM</p>
+          </button>
+          <button type="button" data-ring="permissions" class="rounded-2xl border border-white/10 bg-panel/70 p-4 text-left hover:border-white/20" aria-pressed="false">
+            <i data-lucide="lock" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <p class="mt-3 font-medium text-stone-50" data-i18n="arch.permissions.title">Channel permissions</p>
+            <p class="mt-1 text-xs text-fog" data-i18n="arch.permissions.meta">Join, gain access</p>
+          </button>
+          <button type="button" data-ring="memory" class="rounded-2xl border border-white/10 bg-panel/70 p-4 text-left hover:border-white/20" aria-pressed="false">
+            <i data-lucide="brain" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <p class="mt-3 font-medium text-stone-50" data-i18n="arch.memory.title">Unified memory</p>
+            <p class="mt-1 text-xs text-fog" data-i18n="arch.memory.meta">Nightly team synthesis</p>
+          </button>
+          <button type="button" data-ring="inbox" class="rounded-2xl border border-white/10 bg-panel/70 p-4 text-left hover:border-white/20" aria-pressed="false">
+            <i data-lucide="inbox" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <p class="mt-3 font-medium text-stone-50" data-i18n="arch.inbox.title">One inbox</p>
+            <p class="mt-1 text-xs text-fog" data-i18n="arch.inbox.meta">Signal and Noise</p>
+          </button>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-white/10 bg-panel/80 p-6 hairline">
+          <h3 id="ring-title" class="text-xl font-semibold text-stone-50" data-i18n="arch.linking.heading">@mention anything; both sides remember</h3>
+          <p id="ring-body" class="mt-3 max-w-3xl text-sm leading-relaxed text-mist" data-i18n="arch.linking.body">@mention a doc in a message and both know about each other. Your workspace becomes a web of context you can navigate in either direction. The same graph ties customer support emails into support channels, and CRM records into the conversations that update them.</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-[0.14em] text-fog" data-i18n="arch.blocks.title">Modular blocks</h3>
+            <p class="mt-2 text-sm text-mist" data-i18n="arch.blocks.lead">Click a block to see how it connects. Every surface shares the same backend.</p>
+            <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5" role="list">
+              <button type="button" data-block="email" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="true"><span data-i18n="cap.email.title">Email</span></button>
+              <button type="button" data-block="messages" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.messages.title">Messages</span></button>
+              <button type="button" data-block="tasks" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.tasks.title">Tasks</span></button>
+              <button type="button" data-block="docs" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.docs.title">Docs</span></button>
+              <button type="button" data-block="canvas" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.canvas.title">Canvas</span></button>
+              <button type="button" data-block="agents" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.agents.title">Agents</span></button>
+              <button type="button" data-block="calls" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.calls.title">Calls</span></button>
+              <button type="button" data-block="files" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.files.title">File storage</span></button>
+              <button type="button" data-block="prs" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.prs.title">Pull requests</span></button>
+              <button type="button" data-block="crm" class="rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-left text-sm hover:border-white/20" aria-pressed="false"><span data-i18n="cap.crm.title">CRM</span></button>
+            </div>
+            <p id="block-body" class="mt-4 text-sm leading-relaxed text-mist" data-i18n="cap.email.body">Multi-account unified inbox, keyboard shortcuts, and shared inboxes. Gmail. Draft, edit, and send from AI chats. Built-in window manager for 3+ splits. Native company and contact objects so you can jump from an address to every thread with that person or company.</p>
+          </div>
+          <aside class="rounded-2xl border border-white/10 bg-[#0a0c11] p-4 font-mono text-[11px] leading-relaxed text-mist">
+            <p class="text-ice" data-i18n="arch.layout.title">Repository layout</p>
+            <pre class="mt-3 overflow-x-auto whitespace-pre text-stone-300" data-i18n="arch.layout.tree">macro/
+├── apps/web        SolidJS client
+├── apps/docs       docs.macro.com
+├── apps/marketing  public website
+├── services/       42 deployable services
+├── crates/         167 Rust libraries
+├── packages/       shared TypeScript
+├── infra/          Pulumi
+├── docker/         local Compose
+├── nix/            pinned dev shell
+└── tooling/        repo scripts</pre>
+            <p class="mt-3 text-[11px] text-fog" data-i18n="arch.layout.note">Services follow a hexagonal layout: inbound adapters, a domain core with ports, outbound adapters. Counts are from the repository README.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" class="relative scroll-mt-28 border-t border-white/10 py-20">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ice" data-i18n="cap.kicker">03 — Capabilities</p>
+        <h2 class="font-serif mt-3 max-w-3xl text-3xl font-semibold text-stone-50 sm:text-4xl" data-i18n="cap.title">Blocks that work like Lego, not a generic primitive</h2>
+        <p class="mt-4 max-w-2xl text-mist" data-i18n="cap.lead">Taken from the product README. Filter by surface. Nothing here is inferred from typical SaaS checklists.</p>
+
+        <div class="mt-8 flex flex-wrap gap-2" role="group" data-i18n="cap.filters" data-i18n-attr="aria-label" aria-label="Feature filters">
+          <button type="button" data-filter="all" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="true" data-i18n="cap.filter.all">All</button>
+          <button type="button" data-filter="email" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="false" data-i18n="cap.filter.email">Email</button>
+          <button type="button" data-filter="chat" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="false" data-i18n="cap.filter.chat">Chat</button>
+          <button type="button" data-filter="work" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="false" data-i18n="cap.filter.work">Work</button>
+          <button type="button" data-filter="agents" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="false" data-i18n="cap.filter.agents">Agents</button>
+          <button type="button" data-filter="crm" class="rounded-full border border-white/10 px-3 py-1.5 text-xs text-mist" aria-pressed="false" data-i18n="cap.filter.crm">CRM</button>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <article data-cat="email" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="mail" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.email.title">Email</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.email.body">Multi-account unified inbox, keyboard shortcuts, and shared inboxes. Gmail. Draft, edit, and send from AI chats. Built-in window manager for 3+ splits. Native company and contact objects so you can jump from an address to every thread with that person or company.</p>
+            <a href="https://docs.macro.com/product/email" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="chat" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="messages-square" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.messages.title">Messages</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.messages.body">Channels and direct messages for focused technical discussions. The first replies show inline; the rest collapse into a thread. Threads are permissioned separately so you can share them across channels. Agents are first-class citizens, like human users.</p>
+            <a href="https://docs.macro.com/product/channels" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="work" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="list-checks" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.tasks.title">Tasks</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.tasks.body">Linear-inspired tasks tightly coupled to channels, email, and agents so tracking happens where the conversation happens. Create from an email, from <code>c t</code>, from <code>/task</code> in a doc, from a <code>- [ ]</code> bullet, via <code>@Macro</code>, in any agent chat, or through MCP, API, or SDK.</p>
+            <a href="https://docs.macro.com/product/tasks" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="work" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="file-text" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.docs.title">Docs</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.docs.body">Markdown-native docs with live CRDT collaboration and Cloudflare Durable Objects. History and forking, offline editing, @links to email, tasks, messages, companies, and contacts. Agents edit as peers in the same CRDT system. Mobile-friendly on the web and iOS.</p>
+            <a href="https://docs.macro.com/product/docs" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="work" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="layout-dashboard" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.canvas.title">Canvas</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.canvas.body">A 2D board with embedded @links to tasks, files, and emails — for the work that is too spatial for a list and too connected to live in a separate whiteboard.</p>
+            <a href="https://docs.macro.com/product/canvas" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="agents" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="bot" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.agents.title">Agents</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.agents.body">Team-level memory synthesized from conversations, DMs, email, tasks, and calls — stored in markdown, portable across OpenAI, Google, Anthropic, and MCP. Tool coverage of nearly everything in the Macro UI, with no rate limits on MCP.</p>
+            <a href="https://docs.macro.com/product/agents" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="chat" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="phone" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.calls.title">Calls</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.calls.body">Recorded, transcribed, and logged to team memory so agents can act on what was said — not only on what was typed in a chatbot.</p>
+            <a href="https://docs.macro.com/product/calls" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="work" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="folder" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.files.title">File storage</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.files.body">Auto-imported from email and channels, fully searchable. Agents can search parsed PDF attachments directly rather than walking threads and then files.</p>
+            <a href="https://docs.macro.com/product/folders" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="agents" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="git-pull-request" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.prs.title">Pull requests</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.prs.body">Linked to tasks, embeddable in channels, and available to agents — so the chain from a customer email to a task to an agent to a pull request stays in one system.</p>
+            <a href="https://docs.macro.com/integrations/github" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+          <article data-cat="crm" class="rounded-2xl border border-white/10 bg-panel/70 p-5 hairline">
+            <i data-lucide="contact" class="h-5 w-5 text-ice" aria-hidden="true"></i>
+            <h3 class="mt-3 text-lg font-semibold text-stone-50" data-i18n="cap.crm.title">CRM</h3>
+            <p class="mt-2 text-sm leading-relaxed text-mist" data-i18n="cap.crm.body">Customer and contact objects, custom properties, email sync, and enrichment — colocated with team chat and email. @mention a company and you get a bidirectional link. Every deal gets its own channel, pinned to the record. Kanban, list, and shareable views.</p>
+            <a href="https://docs.macro.com/product/crm" class="prose-link mt-3 inline-flex text-sm" target="_blank" rel="noopener noreferrer" data-i18n="cap.docs.link">Docs →</a>
+          </article>
+        </div>
+        <p id="cap-empty" class="mt-6 hidden text-sm text-mist" data-i18n="cap.empty">No items in this category.</p>
+      </div>
+    </section>
+
+    <section id="install" class="relative scroll-mt-28 border-t border-white/10 py-20">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ice" data-i18n="install.kicker">04 — Start</p>
+        <h2 class="font-serif mt-3 max-w-3xl text-3xl font-semibold text-stone-50 sm:text-4xl" data-i18n="install.title">Hosted app, MCP, or the open-source tree</h2>
+        <p class="mt-4 max-w-2xl text-mist" data-i18n="install.lead" data-i18n-html>Sign up on the hosted app, point a coding agent at the workspace over MCP, or clone the repository. Local stack details live in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a> and <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+
+        <div class="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-panel/80 hairline">
+          <div class="flex flex-wrap border-b border-white/10" role="tablist" data-i18n="install.tabs" data-i18n-attr="aria-label" aria-label="Start options">
+            <button type="button" id="tab-hosted" data-tab="hosted" class="px-4 py-3 text-sm text-mist" role="tab" aria-selected="true" aria-controls="install-panel" data-i18n="install.tab.hosted">Hosted</button>
+            <button type="button" id="tab-mcp" data-tab="mcp" class="px-4 py-3 text-sm text-mist" role="tab" aria-selected="false" aria-controls="install-panel" data-i18n="install.tab.mcp">MCP</button>
+            <button type="button" id="tab-source" data-tab="source" class="px-4 py-3 text-sm text-mist" role="tab" aria-selected="false" aria-controls="install-panel" data-i18n="install.tab.source">Source</button>
+            <button type="button" id="tab-docs" data-tab="docs" class="px-4 py-3 text-sm text-mist" role="tab" aria-selected="false" aria-controls="install-panel" data-i18n="install.tab.docs">Docs site</button>
+            <button type="button" id="tab-desktop" data-tab="desktop" class="px-4 py-3 text-sm text-mist" role="tab" aria-selected="false" aria-controls="install-panel" data-i18n="install.tab.desktop">Tauri</button>
+          </div>
+          <div id="install-panel" role="tabpanel" aria-labelledby="tab-hosted" class="p-4 sm:p-5">
+            <div class="flex items-start gap-3 rounded-xl border border-white/10 bg-[#0a0c11] px-4 py-3">
+              <pre id="install-code" class="install-code min-w-0 flex-1 overflow-x-auto text-[13px] leading-relaxed text-sky-100">https://macro.com/app</pre>
+              <button type="button" id="copy-btn" class="shrink-0 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-mist hover:border-ice hover:text-ice" data-i18n="install.copy">Copy</button>
+            </div>
+            <p data-note="hosted" class="mt-4 text-sm leading-relaxed text-mist" data-i18n="install.note.hosted" data-i18n-html>Sign up at <a class="prose-link" href="https://macro.com/app">macro.com/app</a> and connect Gmail or Google Workspace. Macro runs in any modern browser. There is an <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS app</a>; an Android app is listed as coming soon. The <a class="prose-link" href="https://docs.macro.com/getting-started">getting started guide</a> takes a fresh account to a working setup in about 15 minutes.</p>
+            <p data-note="mcp" class="mt-4 hidden text-sm leading-relaxed text-mist" data-i18n="install.note.mcp" data-i18n-html>Point Claude Code, Codex, or any MCP client at your workspace. See <a class="prose-link" href="https://docs.macro.com/AI/mcp/overview">MCP setup</a> and <a class="prose-link" href="https://docs.macro.com/AI/recipes">agent recipes</a>. The README states there are no rate limits on MCP, with near 100% coverage of the Macro UI.</p>
+            <p data-note="source" class="mt-4 hidden text-sm leading-relaxed text-mist" data-i18n="install.note.source" data-i18n-html>Clone the public repository. Frontend-only work can run against hosted services; backend, database, or on-machine behavior uses the local stack. Follow <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>. The frontend uses <a class="prose-link" href="https://bun.sh/">bun</a> and Vite. A Nix shell is available via <code>nix develop</code>.</p>
+            <p data-note="docs" class="mt-4 hidden text-sm leading-relaxed text-mist" data-i18n="install.note.docs" data-i18n-html>The Mintlify site for <code>docs.macro.com</code> lives in <code>apps/docs</code>. Mintlify currently requires an LTS Node release (Node 20 or 22) for CLI commands. Generated MCP tool pages are rebuilt from <code>crates/ai_tools</code>.</p>
+            <p data-note="desktop" class="mt-4 hidden text-sm leading-relaxed text-mist" data-i18n="install.note.desktop" data-i18n-html>The SolidJS client is also bundled with Tauri for desktop. You need Rust, the Tauri CLI, and bun. In a Nix shell the CLI is installed for cargo. <code>cargo tauri dev</code> runs the desktop app for the host OS; <code>cargo tauri android dev</code> and <code>cargo tauri ios dev</code> are documented for those targets. Focused shells: <code>nix develop .#tauri-linux</code> and <code>nix develop .#tauri-android</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="relative scroll-mt-28 border-t border-white/10 py-20">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ice" data-i18n="faq.kicker">05 — FAQ</p>
+        <h2 class="font-serif mt-3 max-w-3xl text-3xl font-semibold text-stone-50 sm:text-4xl" data-i18n="faq.title">License, self-hosting, security, and contributing</h2>
+        <div class="mt-10 divide-y divide-white/10 rounded-2xl border border-white/10 bg-panel/60">
+          <div class="faq-item open">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="true">
+              <span class="font-medium text-stone-50" data-i18n="faq.q1">What license is Macro under?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a1" data-i18n-html>Macro is fully open source — not “open core” — under the GNU Affero General Public License v3.0. The canonical text is <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt">LICENSE.txt</a>. You can self-host under AGPLv3; the <a class="prose-link" href="https://docs.macro.com/faq">product FAQ</a> covers what that involves. For a different license, contact <a class="prose-link" href="mailto:licensing@macro.com">licensing@macro.com</a>. For managed hosting or commercial arrangements, contact <a class="prose-link" href="mailto:self-host@macro.com">self-host@macro.com</a>.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q2">How is this different from Slack, Linear, Notion, HubSpot, or Superhuman?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a2">The README’s argument is not that those products are weak. It is that they do not work together as one system. Macro is built as a single operating system: one graph, one permission model, one inbox, and agents that see the same team memory. Comparisons for individual surfaces are in the product docs FAQ.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q3">Can I self-host it?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a3" data-i18n-html>Yes, under the terms of the AGPLv3. See the <a class="prose-link" href="https://docs.macro.com/faq">FAQ</a> for what that involves. Local development is documented in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>: frontend against hosted services, or the full local stack when you change a backend service or the database.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q4">How do I contribute, and what does CI expect?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a4" data-i18n-html>Open an issue before a PR. Use Conventional Commits for branches and titles. Format and lint Rust with <code>cargo fmt</code> and <code>just clippy</code>; run <code>cargo test -p &lt;crate&gt;</code> for crates you touch; refresh the sqlx cache with <code>just prepare_db</code> after SQL changes. A required <code>cla</code> check runs on every PR; sign at <a class="prose-link" href="https://macro-cla.macroverse.workers.dev/cla">the Macro CLA</a>, then comment <code>/macro-cla check</code>. The PR Privacy Check fails titles, bodies, or commits that contain contact details, mentions, or support links; run <code>just pr-privacy</code> before pushing. Details are in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q5">What about security and model providers?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a5" data-i18n-html>The README states SOC 2 Type II certification, ISO 27001, and zero data retention with model providers, including no training on customer data. Responsible reports are welcome; send them to <a class="prose-link" href="mailto:security@macro.com">security@macro.com</a>. Bounties are paid according to severity and impact.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q6">Can coding agents use Macro?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a6" data-i18n-html>Yes. Add the HTTP MCP server with <code>claude mcp add --transport http macro https://mcp-server.macro.com/mcp</code>. Team memory is available to external agents via MCP, or through the in-app model picker. Memory is stored as markdown so you can export it.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q7">Is there a mobile app?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a7" data-i18n-html>Docs are mobile-friendly in the <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS app</a> and on the web. The README says an Android app is coming soon. The web client also targets Tauri desktop.</div></div>
+          </div>
+          <div class="faq-item">
+            <button type="button" class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="font-medium text-stone-50" data-i18n="faq.q8">Who is it for, and who built it?</span>
+              <i data-lucide="plus" class="faq-icon h-4 w-4 shrink-0 text-ice transition-transform" aria-hidden="true"></i>
+            </button>
+            <div class="faq-panel"><div class="px-5 pb-5 text-sm leading-relaxed text-mist" data-i18n="faq.a8" data-i18n-html>The README describes Macro as an operating system any small company, or a team at a larger company, can use. It was designed in NYC and Toronto and dogfooded by a team of about 15 for two years. Feature requests: <a class="prose-link" href="mailto:contact@macro.com">contact@macro.com</a>. Hiring: <a class="prose-link" href="mailto:teo@macro.com">teo@macro.com</a>.</div></div>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-col items-start gap-4 rounded-2xl border border-white/10 bg-panel/70 p-5 sm:flex-row sm:items-center">
+          <img src="https://raw.githubusercontent.com/macro-inc/macro/main/.github/readme/security-badges.svg" alt="ISO 27001 and SOC 2 Type II badges" class="h-12 w-auto max-w-full" width="520" height="80" data-i18n="security.alt" data-i18n-attr="alt">
+          <p class="text-sm text-mist" data-i18n="security.note">ISO 27001 and SOC 2 Type II badges from the repository README. Zero data retention with model providers.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/10 bg-[#08090d]">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4">
+      <div class="md:col-span-1">
+        <p class="flex items-center gap-2 text-sm font-semibold text-stone-50">
+          <span class="grid h-8 w-8 place-items-center rounded-md bg-ice text-iceink" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M4 19V5h2.4l3.7 8.2L14 5h2.4v14h-2.3V9.6L11.1 19h-1.2L6.3 9.6V19H4z"/></svg>
+          </span>
+          Macro
+        </p>
+        <p class="mt-3 text-sm leading-relaxed text-mist" data-i18n="footer.blurb">An open-source company operating system by macro-inc. This page is a bilingual introduction to the public GitHub repository.</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.product">Product</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="https://macro.com" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.site">Website</a></li>
+          <li><a href="https://macro.com/app" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.app">Sign up</a></li>
+          <li><a href="https://docs.macro.com" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.docs">Docs</a></li>
+          <li><a href="https://macro.com/app/book/6de4003c-15e4-549f-b5a9-0e930bbf56e4/demo" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.demo">Book a demo</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.repo">Repository</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="https://github.com/macro-inc/macro" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.repo">GitHub</a></li>
+          <li><a href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.contributing">Contributing</a></li>
+          <li><a href="https://github.com/macro-inc/macro/issues" class="text-mist hover:text-ice" target="_blank" rel="noopener noreferrer" data-i18n="footer.issues">Issues</a></li>
+          <li><a href="mailto:contact@macro.com" class="text-mist hover:text-ice" data-i18n="footer.contact">Feature requests</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-fog" data-i18n="footer.col.legal">Legal</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt" class="text-mist hover:text-ice" data-i18n="footer.license">AGPL-3.0</a></li>
+          <li><a href="mailto:licensing@macro.com" class="text-mist hover:text-ice" data-i18n="footer.licensing">licensing@macro.com</a></li>
+          <li><a href="mailto:security@macro.com" class="text-mist hover:text-ice" data-i18n="footer.security">security@macro.com</a></li>
+          <li><a href="mailto:self-host@macro.com" class="text-mist hover:text-ice" data-i18n="footer.selfhost">self-host@macro.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-5 sm:px-6">
+        <p class="text-xs text-fog" data-i18n="footer.copy">© macro-inc · GNU Affero General Public License v3.0</p>
+        <a href="#top" class="inline-flex items-center gap-1.5 text-xs text-mist hover:text-ice">
+          <i data-lucide="arrow-up" class="h-3.5 w-3.5" aria-hidden="true"></i>
+          <span data-i18n="footer.top">Back to top</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300">
+    <div class="rounded-lg border border-white/10 bg-panel px-4 py-2.5 font-mono text-xs text-stone-200 shadow-xl">
+      <span id="toast-text">Copied!</span>
+    </div>
+  </div>
+
+  <script>
+    const IMG = 'https://raw.githubusercontent.com/macro-inc/macro/main/.github/readme/';
+    const shots = {
+      email: IMG + 'email-thread.jpg',
+      messages: IMG + 'messages-channel.jpg',
+      tasks: IMG + 'tasks-list.jpg',
+      docs: IMG + 'docs-prd.jpg',
+      crm: IMG + 'crm-board.jpg',
+      agents: IMG + 'agents-task-handoff.jpg',
+    };
+    const commands = {
+      hosted: 'https://macro.com/app',
+      mcp: 'claude mcp add --transport http macro https://mcp-server.macro.com/mcp',
+      source: 'git clone https://github.com/macro-inc/macro.git',
+      docs: 'cd apps/docs\nbun install\nbun run generate:tools\nbun run dev',
+      desktop: 'nix develop\ncargo tauri dev',
+    };
+    const blockKeys = {
+      email: 'cap.email.body',
+      messages: 'cap.messages.body',
+      tasks: 'cap.tasks.body',
+      docs: 'cap.docs.body',
+      canvas: 'cap.canvas.body',
+      agents: 'cap.agents.body',
+      calls: 'cap.calls.body',
+      files: 'cap.files.body',
+      prs: 'cap.prs.body',
+      crm: 'cap.crm.body',
+    };
+
+    const translations = {
+      en: {
+        'meta.title': 'Macro — The all-in-one workspace for your team',
+        'meta.description': 'Macro unifies email, messages, docs, tasks, agents, and CRM into a single fast interface with shared team-level memory. Fully open source under AGPL-3.0.',
+        'nav.skip': 'Skip to content',
+        'nav.proof': 'Product',
+        'nav.architecture': 'System',
+        'nav.capabilities': 'Features',
+        'nav.install': 'Start',
+        'nav.faq': 'FAQ',
+        'nav.star': 'Star',
+        'nav.star.label': 'Star Macro on GitHub',
+        'nav.menu': 'Menu',
+        'aria.nav': 'Sections',
+        'aria.lang': 'Language',
+        'lang.zh': '繁體中文',
+        'lang.en': 'English',
+        'hero.kicker': 'Open source · NYC & Toronto',
+        'hero.title': 'Unify email, chat, docs, tasks, agents, and CRM in <em class="italic text-ice">one fast interface</em>.',
+        'hero.subtitle': 'Macro is the all-in-one workspace for you and your team. Everything is @linked and searchable so your team — and your agents — never have to switch tools. Designed in NYC and Toronto, built in SolidJS and Rust, fully open source under AGPL-3.0.',
+        'hero.cta.install': 'Get started',
+        'hero.cta.features': 'Browse features',
+        'hero.cta.docs': 'Docs',
+        'hero.badge.license': 'AGPL-3.0',
+        'hero.badge.version': 'v2026.4.28.0',
+        'hero.badge.stack': 'SolidJS + Rust',
+        'hero.badge.oss': 'Fully open source',
+        'hero.badge.security': 'SOC 2 Type II · ISO 27001',
+        'proof.kicker': '01 — Product',
+        'proof.title': 'Six surfaces, one bidirectional graph',
+        'proof.lead': 'Live UI captures from a signed-in Macro workspace on 29 October 2026. The CRM board uses fictional sample companies and deal values.',
+        'proof.tabs': 'Product screenshots',
+        'proof.tab.email': 'Email',
+        'proof.tab.email.meta': 'Unified inbox',
+        'proof.tab.messages': 'Messages',
+        'proof.tab.messages.meta': 'Focused channels',
+        'proof.tab.tasks': 'Tasks',
+        'proof.tab.tasks.meta': 'Tied to chat',
+        'proof.tab.docs': 'Docs',
+        'proof.tab.docs.meta': 'CRDT markdown',
+        'proof.tab.crm': 'CRM',
+        'proof.tab.crm.meta': 'Lives next to mail',
+        'proof.tab.agents': 'Agents',
+        'proof.tab.agents.meta': 'Team memory',
+        'proof.alt.email': 'A Macro team test email with the email navigation sidebar open',
+        'proof.alt.messages': 'A team discussion in Macro with a completed Cursor handoff and agent searches for task owners',
+        'proof.alt.tasks': 'Macro search project tasks grouped by assignee, with statuses, priorities, and project links',
+        'proof.alt.docs': 'The Team Channels PRD in Macro with tags, assignees, and readable requirements',
+        'proof.alt.crm': 'Macro Sales Demo pipeline with nine visible fictional company cards across three stages and its navigation sidebar open',
+        'proof.alt.agents': 'A Macro coding-agent session with tool calls, a successful audit, and a pull request',
+        'proof.caption.email': 'A Macro team test email with the email navigation sidebar open. Multi-account unified inbox, keyboard-first, Gmail.',
+        'proof.caption.messages': 'feature-requests: a Has PR / No PR task filter, a Cursor handoff, and an agent looking up task owners.',
+        'proof.caption.tasks': 'Search surface area project, tasks grouped by assignee, with statuses, priorities, and project links.',
+        'proof.caption.docs': 'PRD: Team Channels — tags, assignees, and readable requirements in the markdown-native editor.',
+        'proof.caption.crm': 'Sales Demo pipeline: nine fictional companies in Lead, Demo, and Customer. Sample deal values; two Churned cards sit outside the crop.',
+        'proof.caption.agents': 'Add Reminder Icon To Tasks — a coding-agent session with a successful audit and PR #8824.',
+        'proof.before.kicker': 'Before',
+        'proof.before.title': 'Five excellent products that do not form a system',
+        'proof.before.body': 'The Macro team used Slack, Linear, Notion, HubSpot, and Superhuman. As a prior venture scaled toward about 20 people, every team got its own tools and the company was held together by MCP and Zapier. The company was not computable.',
+        'proof.after.kicker': 'After',
+        'proof.after.title': 'One operating system, redesigned from the ground up',
+        'proof.after.body': 'Macro is a complete redesign of work software as a single system. Each surface is purpose-built, and every one of them shares the same backend. Cross-references between a doc and a task, or a channel message and an email, are stored as a bidirectional graph.',
+        'arch.kicker': '02 — System',
+        'arch.title': 'How the blocks become one workspace',
+        'arch.lead': 'Each block is designed to be best in class on its own. Where it comes together is how they work together: @links, channel permissions, team memory, and one inbox.',
+        'arch.principles': 'System principles',
+        'arch.linking.title': 'Bidirectional @linking',
+        'arch.linking.meta': 'Docs, mail, tasks, CRM',
+        'arch.linking.heading': '@mention anything; both sides remember',
+        'arch.linking.body': '@mention a doc in a message and both know about each other. Your workspace becomes a web of context you can navigate in either direction. The same graph ties customer support emails into support channels, and CRM records into the conversations that update them.',
+        'arch.permissions.title': 'Channel permissions',
+        'arch.permissions.meta': 'Join, gain access',
+        'arch.permissions.heading': 'Share by talking, not by a permission ticket',
+        'arch.permissions.body': 'Anything you @mention in a channel is automatically shared with its members. Join a channel, gain access; leave, lose it. No permission-request dance. Hit Share on an email to send it into a DM or channel — no screenshot.',
+        'arch.memory.title': 'Unified memory',
+        'arch.memory.meta': 'Nightly team synthesis',
+        'arch.memory.heading': 'Memory of the company, not of one chat',
+        'arch.memory.body': 'Agents remember what the whole team is doing across email, messages, tasks, docs, and calls, not just prior chatbot turns. Memory is refreshed nightly in one pass, stored as markdown, and available over MCP or the in-app model picker.',
+        'arch.inbox.title': 'One inbox',
+        'arch.inbox.meta': 'Signal and Noise',
+        'arch.inbox.heading': 'Mail, chat, tasks, mentions, agents — one list',
+        'arch.inbox.body': 'Emails, channel messages, task assignments, @mentions, and agent responses land in one place, split into Signal and Noise. Keyboard-first throughout: j, k, and e to navigate, cmd+k to a contact, c t to create a task.',
+        'arch.blocks.title': 'Modular blocks',
+        'arch.blocks.lead': 'Click a block to see how it connects. Every surface shares the same backend.',
+        'arch.layout.title': 'Repository layout',
+        'arch.layout.tree': 'macro/\n├── apps/web        SolidJS client\n├── apps/docs       docs.macro.com\n├── apps/marketing  public website\n├── services/       42 deployable services\n├── crates/         167 Rust libraries\n├── packages/       shared TypeScript\n├── infra/          Pulumi\n├── docker/         local Compose\n├── nix/            pinned dev shell\n└── tooling/        repo scripts',
+        'arch.layout.note': 'Services follow a hexagonal layout: inbound adapters, a domain core with ports, outbound adapters. Counts are from the repository README.',
+        'cap.kicker': '03 — Capabilities',
+        'cap.title': 'Blocks that work like Lego, not a generic primitive',
+        'cap.lead': 'Taken from the product README. Filter by surface. Nothing here is inferred from typical SaaS checklists.',
+        'cap.filters': 'Feature filters',
+        'cap.filter.all': 'All',
+        'cap.filter.email': 'Email',
+        'cap.filter.chat': 'Chat',
+        'cap.filter.work': 'Work',
+        'cap.filter.agents': 'Agents',
+        'cap.filter.crm': 'CRM',
+        'cap.empty': 'No items in this category.',
+        'cap.docs.link': 'Docs →',
+        'cap.email.title': 'Email',
+        'cap.email.body': 'Multi-account unified inbox, keyboard shortcuts, and shared inboxes. Gmail. Draft, edit, and send from AI chats. Built-in window manager for 3+ splits. Native company and contact objects so you can jump from an address to every thread with that person or company.',
+        'cap.messages.title': 'Messages',
+        'cap.messages.body': 'Channels and direct messages for focused technical discussions. The first replies show inline; the rest collapse into a thread. Threads are permissioned separately so you can share them across channels. Agents are first-class citizens, like human users.',
+        'cap.tasks.title': 'Tasks',
+        'cap.tasks.body': 'Linear-inspired tasks tightly coupled to channels, email, and agents so tracking happens where the conversation happens. Create from an email, from c t, from /task in a doc, from a - [ ] bullet, via @Macro, in any agent chat, or through MCP, API, or SDK.',
+        'cap.docs.title': 'Docs',
+        'cap.docs.body': 'Markdown-native docs with live CRDT collaboration and Cloudflare Durable Objects. History and forking, offline editing, @links to email, tasks, messages, companies, and contacts. Agents edit as peers in the same CRDT system. Mobile-friendly on the web and iOS.',
+        'cap.canvas.title': 'Canvas',
+        'cap.canvas.body': 'A 2D board with embedded @links to tasks, files, and emails — for the work that is too spatial for a list and too connected to live in a separate whiteboard.',
+        'cap.agents.title': 'Agents',
+        'cap.agents.body': 'Team-level memory synthesized from conversations, DMs, email, tasks, and calls — stored in markdown, portable across OpenAI, Google, Anthropic, and MCP. Tool coverage of nearly everything in the Macro UI, with no rate limits on MCP.',
+        'cap.calls.title': 'Calls',
+        'cap.calls.body': 'Recorded, transcribed, and logged to team memory so agents can act on what was said — not only on what was typed in a chatbot.',
+        'cap.files.title': 'File storage',
+        'cap.files.body': 'Auto-imported from email and channels, fully searchable. Agents can search parsed PDF attachments directly rather than walking threads and then files.',
+        'cap.prs.title': 'Pull requests',
+        'cap.prs.body': 'Linked to tasks, embeddable in channels, and available to agents — so the chain from a customer email to a task to an agent to a pull request stays in one system.',
+        'cap.crm.title': 'CRM',
+        'cap.crm.body': 'Customer and contact objects, custom properties, email sync, and enrichment — colocated with team chat and email. @mention a company and you get a bidirectional link. Every deal gets its own channel, pinned to the record. Kanban, list, and shareable views.',
+        'install.kicker': '04 — Start',
+        'install.title': 'Hosted app, MCP, or the open-source tree',
+        'install.lead': 'Sign up on the hosted app, point a coding agent at the workspace over MCP, or clone the repository. Local stack details live in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a> and <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.',
+        'install.tabs': 'Start options',
+        'install.tab.hosted': 'Hosted',
+        'install.tab.mcp': 'MCP',
+        'install.tab.source': 'Source',
+        'install.tab.docs': 'Docs site',
+        'install.tab.desktop': 'Tauri',
+        'install.copy': 'Copy',
+        'install.note.hosted': 'Sign up at <a class="prose-link" href="https://macro.com/app">macro.com/app</a> and connect Gmail or Google Workspace. Macro runs in any modern browser. There is an <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS app</a>; an Android app is listed as coming soon. The <a class="prose-link" href="https://docs.macro.com/getting-started">getting started guide</a> takes a fresh account to a working setup in about 15 minutes.',
+        'install.note.mcp': 'Point Claude Code, Codex, or any MCP client at your workspace. See <a class="prose-link" href="https://docs.macro.com/AI/mcp/overview">MCP setup</a> and <a class="prose-link" href="https://docs.macro.com/AI/recipes">agent recipes</a>. The README states there are no rate limits on MCP, with near 100% coverage of the Macro UI.',
+        'install.note.source': 'Clone the public repository. Frontend-only work can run against hosted services; backend, database, or on-machine behavior uses the local stack. Follow <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>. The frontend uses <a class="prose-link" href="https://bun.sh/">bun</a> and Vite. A Nix shell is available via <code>nix develop</code>.',
+        'install.note.docs': 'The Mintlify site for <code>docs.macro.com</code> lives in <code>apps/docs</code>. Mintlify currently requires an LTS Node release (Node 20 or 22) for CLI commands. Generated MCP tool pages are rebuilt from <code>crates/ai_tools</code>.',
+        'install.note.desktop': 'The SolidJS client is also bundled with Tauri for desktop. You need Rust, the Tauri CLI, and bun. In a Nix shell the CLI is installed for cargo. <code>cargo tauri dev</code> runs the desktop app for the host OS; <code>cargo tauri android dev</code> and <code>cargo tauri ios dev</code> are documented for those targets. Focused shells: <code>nix develop .#tauri-linux</code> and <code>nix develop .#tauri-android</code>.',
+        'toast.copied': 'Copied',
+        'toast.failed': 'Could not copy',
+        'faq.kicker': '05 — FAQ',
+        'faq.title': 'License, self-hosting, security, and contributing',
+        'faq.q1': 'What license is Macro under?',
+        'faq.a1': 'Macro is fully open source — not “open core” — under the GNU Affero General Public License v3.0. The canonical text is <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt">LICENSE.txt</a>. You can self-host under AGPLv3; the <a class="prose-link" href="https://docs.macro.com/faq">product FAQ</a> covers what that involves. For a different license, contact <a class="prose-link" href="mailto:licensing@macro.com">licensing@macro.com</a>. For managed hosting or commercial arrangements, contact <a class="prose-link" href="mailto:self-host@macro.com">self-host@macro.com</a>.',
+        'faq.q2': 'How is this different from Slack, Linear, Notion, HubSpot, or Superhuman?',
+        'faq.a2': 'The README’s argument is not that those products are weak. It is that they do not work together as one system. Macro is built as a single operating system: one graph, one permission model, one inbox, and agents that see the same team memory. Comparisons for individual surfaces are in the product docs FAQ.',
+        'faq.q3': 'Can I self-host it?',
+        'faq.a3': 'Yes, under the terms of the AGPLv3. See the <a class="prose-link" href="https://docs.macro.com/faq">FAQ</a> for what that involves. Local development is documented in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>: frontend against hosted services, or the full local stack when you change a backend service or the database.',
+        'faq.q4': 'How do I contribute, and what does CI expect?',
+        'faq.a4': 'Open an issue before a PR. Use Conventional Commits for branches and titles. Format and lint Rust with <code>cargo fmt</code> and <code>just clippy</code>; run <code>cargo test -p &lt;crate&gt;</code> for crates you touch; refresh the sqlx cache with <code>just prepare_db</code> after SQL changes. A required <code>cla</code> check runs on every PR; sign at <a class="prose-link" href="https://macro-cla.macroverse.workers.dev/cla">the Macro CLA</a>, then comment <code>/macro-cla check</code>. The PR Privacy Check fails titles, bodies, or commits that contain contact details, mentions, or support links; run <code>just pr-privacy</code> before pushing. Details are in <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.',
+        'faq.q5': 'What about security and model providers?',
+        'faq.a5': 'The README states SOC 2 Type II certification, ISO 27001, and zero data retention with model providers, including no training on customer data. Responsible reports are welcome; send them to <a class="prose-link" href="mailto:security@macro.com">security@macro.com</a>. Bounties are paid according to severity and impact.',
+        'faq.q6': 'Can coding agents use Macro?',
+        'faq.a6': 'Yes. Add the HTTP MCP server with <code>claude mcp add --transport http macro https://mcp-server.macro.com/mcp</code>. Team memory is available to external agents via MCP, or through the in-app model picker. Memory is stored as markdown so you can export it.',
+        'faq.q7': 'Is there a mobile app?',
+        'faq.a7': 'Docs are mobile-friendly in the <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS app</a> and on the web. The README says an Android app is coming soon. The web client also targets Tauri desktop.',
+        'faq.q8': 'Who is it for, and who built it?',
+        'faq.a8': 'The README describes Macro as an operating system any small company, or a team at a larger company, can use. It was designed in NYC and Toronto and dogfooded by a team of about 15 for two years. Feature requests: <a class="prose-link" href="mailto:contact@macro.com">contact@macro.com</a>. Hiring: <a class="prose-link" href="mailto:teo@macro.com">teo@macro.com</a>.',
+        'security.alt': 'ISO 27001 and SOC 2 Type II badges',
+        'security.note': 'ISO 27001 and SOC 2 Type II badges from the repository README. Zero data retention with model providers.',
+        'footer.blurb': 'An open-source company operating system by macro-inc. This page is a bilingual introduction to the public GitHub repository.',
+        'footer.col.product': 'Product',
+        'footer.col.repo': 'Repository',
+        'footer.col.legal': 'Legal',
+        'footer.site': 'Website',
+        'footer.app': 'Sign up',
+        'footer.docs': 'Docs',
+        'footer.demo': 'Book a demo',
+        'footer.repo': 'GitHub',
+        'footer.contributing': 'Contributing',
+        'footer.issues': 'Issues',
+        'footer.contact': 'Feature requests',
+        'footer.license': 'AGPL-3.0',
+        'footer.licensing': 'licensing@macro.com',
+        'footer.security': 'security@macro.com',
+        'footer.selfhost': 'self-host@macro.com',
+        'footer.copy': '© macro-inc · GNU Affero General Public License v3.0',
+        'footer.top': 'Back to top',
+      },
+      zh: {
+        'meta.title': 'Macro — 給團隊的一體化工作區',
+        'meta.description': 'Macro 把郵件、訊息、文件、任務、代理人與 CRM 收進同一個高速介面，並共享團隊層級記憶。以 AGPL-3.0 完整開源。',
+        'nav.skip': '跳到內容',
+        'nav.proof': '產品',
+        'nav.architecture': '系統',
+        'nav.capabilities': '功能',
+        'nav.install': '開始',
+        'nav.faq': '問答',
+        'nav.star': 'Star',
+        'nav.star.label': '在 GitHub 為 Macro 按 Star',
+        'nav.menu': '選單',
+        'aria.nav': '章節',
+        'aria.lang': '語言',
+        'lang.zh': '繁體中文',
+        'lang.en': 'English',
+        'hero.kicker': '開源 · 紐約與多倫多',
+        'hero.title': '把郵件、聊天、文件、任務、代理人與 CRM 收進<em class="italic text-ice">同一個高速介面</em>。',
+        'hero.subtitle': 'Macro 是給你與團隊的一體化工作區。工作區裡的每件事都能 @連結、可搜尋，團隊與代理人都不必再切換工具。在紐約與多倫多設計，以 SolidJS 與 Rust 打造，採 AGPL-3.0 完整開源。',
+        'hero.cta.install': '開始使用',
+        'hero.cta.features': '瀏覽功能',
+        'hero.cta.docs': '文件',
+        'hero.badge.license': 'AGPL-3.0',
+        'hero.badge.version': 'v2026.4.28.0',
+        'hero.badge.stack': 'SolidJS + Rust',
+        'hero.badge.oss': '完整開源',
+        'hero.badge.security': 'SOC 2 Type II · ISO 27001',
+        'proof.kicker': '01 — 產品',
+        'proof.title': '六個介面，一張雙向圖',
+        'proof.lead': '2026 年 10 月 29 日從已登入的 Macro 工作區擷取的真實畫面。CRM 看板使用虛構的示範公司與交易金額。',
+        'proof.tabs': '產品截圖',
+        'proof.tab.email': '郵件',
+        'proof.tab.email.meta': '統一收件匣',
+        'proof.tab.messages': '訊息',
+        'proof.tab.messages.meta': '專注頻道',
+        'proof.tab.tasks': '任務',
+        'proof.tab.tasks.meta': '與聊天綁定',
+        'proof.tab.docs': '文件',
+        'proof.tab.docs.meta': 'CRDT Markdown',
+        'proof.tab.crm': 'CRM',
+        'proof.tab.crm.meta': '就在郵件旁邊',
+        'proof.tab.agents': '代理人',
+        'proof.tab.agents.meta': '團隊記憶',
+        'proof.alt.email': 'Macro 團隊測試郵件，左側開啟郵件導覽列',
+        'proof.alt.messages': 'Macro 頻道討論，含完成的 Cursor 交接與代理人搜尋任務負責人',
+        'proof.alt.tasks': 'Macro 搜尋專案任務，依負責人分組，含狀態、優先級與專案連結',
+        'proof.alt.docs': 'Macro 中的 Team Channels PRD，含標籤、負責人與可讀需求',
+        'proof.alt.crm': 'Macro Sales Demo 管道，三個階段可見九張虛構公司卡片，並開啟導覽側欄',
+        'proof.alt.agents': 'Macro 程式代理人工作階段，含工具呼叫、成功稽核與 pull request',
+        'proof.caption.email': 'Macro 團隊測試郵件，左側開啟郵件導覽。多帳號統一收件匣、鍵盤優先、Gmail。',
+        'proof.caption.messages': 'feature-requests 頻道：Has PR / No PR 任務篩選、交給 Cursor，並請代理人找出負責人。',
+        'proof.caption.tasks': 'Search surface area 專案，任務依負責人分組，含狀態、優先級與專案連結。',
+        'proof.caption.docs': 'PRD：Team Channels — 標籤、負責人，以及 Markdown 原生編輯器中可讀的需求。',
+        'proof.caption.crm': 'Sales Demo 管道：Lead、Demo、Customer 三欄共九家虛構公司。交易金額為示範資料；兩張 Churned 卡片在裁切範圍外。',
+        'proof.caption.agents': 'Add Reminder Icon To Tasks — 程式代理人工作階段，含成功稽核與 PR #8824。',
+        'proof.before.kicker': '之前',
+        'proof.before.title': '五套出色的產品，組不成一個系統',
+        'proof.before.body': 'Macro 團隊用過 Slack、Linear、Notion、HubSpot 與 Superhuman。先前事業做到大約 20 人時，每個團隊各自有工具，公司靠 MCP 與 Zapier 撐住。公司無法被計算。',
+        'proof.after.kicker': '之後',
+        'proof.after.title': '從零重做的單一作業系統',
+        'proof.after.body': 'Macro 把工作軟體從頭設計成單一系統。每個介面為自己的工作而生，卻共用同一個後端。文件與任務、頻道訊息與郵件之間的交叉引用，都以雙向圖原生儲存。',
+        'arch.kicker': '02 — 系統',
+        'arch.title': '這些積木如何變成一個工作區',
+        'arch.lead': '每一塊都按一流產品來設計。真正加總的地方，是它們如何一起運作：@連結、頻道權限、團隊記憶、單一收件匣。',
+        'arch.principles': '系統原則',
+        'arch.linking.title': '雙向 @連結',
+        'arch.linking.meta': '文件、郵件、任務、CRM',
+        'arch.linking.heading': '@提及任何東西，兩邊都會記住',
+        'arch.linking.body': '在訊息裡 @提及一份文件，雙方都會知道彼此。工作區變成可雙向遊走的脈絡網。同一張圖也把客服郵件接到支援頻道，把 CRM 紀錄接到更新它的對話。',
+        'arch.permissions.title': '頻道權限',
+        'arch.permissions.meta': '加入即取得存取',
+        'arch.permissions.heading': '用說話來分享，而不是開權限單',
+        'arch.permissions.body': '你在頻道裡 @提及的任何東西，會自動分享給成員。加入頻道就取得存取；離開就失去。不必再跳權限申請。在郵件上按 Share，就能送到 DM 或頻道，不必截圖。',
+        'arch.memory.title': '統一記憶',
+        'arch.memory.meta': '每晚一次團隊綜整',
+        'arch.memory.heading': '記得的是公司，而不只是一則聊天',
+        'arch.memory.body': '代理人記得整個團隊在郵件、訊息、任務、文件與通話中做什麼，而不只是先前聊天機器人的回合。記憶每晚一次綜整，以 Markdown 儲存，並可經 MCP 或應用內模型選擇器使用。',
+        'arch.inbox.title': '單一收件匣',
+        'arch.inbox.meta': 'Signal 與 Noise',
+        'arch.inbox.heading': '郵件、聊天、任務、提及、代理人 — 同一份清單',
+        'arch.inbox.body': '郵件、頻道訊息、任務指派、@提及與代理人回覆都進同一個地方，分成 Signal 與 Noise。全程鍵盤優先：j、k、e 瀏覽，cmd+k 跳到聯絡人，c t 建立任務。',
+        'arch.blocks.title': '模組化積木',
+        'arch.blocks.lead': '點一塊積木看它如何相連。每個介面共用同一個後端。',
+        'arch.layout.title': '儲存庫結構',
+        'arch.layout.tree': 'macro/\n├── apps/web        SolidJS 客戶端\n├── apps/docs       docs.macro.com\n├── apps/marketing  公開網站\n├── services/       42 個可部署服務\n├── crates/         167 個 Rust 函式庫\n├── packages/       共用 TypeScript\n├── infra/          Pulumi\n├── docker/         本機 Compose\n├── nix/            釘選的開發環境\n└── tooling/        儲存庫腳本',
+        'arch.layout.note': '服務採六角形架構：入站轉接器、帶埠的領域核心、出站轉接器。數量來自儲存庫 README。',
+        'cap.kicker': '03 — 能力',
+        'cap.title': '像樂高一樣組裝的積木，不是通用積木原語',
+        'cap.lead': '內容取自產品 README。依介面篩選。這裡沒有從一般 SaaS 清單推出來的功能。',
+        'cap.filters': '功能篩選',
+        'cap.filter.all': '全部',
+        'cap.filter.email': '郵件',
+        'cap.filter.chat': '聊天',
+        'cap.filter.work': '工作',
+        'cap.filter.agents': '代理人',
+        'cap.filter.crm': 'CRM',
+        'cap.empty': '這個分類沒有項目。',
+        'cap.docs.link': '文件 →',
+        'cap.email.title': '郵件',
+        'cap.email.body': '多帳號統一收件匣、鍵盤快捷鍵與共用收件匣。Gmail。可在 AI 聊天裡起草、編輯與寄出。內建視窗管理器，可切 3 個以上分割。原生公司與聯絡人物件，可從一個地址跳到與該人或該公司的所有往來。',
+        'cap.messages.title': '訊息',
+        'cap.messages.body': '為專注技術討論設計的頻道與私訊。前幾則回覆直接顯示，其餘收進討論串。討論串可單獨授權，因此能跨頻道分享。代理人與真人使用者一樣，是一等公民。',
+        'cap.tasks.title': '任務',
+        'cap.tasks.body': '受 Linear 啟發的任務，緊密接上頻道、郵件與代理人，讓追蹤發生在對話本身。可從郵件、c t、文件裡的 /task、勾選 - [ ]、@Macro、任何代理人聊天，或經 MCP、API、SDK 建立。',
+        'cap.docs.title': '文件',
+        'cap.docs.body': 'Markdown 原生文件，以 CRDT 與 Cloudflare Durable Objects 即時協作。含歷史與分叉、離線編輯，以及指向郵件、任務、訊息、公司與聯絡人的 @連結。代理人作為對等協作者寫入同一套 CRDT。網頁與 iOS 皆可行動使用。',
+        'cap.canvas.title': '畫布',
+        'cap.canvas.body': '二維看板，可嵌入指向任務、檔案與郵件的 @連結 — 給清單裝不下、又不該活在另一塊白板裡的工作。',
+        'cap.agents.title': '代理人',
+        'cap.agents.body': '從對話、私訊、郵件、任務與通話綜整的團隊層級記憶 — 以 Markdown 儲存，可攜到 OpenAI、Google、Anthropic 與 MCP。工具幾乎覆蓋 Macro 介面上能做的事，MCP 沒有速率限制。',
+        'cap.calls.title': '通話',
+        'cap.calls.body': '錄製、轉寫，並寫入團隊記憶，讓代理人能依「說過的話」行動，而不只是聊天機器人裡打過的字。',
+        'cap.files.title': '檔案儲存',
+        'cap.files.body': '從郵件與頻道自動匯入，可完整搜尋。代理人能直接搜尋從郵件解析出的 PDF 附件，不必先拉討論串再找檔案。',
+        'cap.prs.title': 'Pull requests',
+        'cap.prs.body': '連結到任務、可嵌進頻道、也提供給代理人 — 讓「客戶郵件 → 任務 → 代理人 → pull request」整條鏈留在同一個系統。',
+        'cap.crm.title': 'CRM',
+        'cap.crm.body': '客戶與聯絡人物件、自訂屬性、郵件同步與 enrichment — 與團隊聊天、郵件放在一起。@提及一家公司就建立雙向連結。每筆交易自動有自己的頻道，釘在紀錄上。含看板、列表與可分享檢視。',
+        'install.kicker': '04 — 開始',
+        'install.title': '託管應用、MCP，或開源樹',
+        'install.lead': '在託管應用註冊、用 MCP 把程式代理人接到工作區，或 clone 儲存庫。本機堆疊說明在 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a> 與 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>。',
+        'install.tabs': '開始方式',
+        'install.tab.hosted': '託管版',
+        'install.tab.mcp': 'MCP',
+        'install.tab.source': '原始碼',
+        'install.tab.docs': '文件站',
+        'install.tab.desktop': 'Tauri',
+        'install.copy': '複製',
+        'install.note.hosted': '到 <a class="prose-link" href="https://macro.com/app">macro.com/app</a> 註冊，並連接 Gmail 或 Google Workspace。Macro 可在任何現代瀏覽器執行。另有 <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS 應用</a>；README 寫 Android 應用即將推出。<a class="prose-link" href="https://docs.macro.com/getting-started">入門指南</a>大約 15 分鐘可從新帳號走到可用設定。',
+        'install.note.mcp': '把 Claude Code、Codex 或任何 MCP 客戶端指到你的工作區。見 <a class="prose-link" href="https://docs.macro.com/AI/mcp/overview">MCP 設定</a> 與 <a class="prose-link" href="https://docs.macro.com/AI/recipes">代理人食譜</a>。README 寫 MCP 沒有速率限制，工具幾乎覆蓋 Macro 介面。',
+        'install.note.source': 'Clone 公開儲存庫。只改前端可對託管服務執行；改後端、資料庫或必須留在本機的行為則跑本機堆疊。請依 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>。前端使用 <a class="prose-link" href="https://bun.sh/">bun</a> 與 Vite。可用 <code>nix develop</code> 進入 Nix shell。',
+        'install.note.docs': '<code>docs.macro.com</code> 的 Mintlify 站在 <code>apps/docs</code>。Mintlify CLI 目前需要 LTS Node（Node 20 或 22）。產生的 MCP 工具頁會從 <code>crates/ai_tools</code> 重建。',
+        'install.note.desktop': 'SolidJS 客戶端也用 Tauri 打成桌面應用。需要 Rust、Tauri CLI 與 bun。在 Nix shell 裡 CLI 是給 cargo 用的。<code>cargo tauri dev</code> 跑宿主作業系統的桌面應用；<code>cargo tauri android dev</code> 與 <code>cargo tauri ios dev</code> 有對應說明。聚焦 shell：<code>nix develop .#tauri-linux</code> 與 <code>nix develop .#tauri-android</code>。',
+        'toast.copied': '已複製',
+        'toast.failed': '無法複製',
+        'faq.kicker': '05 — 問答',
+        'faq.title': '授權、自架、資安與貢獻',
+        'faq.q1': 'Macro 用什麼授權？',
+        'faq.a1': 'Macro 是完整開源 — 不是「open core」— 採用 GNU Affero General Public License v3.0。準據文本是 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/LICENSE.txt">LICENSE.txt</a>。可依 AGPLv3 自架；<a class="prose-link" href="https://docs.macro.com/faq">產品 FAQ</a> 說明涉及什麼。若要不同授權，請聯絡 <a class="prose-link" href="mailto:licensing@macro.com">licensing@macro.com</a>。託管或商業安排請聯絡 <a class="prose-link" href="mailto:self-host@macro.com">self-host@macro.com</a>。',
+        'faq.q2': '這和 Slack、Linear、Notion、HubSpot、Superhuman 有何不同？',
+        'faq.a2': 'README 的論點不是那些產品不好，而是它們無法作為單一系統一起運作。Macro 被建成一套作業系統：一張圖、一套權限、一個收件匣，以及看見同一份團隊記憶的代理人。各介面的比較寫在產品文件 FAQ。',
+        'faq.q3': '可以自架嗎？',
+        'faq.a3': '可以，依 AGPLv3 條款。細節見 <a class="prose-link" href="https://docs.macro.com/faq">FAQ</a>。本機開發寫在 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/docs/development/running-locally.md">Running locally</a>：前端可對託管服務執行；改後端服務或資料庫時再跑完整本機堆疊。',
+        'faq.q4': '如何貢獻？CI 要跑什麼？',
+        'faq.a4': '發 PR 前先開 issue。分支與標題用 Conventional Commits。Rust 變更用 <code>cargo fmt</code> 與 <code>just clippy</code>；對動到的 crate 跑 <code>cargo test -p &lt;crate&gt;</code>；改 SQL 後用 <code>just prepare_db</code> 更新 sqlx 快取。每個 PR 都有必要的 <code>cla</code> 檢查；到 <a class="prose-link" href="https://macro-cla.macroverse.workers.dev/cla">Macro CLA</a> 簽署，再留言 <code>/macro-cla check</code>。PR Privacy Check 會擋下含聯絡方式、提及或支援連結的標題、內文或提交；推送前跑 <code>just pr-privacy</code>。細節在 <a class="prose-link" href="https://github.com/macro-inc/macro/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>。',
+        'faq.q5': '資安與模型供應商呢？',
+        'faq.a5': 'README 載明 SOC 2 Type II 認證、ISO 27001，以及對模型供應商零資料保留，包含不以客戶資料訓練。歡迎負責任的回報，請寄 <a class="prose-link" href="mailto:security@macro.com">security@macro.com</a>。賞金依嚴重程度與影響支付。',
+        'faq.q6': '程式代理人可以用 Macro 嗎？',
+        'faq.a6': '可以。用 <code>claude mcp add --transport http macro https://mcp-server.macro.com/mcp</code> 加入 HTTP MCP 伺服器。團隊記憶可經 MCP 提供給外部代理人，或經應用內模型選擇器使用。記憶以 Markdown 儲存，可自行匯出。',
+        'faq.q7': '有行動應用嗎？',
+        'faq.a7': '文件在 <a class="prose-link" href="https://apps.apple.com/us/app/macro-app/id6743133649">iOS 應用</a> 與網頁上皆適合行動使用。README 寫 Android 應用即將推出。網頁客戶端也對準 Tauri 桌面版。',
+        'faq.q8': '給誰用？誰打造的？',
+        'faq.a8': 'README 把 Macro 寫成任何小公司、或大公司裡一個團隊都能當作業系統來用的產品。在紐約與多倫多設計，由約 15 人的團隊自用兩年。功能許願：<a class="prose-link" href="mailto:contact@macro.com">contact@macro.com</a>。招募：<a class="prose-link" href="mailto:teo@macro.com">teo@macro.com</a>。',
+        'security.alt': 'ISO 27001 與 SOC 2 Type II 徽章',
+        'security.note': '儲存庫 README 中的 ISO 27001 與 SOC 2 Type II 徽章。對模型供應商零資料保留。',
+        'footer.blurb': 'macro-inc 的開源公司作業系統。本頁是這份公開 GitHub 儲存庫的雙語介紹。',
+        'footer.col.product': '產品',
+        'footer.col.repo': '儲存庫',
+        'footer.col.legal': '法律',
+        'footer.site': '網站',
+        'footer.app': '註冊',
+        'footer.docs': '文件',
+        'footer.demo': '預約示範',
+        'footer.repo': 'GitHub',
+        'footer.contributing': '貢獻指南',
+        'footer.issues': 'Issues',
+        'footer.contact': '功能許願',
+        'footer.license': 'AGPL-3.0',
+        'footer.licensing': 'licensing@macro.com',
+        'footer.security': 'security@macro.com',
+        'footer.selfhost': 'self-host@macro.com',
+        'footer.copy': '© macro-inc · GNU Affero General Public License v3.0',
+        'footer.top': '回到頂端',
+      },
+    };
+
+    let lang = document.documentElement.dataset.lang === 'zh' ? 'zh' : 'en';
+    let tab = 'hosted';
+    let shot = 'email';
+    let toastTimer = 0;
+
+    function applyLanguage(next) {
+      lang = next === 'zh' ? 'zh' : 'en';
+      try { localStorage.setItem('macro-landing-lang', lang); } catch (e) {}
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+      document.documentElement.dataset.lang = lang;
+      document.title = translations[lang]['meta.title'];
+      const description = document.querySelector('meta[name="description"]');
+      if (description) description.setAttribute('content', translations[lang]['meta.description']);
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        const value = translations[lang][key];
+        if (typeof value !== 'string') {
+          console.error('Missing translation', lang, key);
+          return;
+        }
+        const attr = el.getAttribute('data-i18n-attr');
+        if (attr) el.setAttribute(attr, value);
+        else if (el.hasAttribute('data-i18n-html')) el.innerHTML = value;
+        else el.textContent = value;
+      });
+      document.querySelectorAll('[data-set-lang]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-set-lang') === lang ? 'true' : 'false');
+      });
+      if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+    }
+
+    function assertParity() {
+      const missingZh = Object.keys(translations.en).filter((key) => translations.zh[key] === undefined);
+      const missingEn = Object.keys(translations.zh).filter((key) => translations.en[key] === undefined);
+      const orphan = [];
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        if (translations.en[key] === undefined || translations.zh[key] === undefined) orphan.push(key);
+      });
+      if (missingZh.length || missingEn.length || orphan.length) {
+        console.error('i18n parity', { missingZh, missingEn, orphan });
+      }
+    }
+
+    function setTab(id) {
+      tab = id;
+      document.getElementById('install-code').textContent = commands[id];
+      document.querySelectorAll('[data-tab]').forEach((button) => {
+        const on = button.getAttribute('data-tab') === id;
+        button.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (on) document.getElementById('install-panel').setAttribute('aria-labelledby', button.id);
+      });
+      document.querySelectorAll('[data-note]').forEach((note) => {
+        note.classList.toggle('hidden', note.getAttribute('data-note') !== id);
+      });
+    }
+
+    function setRing(id) {
+      document.querySelectorAll('[data-ring]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-ring') === id ? 'true' : 'false');
+      });
+      document.getElementById('ring-title').setAttribute('data-i18n', 'arch.' + id + '.heading');
+      document.getElementById('ring-body').setAttribute('data-i18n', 'arch.' + id + '.body');
+      applyLanguage(lang);
+    }
+
+    function setBlock(id) {
+      document.querySelectorAll('[data-block]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-block') === id ? 'true' : 'false');
+      });
+      document.getElementById('block-body').setAttribute('data-i18n', blockKeys[id]);
+      applyLanguage(lang);
+    }
+
+    function setFilter(cat) {
+      let visible = 0;
+      document.querySelectorAll('[data-cat]').forEach((card) => {
+        const show = cat === 'all' || card.getAttribute('data-cat') === cat;
+        card.classList.toggle('hidden', !show);
+        if (show) visible += 1;
+      });
+      document.querySelectorAll('[data-filter]').forEach((button) => {
+        button.setAttribute('aria-pressed', button.getAttribute('data-filter') === cat ? 'true' : 'false');
+      });
+      document.getElementById('cap-empty').classList.toggle('hidden', visible > 0);
+    }
+
+    function renderShot() {
+      const image = document.getElementById('proof-img');
+      image.src = shots[shot];
+      image.setAttribute('data-i18n', 'proof.alt.' + shot);
+      document.getElementById('proof-caption').setAttribute('data-i18n', 'proof.caption.' + shot);
+      document.getElementById('frame-label').setAttribute('data-i18n', 'proof.tab.' + shot);
+      applyLanguage(lang);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-text').textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) {
+        try {
+          const area = document.createElement('textarea');
+          area.value = text;
+          area.setAttribute('readonly', '');
+          area.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;outline:0;opacity:0;';
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          const ok = document.execCommand('copy');
+          area.remove();
+          return ok;
+        } catch (fallbackError) {
+          return false;
+        }
+      }
+    }
+
+    function closeMenu() {
+      document.getElementById('mobile-nav').classList.add('hidden');
+      document.getElementById('menu-btn').setAttribute('aria-expanded', 'false');
+    }
+
+    assertParity();
+    applyLanguage(lang);
+    setTab('hosted');
+    if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+
+    document.querySelectorAll('[data-set-lang]').forEach((button) => {
+      button.addEventListener('click', () => applyLanguage(button.getAttribute('data-set-lang')));
+    });
+    document.querySelectorAll('[data-shot]').forEach((button) => {
+      button.addEventListener('click', () => {
+        shot = button.getAttribute('data-shot');
+        document.querySelectorAll('[data-shot]').forEach((other) => {
+          other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+        });
+        renderShot();
+      });
+    });
+    document.querySelectorAll('[data-ring]').forEach((button) => {
+      button.addEventListener('click', () => setRing(button.getAttribute('data-ring')));
+    });
+    document.querySelectorAll('[data-block]').forEach((button) => {
+      button.addEventListener('click', () => setBlock(button.getAttribute('data-block')));
+    });
+    document.querySelectorAll('[data-filter]').forEach((button) => {
+      button.addEventListener('click', () => setFilter(button.getAttribute('data-filter')));
+    });
+    document.querySelectorAll('[data-tab]').forEach((button) => {
+      button.addEventListener('click', () => setTab(button.getAttribute('data-tab')));
+    });
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const ok = await copyText(commands[tab]);
+      showToast(translations[lang][ok ? 'toast.copied' : 'toast.failed']);
+    });
+    document.querySelectorAll('.faq-item button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.faq-item');
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach((other) => {
+          other.classList.remove('open');
+          other.querySelector('button').setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    const menuButton = document.getElementById('menu-btn');
+    menuButton.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') === 'true';
+      document.getElementById('mobile-nav').classList.toggle('hidden', open);
+      menuButton.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+    document.querySelectorAll('#mobile-nav a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
+    });
+  </script>
+</body>
+</html>

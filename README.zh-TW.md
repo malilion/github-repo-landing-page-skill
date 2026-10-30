@@ -10,6 +10,8 @@
 
 **線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/](https://malilion.github.io/github-repo-landing-page-skill/demo/)
 
+**第二個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/macro/](https://malilion.github.io/github-repo-landing-page-skill/demo/macro/),由 Grok CLI 搭配本 skill 為 [macro-inc/macro](https://github.com/macro-inc/macro)(AGPL-3.0)產生。
+
 ## 特色
 
 - **單一檔案**:所有內容都在一個 `index.html`,不需建置流程,也不需 npm install。
@@ -72,3 +74,4 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `README.zh-TW.md` | 繁體中文說明 |
 | `assets/demo.gif` | 上方的示範動畫 |
 | `demo/index.html` | 產生的示範頁,以 GitHub Pages 提供 |
+| `demo/macro/index.html` | 第二個產生的示範頁(macro-inc/macro),以 GitHub Pages 提供 |
