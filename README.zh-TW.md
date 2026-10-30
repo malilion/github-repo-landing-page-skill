@@ -16,6 +16,8 @@
 
 **再一個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/magicui/](https://malilion.github.io/github-repo-landing-page-skill/demo/magicui/),由 Grok CLI 搭配本 skill 為 [magicuidesign/magicui](https://github.com/magicuidesign/magicui)(MIT)產生。
 
+**還有一個線上示範:** [https://malilion.github.io/github-repo-landing-page-skill/demo/agenui/](https://malilion.github.io/github-repo-landing-page-skill/demo/agenui/),由 Grok CLI 搭配本 skill 為 [AGenUI/AGenUI](https://github.com/AGenUI/AGenUI)(Apache-2.0)產生。
+
 ## 特色
 
 - **單一檔案**:所有內容都在一個 `index.html`,不需建置流程,也不需 npm install。
@@ -81,3 +83,4 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `demo/macro/index.html` | 第二個產生的示範頁(macro-inc/macro),以 GitHub Pages 提供 |
 | `demo/assistant-ui/index.html` | 另一個產生的示範頁(assistant-ui/assistant-ui),以 GitHub Pages 提供 |
 | `demo/magicui/index.html` | 再一個產生的示範頁(magicuidesign/magicui),以 GitHub Pages 提供 |
+| `demo/agenui/index.html` | 還有一個產生的示範頁(AGenUI/AGenUI),以 GitHub Pages 提供 |

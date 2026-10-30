@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGenUI — Native A2UI rendering for iOS, Android, and HarmonyOS</title>
+  <meta name="description" content="AGenUI is an Apache-2.0 A2UI v0.9 SDK. A shared C++ core streams LLM-generated UI to native iOS, Android, and HarmonyOS renderers.">
+  <meta name="theme-color" content="#07111e">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AGenUI — Native A2UI rendering for iOS, Android, and HarmonyOS">
+  <meta property="og:description" content="Apache-2.0 A2UI v0.9 SDK. Shared C++ core, native renderers on iOS, Android, and HarmonyOS. Version 1.7.0.">
+  <meta property="og:url" content="https://github.com/AGenUI/AGenUI">
+  <meta property="og:image" content="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/a2ui_rendering_effect.png">
+  <meta property="og:image:alt" content="A2UI components rendered by AGenUI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AGenUI — Native A2UI rendering for iOS, Android, and HarmonyOS">
+  <meta name="twitter:description" content="Apache-2.0 A2UI v0.9 SDK. Shared C++ core, native renderers on iOS, Android, and HarmonyOS. Version 1.7.0.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/a2ui_rendering_effect.png">
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" integrity="sha384-hJnF5AwidE18GSWTAGHv3ByzzvfNZ1Tcx5y1UUV3WkauuMCEzBJBMSwSt/PUPXnM" crossorigin="anonymous"></script>
+  <script>
+    if (window.tailwind) {
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              ink: '#07111e',
+              panel: '#0d1b2e',
+              line: '#243852',
+              mist: '#d5e2f2',
+              mute: '#93a4bd',
+              signal: '#3c9dff',
+              foam: '#b7f3e2'
+            },
+            fontFamily: {
+              serif: ['Fraunces', '"Noto Serif TC"', 'serif'],
+              sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+              mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'monospace']
+            },
+            boxShadow: {
+              glow: '0 24px 80px rgba(0, 145, 255, 0.18)'
+            }
+          }
+        }
+      };
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      background-color: #07111e;
+      background-image:
+        radial-gradient(980px 480px at 88% -8%, rgba(0, 145, 255, 0.20), transparent 58%),
+        radial-gradient(720px 380px at -12% 18%, rgba(183, 243, 226, 0.06), transparent 52%),
+        linear-gradient(rgba(148, 184, 220, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 184, 220, 0.045) 1px, transparent 1px);
+      background-size: auto, auto, 52px 52px, 52px 52px;
+    }
+    ::selection { background: rgba(60, 157, 255, 0.35); color: #f4f8fc; }
+    .glass {
+      background: rgba(7, 17, 30, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    [hidden] { display: none !important; }
+    .pulse-dot { animation: pulse-dot 1.8s ease-in-out infinite; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.82); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-dot { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+    .shot-frame { transition: background-color 0.3s ease; }
+    .hero-still { filter: drop-shadow(0 28px 48px rgba(0, 145, 255, 0.28)); }
+    .faq-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s ease;
+    }
+    .faq-panel.is-open { grid-template-rows: 1fr; }
+    .faq-chevron { transition: transform 0.3s ease; }
+    .faq-chevron.is-open { transform: rotate(180deg); }
+    .is-on { border-color: #3c9dff !important; background-color: rgba(60, 157, 255, 0.10); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "AGenUI",
+    "description": "High-performance A2UI SDK for native generative UI on iOS, Android, and HarmonyOS.",
+    "version": "1.7.0",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "codeRepository": "https://github.com/AGenUI/AGenUI",
+    "url": "https://github.com/AGenUI/AGenUI",
+    "programmingLanguage": ["C++", "Swift", "Java", "ArkTS", "Go"],
+    "runtimePlatform": ["iOS", "Android", "HarmonyOS"],
+    "author": { "@type": "Organization", "name": "AGenUI", "url": "https://genui.amap.com" }
+  }
+  </script>
+</head>
+<body class="bg-ink text-mist antialiased font-sans min-h-screen">
+  <a href="#hero" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-panel focus:px-3 focus:py-2" data-i18n="skip">Skip to content</a>
+
+  <header id="top" class="sticky top-0 z-50 glass border-b border-line/80">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
+      <a href="#hero" class="flex min-w-0 items-center gap-2.5">
+        <span class="grid h-9 w-9 place-items-center rounded-xl border border-signal/40 bg-signal/10 text-signal" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 13.5 9 3l6 10.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M5.2 10.2h7.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="truncate text-[15px] font-semibold tracking-tight text-white">AGenUI</span>
+        <span class="hidden font-mono text-[11px] text-foam sm:inline">v1.7.0</span>
+      </a>
+
+      <nav class="order-3 flex w-full flex-wrap gap-x-1 gap-y-1 text-sm md:order-none md:w-auto md:flex-1 md:justify-center" aria-label="Sections">
+        <a href="#showcase" class="rounded-full px-3 py-1.5 text-mute hover:bg-white/5 hover:text-white" data-i18n="nav.showcase">Showcase</a>
+        <a href="#capabilities" class="rounded-full px-3 py-1.5 text-mute hover:bg-white/5 hover:text-white" data-i18n="nav.capabilities">Capabilities</a>
+        <a href="#install" class="rounded-full px-3 py-1.5 text-mute hover:bg-white/5 hover:text-white" data-i18n="nav.install">Install</a>
+        <a href="#faq" class="rounded-full px-3 py-1.5 text-mute hover:bg-white/5 hover:text-white" data-i18n="nav.faq">FAQ</a>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2">
+        <div class="flex rounded-full border border-line bg-ink/60 p-0.5" role="group" data-i18n="lang.group" data-i18n-attr="aria-label" aria-label="Language">
+          <button type="button" id="btn-zh" class="rounded-full px-2.5 py-1 text-xs font-medium text-mute" aria-pressed="false">繁體中文</button>
+          <button type="button" id="btn-en" class="rounded-full px-2.5 py-1 text-xs font-medium text-mute" aria-pressed="true">English</button>
+        </div>
+        <a href="https://github.com/AGenUI/AGenUI" class="inline-flex items-center gap-1.5 rounded-full bg-signal px-3 py-1.5 text-xs font-semibold text-ink shadow-glow hover:bg-[#6ab4ff]" rel="noopener noreferrer">
+          <i data-lucide="star" class="h-3.5 w-3.5"></i>
+          <span data-i18n="nav.star">Star on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-12 sm:px-6 lg:grid-cols-12 lg:pt-16">
+      <div class="min-w-0 lg:col-span-7">
+        <p class="inline-flex items-center gap-2 rounded-full border border-line bg-panel/80 px-3 py-1 text-xs text-mute">
+          <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-foam" aria-hidden="true"></span>
+          <span data-i18n="hero.pill">A2UI v0.9 · SDK 1.7.0 · released 2026-10-19</span>
+        </p>
+        <h1 class="mt-5 text-4xl font-semibold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-[3.35rem]">
+          <span data-i18n="hero.title.before">Generative UI, </span><span id="hero-em" data-i18n="hero.title.em" class="font-serif italic text-signal">rendered natively</span><span data-i18n="hero.title.after"> across iOS, Android, and HarmonyOS.</span>
+        </h1>
+        <p class="mt-5 max-w-xl text-base leading-relaxed text-mute sm:text-lg" data-i18n="hero.subtitle">AGenUI fully implements Google's open-source A2UI v0.9 protocol. A shared C++ core parses the stream and keeps a virtual component tree. Three native renderers then draw interactive cards, forms, lists, images, and media with system UI.</p>
+        <p class="mt-3 text-sm text-mute/90" data-i18n="hero.note">The project is under active development. Contributions, feedback, and discussion are welcome.</p>
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <a href="#install" class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-ink hover:bg-mist">
+            <span data-i18n="hero.cta.install">Quick install</span>
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </a>
+          <a href="#capabilities" class="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-mist hover:border-signal/50 hover:text-white">
+            <span data-i18n="hero.cta.features">Browse capabilities</span>
+          </a>
+          <a href="https://genui.amap.com" class="text-sm text-signal hover:text-white" rel="noopener noreferrer" data-i18n="hero.site">Official website</a>
+        </div>
+        <ul class="mt-7 flex flex-wrap gap-2 text-[11px] font-medium tracking-wide">
+          <li><a href="https://github.com/AGenUI/AGenUI/blob/main/LICENSE" class="inline-flex rounded-full border border-foam/30 bg-foam/10 px-2.5 py-1 text-foam" rel="noopener noreferrer">Apache-2.0</a></li>
+          <li><span class="inline-flex rounded-full border border-line bg-panel px-2.5 py-1 font-mono text-mist">v1.7.0</span></li>
+          <li><span class="inline-flex rounded-full border border-line bg-panel px-2.5 py-1 text-mute">iOS 13+</span></li>
+          <li><span class="inline-flex rounded-full border border-line bg-panel px-2.5 py-1 text-mute">Android API 21+</span></li>
+          <li><span class="inline-flex rounded-full border border-line bg-panel px-2.5 py-1 text-mute">HarmonyOS NEXT API 17+</span></li>
+          <li><a href="https://github.com/google/A2UI" class="inline-flex rounded-full border border-line bg-panel px-2.5 py-1 text-mute hover:text-white" rel="noopener noreferrer">A2UI v0.9</a></li>
+        </ul>
+        <dl class="mt-8 grid max-w-lg grid-cols-3 gap-3 border-t border-line/80 pt-6">
+          <div>
+            <dt class="font-mono text-xl text-white" data-i18n="fact.platforms.v">3</dt>
+            <dd class="mt-1 text-xs leading-snug text-mute" data-i18n="fact.platforms.l">Native platforms</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-xl text-white">22</dt>
+            <dd class="mt-1 text-xs leading-snug text-mute" data-i18n="fact.components.l">Built-in components</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-xl text-white">120<span class="text-sm"> fps</span></dt>
+            <dd class="mt-1 text-xs leading-snug text-mute" data-i18n="fact.fps.l">README: core scenes such as scrolling</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="relative min-w-0 lg:col-span-5">
+        <div class="pointer-events-none absolute inset-x-8 top-10 h-2/3 rounded-full bg-signal/20 blur-3xl" aria-hidden="true"></div>
+        <figure class="relative">
+          <img
+            src="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/hero.gif"
+            alt="AGenUI streaming generative UI across iOS, Android, and HarmonyOS"
+            data-i18n="hero.img.alt"
+            data-i18n-attr="alt"
+            width="640"
+            class="hero-still relative mx-auto w-full max-w-[420px]"
+          >
+          <figcaption class="mt-3 text-center text-xs text-mute" data-i18n="hero.img.cap">Repository capture: docs/images/hero.gif</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 pb-6 sm:px-6" aria-labelledby="release-title">
+      <div class="rounded-3xl border border-line bg-panel/70 p-5 sm:p-7">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="release-title" class="text-lg font-semibold text-white">
+            <span data-i18n="release.kicker">What's new in </span><span class="font-mono text-signal">v1.7.0</span>
+          </h2>
+          <p class="font-mono text-xs text-mute" data-i18n="release.date">Released 2026-10-19 · CHANGELOG.md</p>
+        </div>
+        <ul class="mt-5 grid gap-4 md:grid-cols-3">
+          <li class="rounded-2xl border border-line/80 bg-ink/50 p-4">
+            <p class="font-mono text-xs text-foam">resolveCalls</p>
+            <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="release.f1">Recursively executes FunctionCalls nested in JSON and replaces each call node with its return value.</p>
+          </li>
+          <li class="rounded-2xl border border-line/80 bg-ink/50 p-4">
+            <p class="font-mono text-xs text-foam">registerDeepParseProperty</p>
+            <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="release.f2">Enables nested binding resolution inside function arguments and event context for action.</p>
+          </li>
+          <li class="rounded-2xl border border-line/80 bg-ink/50 p-4">
+            <p class="font-mono text-xs text-foam">label</p>
+            <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="release.f3">ChoicePicker and Slider now render and measure label, including wrap, dynamic updates, and clearing.</p>
+          </li>
+        </ul>
+        <p class="mt-4 text-sm leading-relaxed text-mute" data-i18n="release.also">Also in 1.7.0: Android keeps line-height after dynamic text updates. HarmonyOS fixes Image taps that carry an action, checks RichText and Tabs event types, and corrects ChoicePicker teardown order. Playground catalog URL references are updated.</p>
+      </div>
+    </section>
+
+    <section id="showcase" class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-signal" data-i18n="showcase.kicker">Visual proof</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl" data-i18n="showcase.title">Files that already live in the repo.</h2>
+        <p class="mt-3 text-mute" data-i18n="showcase.lead">Every frame below is a file under docs/images. The pipeline steps quote the data-flow diagram and the Quick Start stream API. Nothing here is a redrawn mock.</p>
+      </div>
+
+      <div class="mt-8 grid items-start gap-6 lg:grid-cols-12">
+        <div class="min-w-0 lg:col-span-4">
+          <h3 class="text-sm font-semibold text-white" data-i18n="flow.title">From token to native view</h3>
+          <ol class="mt-3 space-y-2" id="flow-list">
+            <li>
+              <button type="button" data-step="0" class="flow-step w-full rounded-2xl border border-line bg-panel/60 px-3 py-3 text-left hover:border-signal/50">
+                <span class="font-mono text-[10px] text-signal">01</span>
+                <span class="mt-1 block text-sm font-semibold text-white" data-i18n="flow.s1.t">LLM / AI model</span>
+                <span class="mt-1 block text-xs leading-relaxed text-mute" data-i18n="flow.s1.d">Generates A2UI JSON tokens. Go agents emit createSurface, updateComponents, updateDataModel, and deleteSurface.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-step="1" class="flow-step w-full rounded-2xl border border-line bg-panel/60 px-3 py-3 text-left hover:border-signal/50">
+                <span class="font-mono text-[10px] text-signal">02</span>
+                <span class="mt-1 block text-sm font-semibold text-white" data-i18n="flow.s2.t">SurfaceManager</span>
+                <span class="mt-1 block text-xs leading-relaxed text-mute" data-i18n="flow.s2.d">beginTextStream, receiveTextChunk, endTextStream. The diagram names the bridge JNI / ObjC++ / NAPI.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-step="2" class="flow-step w-full rounded-2xl border border-line bg-panel/60 px-3 py-3 text-left hover:border-signal/50">
+                <span class="font-mono text-[10px] text-signal">03</span>
+                <span class="mt-1 block text-sm font-semibold text-white" data-i18n="flow.s3.t">C++ core</span>
+                <span class="mt-1 block text-xs leading-relaxed text-mute" data-i18n="flow.s3.d">stream/ reassembles chunks. surface/ holds the virtual tree, data binding, and Yoga layout. function_call/ dispatches. core/include is the public C API.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" data-step="3" class="flow-step w-full rounded-2xl border border-line bg-panel/60 px-3 py-3 text-left hover:border-signal/50">
+                <span class="font-mono text-[10px] text-signal">04</span>
+                <span class="mt-1 block text-sm font-semibold text-white" data-i18n="flow.s4.t">Native UI</span>
+                <span class="mt-1 block text-xs leading-relaxed text-mute" data-i18n="flow.s4.d">UIKit, Android ViewGroup, and ArkUI. Listeners: onCreateSurface, onDeleteSurface, onReceiveActionEvent.</span>
+              </button>
+            </li>
+          </ol>
+          <pre class="mt-3 overflow-x-auto rounded-2xl border border-line bg-ink px-3 py-3 font-mono text-[12px] leading-relaxed text-foam"><code id="flow-code">createSurface
+updateComponents
+updateDataModel
+deleteSurface</code></pre>
+        </div>
+
+        <div class="min-w-0 lg:col-span-8">
+          <div class="flex flex-wrap gap-2" role="tablist" data-i18n="shot.tabs" data-i18n-attr="aria-label" aria-label="Repository images">
+            <button type="button" data-shot="0" class="shot-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="shot.tab.hero">Stream</button>
+            <button type="button" data-shot="1" class="shot-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="shot.tab.render">Components</button>
+            <button type="button" data-shot="2" class="shot-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="shot.tab.arch">Architecture</button>
+            <button type="button" data-shot="3" class="shot-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="shot.tab.comp">Catalog map</button>
+            <button type="button" data-shot="4" class="shot-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="shot.tab.flow">Data flow</button>
+          </div>
+          <figure class="shot-frame mt-3 overflow-hidden rounded-3xl border border-line" style="background:#070b16">
+            <img
+              id="shot"
+              src="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/hero.gif"
+              alt="AGenUI streaming generative UI across iOS, Android, and HarmonyOS"
+              data-i18n="shot.hero.alt"
+              data-i18n-attr="alt"
+              class="mx-auto max-h-[560px] w-full object-contain"
+            >
+          </figure>
+          <p id="shot-cap" class="mt-3 text-sm text-mute" data-i18n="shot.hero.cap">Streaming generative UI across iOS, Android, and HarmonyOS. Source: docs/images/hero.gif</p>
+        </div>
+      </div>
+
+      <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/core">
+          <p class="font-mono text-xs text-signal">core/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.core">C++ engine: parser, diff, layout, Function Call.</p>
+        </a>
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/platforms">
+          <p class="font-mono text-xs text-signal">platforms/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.platforms">iOS Objective-C bridge, Android JNI, HarmonyOS NAPI.</p>
+        </a>
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/playground">
+          <p class="font-mono text-xs text-signal">playground/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.playground">Demo apps for all three platforms, plus Studio.</p>
+        </a>
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/skills/a2ui-generation">
+          <p class="font-mono text-xs text-signal">skills/a2ui-generation/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.skill">Agent Skill that emits A2UI messages.</p>
+        </a>
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/agent_sdks/go">
+          <p class="font-mono text-xs text-signal">agent_sdks/go/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.go">Server-side A2UI agent SDK.</p>
+        </a>
+        <a class="rounded-2xl border border-line bg-panel/40 px-4 py-3 hover:border-signal/40" href="https://github.com/AGenUI/AGenUI/tree/main/samples/protocols">
+          <p class="font-mono text-xs text-signal">samples/protocols/</p>
+          <p class="mt-1 text-sm text-mute" data-i18n="dir.samples">Checked-in protocol samples.</p>
+        </a>
+      </div>
+      <ul class="mt-4 flex flex-wrap gap-2 text-[11px] font-mono text-mute">
+        <li class="rounded-full border border-line px-2 py-1">beijing-weather</li>
+        <li class="rounded-full border border-line px-2 py-1">chengdu-3day-trip</li>
+        <li class="rounded-full border border-line px-2 py-1">flight-schedule</li>
+        <li class="rounded-full border border-line px-2 py-1">flight-ticket</li>
+        <li class="rounded-full border border-line px-2 py-1">food-delivery-order</li>
+        <li class="rounded-full border border-line px-2 py-1">hotel-booking</li>
+        <li class="rounded-full border border-line px-2 py-1">movie-recommendation</li>
+        <li class="rounded-full border border-line px-2 py-1">parking-recommend</li>
+        <li class="rounded-full border border-line px-2 py-1">peony-pavilion-intro</li>
+        <li class="rounded-full border border-line px-2 py-1">suzhou-intro-card</li>
+        <li class="rounded-full border border-line px-2 py-1">weather-comparison</li>
+        <li class="rounded-full border border-line px-2 py-1">workout-plan</li>
+      </ul>
+    </section>
+
+    <section id="capabilities" class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs uppercase tracking-[0.18em] text-signal" data-i18n="cap.kicker">Capabilities</p>
+          <h2 class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl" data-i18n="cap.title">What the SDK actually ships.</h2>
+          <p class="mt-3 text-mute" data-i18n="cap.lead">Taken from the README, CHANGELOG, catalog, and package manifests. Counts below are the ones those files state.</p>
+        </div>
+        <div class="flex flex-wrap gap-2" role="group" data-i18n="filter.group" data-i18n-attr="aria-label" aria-label="Filter capabilities">
+          <button type="button" data-filter="all" class="feat-filter rounded-full border border-signal bg-signal/15 px-3 py-1.5 text-xs text-white" data-i18n="filter.all">All</button>
+          <button type="button" data-filter="render" class="feat-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="filter.render">Render</button>
+          <button type="button" data-filter="protocol" class="feat-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="filter.protocol">Protocol</button>
+          <button type="button" data-filter="agent" class="feat-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="filter.agent">Agent</button>
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3" id="feat-grid">
+        <article data-cat="render" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="radio" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.stream.t">Real-time streaming render</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.stream.d">Structured component descriptions arrive incrementally from the LLM and update on screen. The Quick Start drives a session with beginTextStream, receiveTextChunk, and endTextStream.</p>
+        </article>
+        <article data-cat="render" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="zap" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.perf.t">Native drawing on three OSes</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.perf.d">iOS, Android, and HarmonyOS use system UI. The README states that core scenes such as page scrolling hold a 120 fps refresh rate.</p>
+        </article>
+        <article data-cat="render" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="cpu" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.core.t">Shared C++ core</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.core.d">The C++ layer parses the stream, manages the virtual component tree, caches draw data, resolves theme and style, and diffs component changes before the platform renderers paint.</p>
+        </article>
+        <article data-cat="render" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="palette" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.theme.t">Design tokens, light and dark</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.theme.d">registerDefaultTheme takes theme JSON and design-token JSON. setDayNightMode accepts "light" or "dark", and surfaces that are already up refresh their colors.</p>
+        </article>
+        <article data-cat="protocol" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="layout-grid" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.components.t">22 built-in components</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.components.d">18 components implement the A2UI protocol on all three platforms. Four more ship with the SDK and are outside the spec: Table, Carousel, Web, and RichText.</p>
+        </article>
+        <article data-cat="protocol" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="puzzle" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.custom.t">Custom component API</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.custom.d">Register extra native components at runtime. The model can then emit them by name. Playground registers Chart, Markdown, and Lottie to show the same API.</p>
+        </article>
+        <article data-cat="protocol" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="book-open" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.catalog.t">Freestanding catalog</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.catalog.d">agenui_catalog.json inlines every external $ref. The README says it covers 25 components and 14 functions (validation, formatting, logic, and URL navigation), plus Styles and TextStyles. Supply it as a catalogId in supportedCatalogIds.</p>
+        </article>
+        <article data-cat="protocol" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="workflow" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.functions.t">On-device function calls</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.functions.d">Register client tools the model can invoke. v1.7.0 adds resolveCalls for nested FunctionCalls, and registerDeepParseProperty for multi-level bindings inside action arguments and event context.</p>
+        </article>
+        <article data-cat="agent" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="sparkles" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.skill.t">A2UI generation skill</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.skill.d">skills/a2ui-generation mounts into Agent Skills runtimes. The README names Claude Code, Cursor, Codex, Gemini CLI, Windsurf, and GitHub Copilot, and states 55+ runtimes. Default shape is one Card. An explicit layout or style request wins over that default.</p>
+        </article>
+        <article data-cat="agent" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="laptop" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.studio.t">Studio, local and BYOK</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.studio.d">AGenUI Studio turns a description into protocol, previews it, validates with the skill's validate_a2ui.py, and pushes to Playground by QR code. npm package agenui-studio is 0.1.5. Documented providers: DeepSeek, Qwen, GLM, Moonshot, MiniMax, OpenAI, Gemini, Anthropic, OpenRouter. Keys stay under ~/.agenui.</p>
+        </article>
+        <article data-cat="agent" class="rounded-3xl border border-line bg-panel/50 p-5">
+          <i data-lucide="boxes" class="h-5 w-5 text-signal"></i>
+          <h3 class="mt-3 text-base font-semibold text-white" data-i18n="feat.go.t">Go agent SDK</h3>
+          <p class="mt-2 text-sm leading-relaxed text-mute" data-i18n="feat.go.d">agent_sdks/go streams partial UI, validates topology, reachability, circular references, and recursion depth, and can build an LLM system prompt from a catalog. A sample lives at samples/go/rizzcharts.</p>
+        </article>
+      </div>
+
+      <div class="mt-14">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h3 class="text-2xl font-semibold text-white" data-i18n="vocab.title">Component vocabulary</h3>
+            <p class="mt-2 max-w-2xl text-sm text-mute" data-i18n="vocab.lead">Names and descriptions follow the README tables. Protocol components are on all three platforms. SDK extensions are bundled but are not part of the A2UI spec. Playground components show the custom-component API.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" data-group="all" class="group-filter rounded-full border border-signal bg-signal/15 px-3 py-1.5 text-xs text-white" data-i18n="vocab.all">All</button>
+            <button type="button" data-group="protocol" class="group-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="vocab.protocol">A2UI protocol · 18</button>
+            <button type="button" data-group="sdk" class="group-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="vocab.sdk">SDK extensions · 4</button>
+            <button type="button" data-group="play" class="group-filter rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="vocab.play">Playground · 3</button>
+          </div>
+        </div>
+        <ul class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" id="vocab-grid">
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Text</p><p class="mt-1 text-xs text-mute" data-i18n="c.text">Styled text with variants such as h1–h5, body, and caption.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Image</p><p class="mt-1 text-xs text-mute" data-i18n="c.image">Network image with scale modes and rounded corners.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Icon</p><p class="mt-1 text-xs text-mute" data-i18n="c.icon">Icon rendered through a Unicode or SVG mapping.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Divider</p><p class="mt-1 text-xs text-mute" data-i18n="c.divider">Horizontal or vertical separator.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Video</p><p class="mt-1 text-xs text-mute" data-i18n="c.video">Native video player with seek and auto-hiding controls.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">AudioPlayer</p><p class="mt-1 text-xs text-mute" data-i18n="c.audio">Audio player with a progress bar.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Button</p><p class="mt-1 text-xs text-mute" data-i18n="c.button">Tappable button that fires an Action.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Row</p><p class="mt-1 text-xs text-mute" data-i18n="c.row">Horizontal flex container.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Column</p><p class="mt-1 text-xs text-mute" data-i18n="c.column">Vertical flex container.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Card</p><p class="mt-1 text-xs text-mute" data-i18n="c.card">Card container with shadow.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">List</p><p class="mt-1 text-xs text-mute" data-i18n="c.list">Scrollable list with static children or a template.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Tabs</p><p class="mt-1 text-xs text-mute" data-i18n="c.tabs">Tab bar with switchable panels.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Modal</p><p class="mt-1 text-xs text-mute" data-i18n="c.modal">Native dialog overlay.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">TextField</p><p class="mt-1 text-xs text-mute" data-i18n="c.field">Text input with optional validation.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">CheckBox</p><p class="mt-1 text-xs text-mute" data-i18n="c.check">Boolean toggle.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Slider</p><p class="mt-1 text-xs text-mute" data-i18n="c.slider">Numeric range input.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">ChoicePicker</p><p class="mt-1 text-xs text-mute" data-i18n="c.choice">Single or multi-select picker.</p></li>
+          <li data-group="protocol" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">DateTimeInput</p><p class="mt-1 text-xs text-mute" data-i18n="c.date">Date and time picker.</p></li>
+          <li data-group="sdk" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Table</p><p class="mt-1 text-xs text-mute" data-i18n="c.table">Data table that uses a Yoga sub-layout.</p></li>
+          <li data-group="sdk" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Carousel</p><p class="mt-1 text-xs text-mute" data-i18n="c.carousel">Image or content carousel.</p></li>
+          <li data-group="sdk" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Web</p><p class="mt-1 text-xs text-mute" data-i18n="c.web">Embedded WebView.</p></li>
+          <li data-group="sdk" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">RichText</p><p class="mt-1 text-xs text-mute" data-i18n="c.rich">HTML rich text.</p></li>
+          <li data-group="play" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Chart</p><p class="mt-1 text-xs text-mute" data-i18n="c.chart">Bar, line, and pie charts.</p></li>
+          <li data-group="play" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Markdown</p><p class="mt-1 text-xs text-mute" data-i18n="c.md">Markdown rendering, including streaming output.</p></li>
+          <li data-group="play" class="rounded-2xl border border-line bg-ink/40 px-4 py-3"><p class="font-mono text-sm text-white">Lottie</p><p class="mt-1 text-xs text-mute" data-i18n="c.lottie">Lottie animation playback.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="install" class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-signal" data-i18n="install.kicker">Install</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl" data-i18n="install.title">Commands copied from the docs.</h2>
+        <p class="mt-3 text-mute" data-i18n="install.lead">Each tab is a command the repository already documents. Notes record the toolchain and version strings found next to that command. There is no guessed package manager.</p>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-2" role="tablist" data-i18n="install.tabs" data-i18n-attr="aria-label" aria-label="Install methods">
+        <button type="button" data-tab="skill" class="install-tab rounded-full border border-signal bg-signal/15 px-3 py-1.5 text-xs text-white" data-i18n="tab.skill">Skill</button>
+        <button type="button" data-tab="studio" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.studio">Studio</button>
+        <button type="button" data-tab="android" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.android">Android</button>
+        <button type="button" data-tab="ios" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.ios">iOS</button>
+        <button type="button" data-tab="harmony" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.harmony">HarmonyOS</button>
+        <button type="button" data-tab="go" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.go">Go SDK</button>
+        <button type="button" data-tab="source" class="install-tab rounded-full border border-line px-3 py-1.5 text-xs text-mute" data-i18n="tab.source">Clone</button>
+      </div>
+
+      <div class="mt-4 overflow-hidden rounded-3xl border border-line bg-[#091422]">
+        <div class="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5">
+          <span class="font-mono text-[11px] text-mute" id="install-file" data-i18n="install.skill.file">README · one-command skill install</span>
+          <button type="button" id="copy-btn" class="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-xs text-mist hover:border-signal/50">
+            <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+            <span data-i18n="install.copy">Copy</span>
+          </button>
+        </div>
+        <pre class="overflow-x-auto px-4 py-4 font-mono text-[13px] leading-relaxed text-foam"><code id="install-cmd">npx skills add AGenUI/AGenUI</code></pre>
+      </div>
+      <p id="install-note" class="mt-4 max-w-3xl text-sm leading-relaxed text-mute break-words" data-i18n="install.skill.note">Recommended line from the README. Manual path: git clone https://github.com/AGenUI/AGenUI.git and copy skills/a2ui-generation to ~/.claude/skills/. Other runtimes use their own skills directory, for example ~/.cursor/skills/ or ~/.codex/skills/. The skill asks the model for updateComponents and updateDataModel.</p>
+      <p class="mt-4 text-sm">
+        <a id="doc-link" href="https://github.com/AGenUI/AGenUI/blob/main/docs/QuickStart.md" class="text-signal hover:text-white" rel="noopener noreferrer" data-i18n="install.docs">SDK quick start and API reference</a>
+      </p>
+    </section>
+
+    <section id="faq" class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-signal" data-i18n="faq.kicker">FAQ</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl" data-i18n="faq.title">License, scope, and CI.</h2>
+      </div>
+      <div class="mt-6 divide-y divide-line rounded-3xl border border-line bg-panel/40">
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q1">Which license covers AGenUI?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a1">AGenUI is released under the Apache License, Version 2.0. The LICENSE file is in the repository root. NOTICE says the project's own source, outside the third-party pieces it lists, is Apache-2.0. It also says the vendored iksemel library is LGPL-2.1, built as a shared library on HarmonyOS, and not used on Android or iOS. NOTICE describes the engine source as not a derivative of that library.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q2">How is this different from the A2UI specification?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a2">Google's A2UI v0.9 is the protocol. AGenUI is an implementation of that protocol: a shared C++ core, native renderers for iOS, Android, and HarmonyOS, the freestanding catalog, the generation skill, Studio, and the Go agent SDK. The README describes drawing interactive cards, forms, lists, images, and media players with system UI. This repository does not publish a scorecard against other named UI SDKs, so this page does not invent one.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q3">Should I use the skill or Studio?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a3">The skill is a directory you mount in an agent runtime with npx skills add AGenUI/AGenUI. Studio is a local browser workbench, npx agenui-studio, that reuses the skill's design rules and scripts/validate_a2ui.py, then sends a QR code to AGenUI Playground on a device. Studio's README says API keys, config, and generated protocols stay on the machine under ~/.agenui.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q4">What CI is already in the repository?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a4">.github/workflows has live pipelines: CI - Android runs ./scripts/android/build.sh (the workflow sets up JDK 17), CI - iOS runs ./scripts/ios/build.sh on macos-26 after selecting Xcode 26.2, and CI - HarmonyOS runs ./scripts/harmony/build.sh. They trigger on push and pull request to main, with path filters. Release workflows run for tags that start with AGenUI-; Studio Release packs agenui-studio.zip on those tags. The C++ gtest file tests/cpp/ci/github-actions.yml says it is not a live workflow until copied to .github/workflows/. Host tests: ./tests/cpp/ci/run_tests.sh. Device integration: ./tests/integration/run.sh, with --android, --ios, or --harmony.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q5">Which version and OS minimums are written down?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a5">core/include/agenui_version.h sets AGENUI_VERSION to 1.7.0. CHANGELOG dates that release 2026-10-19. The published iOS podspec is 1.7.0 with deployment target 13.0. QuickStart lists Android API 21 or later, and HarmonyOS NEXT API 17 or later. The separate npm package agenui-studio is 0.1.5. The QuickStart local Maven snippet still shows implementation 'com.amap.genui:agenui-sdk:0.1.0'.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <h3>
+            <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-5 py-4 text-left" aria-expanded="false">
+              <span class="text-sm font-semibold text-white sm:text-base" data-i18n="faq.q6">How do contributions land?</span>
+              <i data-lucide="chevron-down" class="faq-chevron h-4 w-4 shrink-0 text-mute"></i>
+            </button>
+          </h3>
+          <div class="faq-panel">
+            <div class="min-h-0 overflow-hidden">
+              <p class="px-5 pb-5 text-sm leading-relaxed text-mute" data-i18n="faq.a6">Fork, branch from main (fix/… or feat/…), test on the platforms you change, and open a pull request to main. At least one maintainer approval is required. C++, Swift, and Java follow the Google Style Guide. ArkTS follows OpenHarmony. Larger changes start with an issue. See CONTRIBUTING.md. Issues and Discussions are on GitHub. The README lists the email tengjixiang.ttjx@alibaba-inc.com, plus DingTalk and WeChat groups.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mt-16 border-t border-line">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <p class="text-lg font-semibold text-white">AGenUI</p>
+        <p class="mt-3 text-sm leading-relaxed text-mute" data-i18n="footer.blurb">A high-performance A2UI SDK for native generative UI on iOS, Android, and HarmonyOS. Shared C++ core. Version 1.7.0.</p>
+        <p class="mt-4 text-sm text-mist">
+          <span data-i18n="footer.licenseLead">Licensed under </span>
+          <a href="https://www.apache.org/licenses/LICENSE-2.0" class="text-foam underline decoration-foam/40 underline-offset-2 hover:text-white" rel="noopener noreferrer">Apache-2.0</a>
+          <span data-i18n="footer.licenseMid">. Repository </span>
+          <a href="https://github.com/AGenUI/AGenUI" class="text-foam underline decoration-foam/40 underline-offset-2 hover:text-white" rel="noopener noreferrer">github.com/AGenUI/AGenUI</a>
+          <span data-i18n="footer.licenseEnd">. License file: </span>
+          <a href="https://github.com/AGenUI/AGenUI/blob/main/LICENSE" class="text-foam underline decoration-foam/40 underline-offset-2 hover:text-white" rel="noopener noreferrer">LICENSE</a>.
+        </p>
+      </div>
+      <div class="md:col-span-3">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-mute" data-i18n="footer.links">Project</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI" rel="noopener noreferrer">GitHub</a></li>
+          <li><a class="text-mist hover:text-white" href="https://genui.amap.com" rel="noopener noreferrer" data-i18n="footer.site">Official website</a></li>
+          <li><a id="footer-quick" class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI/blob/main/docs/QuickStart.md" rel="noopener noreferrer" data-i18n="footer.quick">Quick start</a></li>
+          <li><a id="footer-api" class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI/blob/main/docs/API.md" rel="noopener noreferrer" data-i18n="footer.api">API reference</a></li>
+          <li><a class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI/blob/main/CONTRIBUTING.md" rel="noopener noreferrer" data-i18n="footer.contrib">Contributing</a></li>
+          <li><a class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI/issues" rel="noopener noreferrer">Issues</a></li>
+          <li><a class="text-mist hover:text-white" href="https://github.com/AGenUI/AGenUI/discussions" rel="noopener noreferrer">Discussions</a></li>
+          <li><a class="break-all text-mist hover:text-white" href="mailto:tengjixiang.ttjx@alibaba-inc.com">tengjixiang.ttjx@alibaba-inc.com</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-4">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-mute" data-i18n="footer.community">Community QR codes from the README</p>
+        <div class="mt-3 grid grid-cols-2 gap-3">
+          <figure class="rounded-2xl border border-line bg-white p-2">
+            <img src="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/dingtalk_qrcode.jpg" alt="AGenUI DingTalk group QR code" data-i18n="qr.ding.alt" data-i18n-attr="alt" width="220" height="220" class="mx-auto h-auto w-full max-w-[220px]" loading="lazy">
+            <figcaption class="mt-1 text-center text-[11px] text-ink" data-i18n="qr.ding.cap">DingTalk group</figcaption>
+          </figure>
+          <figure class="rounded-2xl border border-line bg-white p-2">
+            <img src="https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/wechat_qrcode.jpg" alt="AGenUI WeChat group QR code" data-i18n="qr.wechat.alt" data-i18n-attr="alt" width="220" height="220" class="mx-auto h-auto w-full max-w-[220px]" loading="lazy">
+            <figcaption class="mt-1 text-center text-[11px] text-ink" data-i18n="qr.wechat.cap">WeChat group</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-line/80">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+        <p class="text-xs text-mute" data-i18n="footer.copy">AGenUI · Apache License 2.0 · main</p>
+        <a href="#top" class="inline-flex items-center gap-1.5 text-xs text-mist hover:text-white">
+          <i data-lucide="arrow-up" class="h-3.5 w-3.5"></i>
+          <span data-i18n="footer.top">Back to top</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="pointer-events-none fixed bottom-6 right-4 z-50 translate-y-20 opacity-0 transition-all duration-300 sm:right-6" role="status" aria-live="polite">
+    <div class="rounded-lg border border-line bg-panel px-4 py-2.5 font-mono text-xs text-mist shadow-xl">
+      <span id="toast-text">Copied</span>
+    </div>
+  </div>
+
+  <script>
+    var translations = {
+      en: {
+        "skip": "Skip to content",
+        "lang.group": "Language",
+        "nav.showcase": "Showcase",
+        "nav.capabilities": "Capabilities",
+        "nav.install": "Install",
+        "nav.faq": "FAQ",
+        "nav.star": "Star on GitHub",
+        "meta.title": "AGenUI — Native A2UI rendering for iOS, Android, and HarmonyOS",
+        "meta.desc": "AGenUI is an Apache-2.0 A2UI v0.9 SDK. A shared C++ core streams LLM-generated UI to native iOS, Android, and HarmonyOS renderers.",
+        "hero.pill": "A2UI v0.9 · SDK 1.7.0 · released 2026-10-19",
+        "hero.title.before": "Generative UI, ",
+        "hero.title.em": "rendered natively",
+        "hero.title.after": " across iOS, Android, and HarmonyOS.",
+        "hero.subtitle": "AGenUI fully implements Google's open-source A2UI v0.9 protocol. A shared C++ core parses the stream and keeps a virtual component tree. Three native renderers then draw interactive cards, forms, lists, images, and media with system UI.",
+        "hero.note": "The project is under active development. Contributions, feedback, and discussion are welcome.",
+        "hero.cta.install": "Quick install",
+        "hero.cta.features": "Browse capabilities",
+        "hero.site": "Official website",
+        "hero.img.alt": "AGenUI streaming generative UI across iOS, Android, and HarmonyOS",
+        "hero.img.cap": "Repository capture: docs/images/hero.gif",
+        "fact.platforms.v": "3",
+        "fact.platforms.l": "Native platforms",
+        "fact.components.l": "Built-in components",
+        "fact.fps.l": "README: core scenes such as scrolling",
+        "release.kicker": "What's new in ",
+        "release.date": "Released 2026-10-19 · CHANGELOG.md",
+        "release.f1": "Recursively executes FunctionCalls nested in JSON and replaces each call node with its return value.",
+        "release.f2": "Enables nested binding resolution inside function arguments and event context for action.",
+        "release.f3": "ChoicePicker and Slider now render and measure label, including wrap, dynamic updates, and clearing.",
+        "release.also": "Also in 1.7.0: Android keeps line-height after dynamic text updates. HarmonyOS fixes Image taps that carry an action, checks RichText and Tabs event types, and corrects ChoicePicker teardown order. Playground catalog URL references are updated.",
+        "showcase.kicker": "Visual proof",
+        "showcase.title": "Files that already live in the repo.",
+        "showcase.lead": "Every frame below is a file under docs/images. The pipeline steps quote the data-flow diagram and the Quick Start stream API. Nothing here is a redrawn mock.",
+        "flow.title": "From token to native view",
+        "flow.s1.t": "LLM / AI model",
+        "flow.s1.d": "Generates A2UI JSON tokens. Go agents emit createSurface, updateComponents, updateDataModel, and deleteSurface.",
+        "flow.s2.t": "SurfaceManager",
+        "flow.s2.d": "beginTextStream, receiveTextChunk, endTextStream. The diagram names the bridge JNI / ObjC++ / NAPI.",
+        "flow.s3.t": "C++ core",
+        "flow.s3.d": "stream/ reassembles chunks. surface/ holds the virtual tree, data binding, and Yoga layout. function_call/ dispatches. core/include is the public C API.",
+        "flow.s4.t": "Native UI",
+        "flow.s4.d": "UIKit, Android ViewGroup, and ArkUI. Listeners: onCreateSurface, onDeleteSurface, onReceiveActionEvent.",
+        "shot.tabs": "Repository images",
+        "shot.tab.hero": "Stream",
+        "shot.tab.render": "Components",
+        "shot.tab.arch": "Architecture",
+        "shot.tab.comp": "Catalog map",
+        "shot.tab.flow": "Data flow",
+        "shot.hero.alt": "AGenUI streaming generative UI across iOS, Android, and HarmonyOS",
+        "shot.hero.cap": "Streaming generative UI across iOS, Android, and HarmonyOS. Source: docs/images/hero.gif",
+        "shot.render.alt": "A2UI components rendering showcase",
+        "shot.render.cap": "Component rendering showcase shipped with the README. Source: docs/images/a2ui_rendering_effect.png",
+        "shot.arch.alt": "AGenUI SDK architecture",
+        "shot.arch.cap": "Architecture diagram: shared C++ core and three native renderers. Source: docs/images/architecture.svg",
+        "shot.comp.alt": "AGenUI built-in components",
+        "shot.comp.cap": "Built-in component map from the repository. Source: docs/images/components.svg",
+        "shot.flow.alt": "AGenUI data flow from LLM tokens to native UI",
+        "shot.flow.cap": "Data flow: LLM tokens, SurfaceManager, C++ core, native UI. Source: docs/images/dataflow.svg",
+        "dir.core": "C++ engine: parser, diff, layout, Function Call.",
+        "dir.platforms": "iOS Objective-C bridge, Android JNI, HarmonyOS NAPI.",
+        "dir.playground": "Demo apps for all three platforms, plus Studio.",
+        "dir.skill": "Agent Skill that emits A2UI messages.",
+        "dir.go": "Server-side A2UI agent SDK.",
+        "dir.samples": "Checked-in protocol samples.",
+        "cap.kicker": "Capabilities",
+        "cap.title": "What the SDK actually ships.",
+        "cap.lead": "Taken from the README, CHANGELOG, catalog, and package manifests. Counts below are the ones those files state.",
+        "filter.group": "Filter capabilities",
+        "filter.all": "All",
+        "filter.render": "Render",
+        "filter.protocol": "Protocol",
+        "filter.agent": "Agent",
+        "feat.stream.t": "Real-time streaming render",
+        "feat.stream.d": "Structured component descriptions arrive incrementally from the LLM and update on screen. The Quick Start drives a session with beginTextStream, receiveTextChunk, and endTextStream.",
+        "feat.perf.t": "Native drawing on three OSes",
+        "feat.perf.d": "iOS, Android, and HarmonyOS use system UI. The README states that core scenes such as page scrolling hold a 120 fps refresh rate.",
+        "feat.core.t": "Shared C++ core",
+        "feat.core.d": "The C++ layer parses the stream, manages the virtual component tree, caches draw data, resolves theme and style, and diffs component changes before the platform renderers paint.",
+        "feat.theme.t": "Design tokens, light and dark",
+        "feat.theme.d": "registerDefaultTheme takes theme JSON and design-token JSON. setDayNightMode accepts \"light\" or \"dark\", and surfaces that are already up refresh their colors.",
+        "feat.components.t": "22 built-in components",
+        "feat.components.d": "18 components implement the A2UI protocol on all three platforms. Four more ship with the SDK and are outside the spec: Table, Carousel, Web, and RichText.",
+        "feat.custom.t": "Custom component API",
+        "feat.custom.d": "Register extra native components at runtime. The model can then emit them by name. Playground registers Chart, Markdown, and Lottie to show the same API.",
+        "feat.catalog.t": "Freestanding catalog",
+        "feat.catalog.d": "agenui_catalog.json inlines every external $ref. The README says it covers 25 components and 14 functions (validation, formatting, logic, and URL navigation), plus Styles and TextStyles. Supply it as a catalogId in supportedCatalogIds.",
+        "feat.functions.t": "On-device function calls",
+        "feat.functions.d": "Register client tools the model can invoke. v1.7.0 adds resolveCalls for nested FunctionCalls, and registerDeepParseProperty for multi-level bindings inside action arguments and event context.",
+        "feat.skill.t": "A2UI generation skill",
+        "feat.skill.d": "skills/a2ui-generation mounts into Agent Skills runtimes. The README names Claude Code, Cursor, Codex, Gemini CLI, Windsurf, and GitHub Copilot, and states 55+ runtimes. Default shape is one Card. An explicit layout or style request wins over that default.",
+        "feat.studio.t": "Studio, local and BYOK",
+        "feat.studio.d": "AGenUI Studio turns a description into protocol, previews it, validates with the skill's validate_a2ui.py, and pushes to Playground by QR code. npm package agenui-studio is 0.1.5. Documented providers: DeepSeek, Qwen, GLM, Moonshot, MiniMax, OpenAI, Gemini, Anthropic, OpenRouter. Keys stay under ~/.agenui.",
+        "feat.go.t": "Go agent SDK",
+        "feat.go.d": "agent_sdks/go streams partial UI, validates topology, reachability, circular references, and recursion depth, and can build an LLM system prompt from a catalog. A sample lives at samples/go/rizzcharts.",
+        "vocab.title": "Component vocabulary",
+        "vocab.lead": "Names and descriptions follow the README tables. Protocol components are on all three platforms. SDK extensions are bundled but are not part of the A2UI spec. Playground components show the custom-component API.",
+        "vocab.all": "All",
+        "vocab.protocol": "A2UI protocol · 18",
+        "vocab.sdk": "SDK extensions · 4",
+        "vocab.play": "Playground · 3",
+        "c.text": "Styled text with variants such as h1–h5, body, and caption.",
+        "c.image": "Network image with scale modes and rounded corners.",
+        "c.icon": "Icon rendered through a Unicode or SVG mapping.",
+        "c.divider": "Horizontal or vertical separator.",
+        "c.video": "Native video player with seek and auto-hiding controls.",
+        "c.audio": "Audio player with a progress bar.",
+        "c.button": "Tappable button that fires an Action.",
+        "c.row": "Horizontal flex container.",
+        "c.column": "Vertical flex container.",
+        "c.card": "Card container with shadow.",
+        "c.list": "Scrollable list with static children or a template.",
+        "c.tabs": "Tab bar with switchable panels.",
+        "c.modal": "Native dialog overlay.",
+        "c.field": "Text input with optional validation.",
+        "c.check": "Boolean toggle.",
+        "c.slider": "Numeric range input.",
+        "c.choice": "Single or multi-select picker.",
+        "c.date": "Date and time picker.",
+        "c.table": "Data table that uses a Yoga sub-layout.",
+        "c.carousel": "Image or content carousel.",
+        "c.web": "Embedded WebView.",
+        "c.rich": "HTML rich text.",
+        "c.chart": "Bar, line, and pie charts.",
+        "c.md": "Markdown rendering, including streaming output.",
+        "c.lottie": "Lottie animation playback.",
+        "install.kicker": "Install",
+        "install.title": "Commands copied from the docs.",
+        "install.lead": "Each tab is a command the repository already documents. Notes record the toolchain and version strings found next to that command. There is no guessed package manager.",
+        "install.tabs": "Install methods",
+        "tab.skill": "Skill",
+        "tab.studio": "Studio",
+        "tab.android": "Android",
+        "tab.ios": "iOS",
+        "tab.harmony": "HarmonyOS",
+        "tab.go": "Go SDK",
+        "tab.source": "Clone",
+        "install.copy": "Copy",
+        "install.copied": "Copied",
+        "install.skill.file": "README · one-command skill install",
+        "install.studio.file": "playground/studio · end-user launcher",
+        "install.android.file": "scripts/android/build.sh · Release AAR",
+        "install.ios.file": "docs/QuickStart.md · CocoaPods",
+        "install.harmony.file": "scripts/harmony/build.sh · HAR",
+        "install.go.file": "agent_sdks/go/README.md",
+        "install.source.file": "git clone · default branch main",
+        "install.skill.note": "Recommended line from the README. Manual path: git clone https://github.com/AGenUI/AGenUI.git and copy skills/a2ui-generation to ~/.claude/skills/. Other runtimes use their own skills directory, for example ~/.cursor/skills/ or ~/.codex/skills/. The skill asks the model for updateComponents and updateDataModel.",
+        "install.studio.note": "End-user command from the Studio README. The launcher downloads a release, creates a virtualenv, and opens a browser. package.json names agenui-studio 0.1.5 and Node >= 14. From a clone the same README asks for Python 3.9+, Node.js 18+, pip install of playground/studio/server/requirements.txt, a web build, then python3 -m playground.studio.server, which prints the local address to open.",
+        "install.android.note": "Release AAR lands in dist/android/release/. README toolchain: Android Studio Hedgehog or later, NDK 27.3.13750724, API 35 SDK, JDK 11. QuickStart minimum device API is 21. Local Maven, as written in QuickStart: ./scripts/android/build.sh --publish-local and implementation 'com.amap.genui:agenui-sdk:0.1.0'. Other flags in the README: --debug, --with-symbols, --publish-maven.",
+        "install.ios.note": "Add the pod line, then run pod install. platforms/ios/publish/AGenUI.podspec is version 1.7.0, deployment target iOS 13.0, and points at the GitHub Release zip for tag AGenUI-<version>. From source, ./scripts/ios/build.sh produces an XCFramework (Release by default). README toolchain: Xcode 15 or later, CocoaPods, CMake.",
+        "install.harmony.note": "Default output directory is dist/harmony/release/. QuickStart then depends on the HAR with \"@agenui/agenui\": \"file:./path/to/agenui.har\". README toolchain: DevEco Studio 4.0 or later, and ohpm. Minimum stated in QuickStart: HarmonyOS NEXT API 17. Pass --mode debug for a debug build.",
+        "install.go.note": "Module path from agent_sdks/go/README.md. The SDK parses createSurface, updateComponents, updateDataModel, and deleteSurface, including a streaming parser. A worked example is samples/go/rizzcharts. Validation covers topology, reachability, circular references, and recursion depth.",
+        "install.source.note": "Default branch is main. Android playground: open playground/android in Android Studio. iOS: in playground/ios/Playground run pod install, then open Playground.xcworkspace. HarmonyOS: open playground/harmony in DevEco Studio. Playgrounds compile against the AGenUI sources.",
+        "install.docs": "SDK quick start and API reference",
+        "faq.kicker": "FAQ",
+        "faq.title": "License, scope, and CI.",
+        "faq.q1": "Which license covers AGenUI?",
+        "faq.a1": "AGenUI is released under the Apache License, Version 2.0. The LICENSE file is in the repository root. NOTICE says the project's own source, outside the third-party pieces it lists, is Apache-2.0. It also says the vendored iksemel library is LGPL-2.1, built as a shared library on HarmonyOS, and not used on Android or iOS. NOTICE describes the engine source as not a derivative of that library.",
+        "faq.q2": "How is this different from the A2UI specification?",
+        "faq.a2": "Google's A2UI v0.9 is the protocol. AGenUI is an implementation of that protocol: a shared C++ core, native renderers for iOS, Android, and HarmonyOS, the freestanding catalog, the generation skill, Studio, and the Go agent SDK. The README describes drawing interactive cards, forms, lists, images, and media players with system UI. This repository does not publish a scorecard against other named UI SDKs, so this page does not invent one.",
+        "faq.q3": "Should I use the skill or Studio?",
+        "faq.a3": "The skill is a directory you mount in an agent runtime with npx skills add AGenUI/AGenUI. Studio is a local browser workbench, npx agenui-studio, that reuses the skill's design rules and scripts/validate_a2ui.py, then sends a QR code to AGenUI Playground on a device. Studio's README says API keys, config, and generated protocols stay on the machine under ~/.agenui.",
+        "faq.q4": "What CI is already in the repository?",
+        "faq.a4": ".github/workflows has live pipelines: CI - Android runs ./scripts/android/build.sh (the workflow sets up JDK 17), CI - iOS runs ./scripts/ios/build.sh on macos-26 after selecting Xcode 26.2, and CI - HarmonyOS runs ./scripts/harmony/build.sh. They trigger on push and pull request to main, with path filters. Release workflows run for tags that start with AGenUI-; Studio Release packs agenui-studio.zip on those tags. The C++ gtest file tests/cpp/ci/github-actions.yml says it is not a live workflow until copied to .github/workflows/. Host tests: ./tests/cpp/ci/run_tests.sh. Device integration: ./tests/integration/run.sh, with --android, --ios, or --harmony.",
+        "faq.q5": "Which version and OS minimums are written down?",
+        "faq.a5": "core/include/agenui_version.h sets AGENUI_VERSION to 1.7.0. CHANGELOG dates that release 2026-10-19. The published iOS podspec is 1.7.0 with deployment target 13.0. QuickStart lists Android API 21 or later, and HarmonyOS NEXT API 17 or later. The separate npm package agenui-studio is 0.1.5. The QuickStart local Maven snippet still shows implementation 'com.amap.genui:agenui-sdk:0.1.0'.",
+        "faq.q6": "How do contributions land?",
+        "faq.a6": "Fork, branch from main (fix/… or feat/…), test on the platforms you change, and open a pull request to main. At least one maintainer approval is required. C++, Swift, and Java follow the Google Style Guide. ArkTS follows OpenHarmony. Larger changes start with an issue. See CONTRIBUTING.md. Issues and Discussions are on GitHub. The README lists the email tengjixiang.ttjx@alibaba-inc.com, plus DingTalk and WeChat groups.",
+        "footer.blurb": "A high-performance A2UI SDK for native generative UI on iOS, Android, and HarmonyOS. Shared C++ core. Version 1.7.0.",
+        "footer.licenseLead": "Licensed under ",
+        "footer.licenseMid": ". Repository ",
+        "footer.licenseEnd": ". License file: ",
+        "footer.links": "Project",
+        "footer.site": "Official website",
+        "footer.quick": "Quick start",
+        "footer.api": "API reference",
+        "footer.contrib": "Contributing",
+        "footer.community": "Community QR codes from the README",
+        "qr.ding.alt": "AGenUI DingTalk group QR code",
+        "qr.ding.cap": "DingTalk group",
+        "qr.wechat.alt": "AGenUI WeChat group QR code",
+        "qr.wechat.cap": "WeChat group",
+        "footer.copy": "AGenUI · Apache License 2.0 · main",
+        "footer.top": "Back to top"
+      },
+      zh: {
+        "skip": "跳至主內容",
+        "lang.group": "語言",
+        "nav.showcase": "展示",
+        "nav.capabilities": "能力",
+        "nav.install": "安裝",
+        "nav.faq": "問答",
+        "nav.star": "到 GitHub 加星",
+        "meta.title": "AGenUI — 面向 iOS、Android 與 HarmonyOS 的原生 A2UI 渲染",
+        "meta.desc": "AGenUI 是 Apache-2.0 的 A2UI v0.9 SDK。共享 C++ 核心把 LLM 產生的介面，串流繪製到 iOS、Android 與 HarmonyOS 原生渲染器。",
+        "hero.pill": "A2UI v0.9 · SDK 1.7.0 · 發布於 2026-10-19",
+        "hero.title.before": "生成式介面，",
+        "hero.title.em": "以原生繪製",
+        "hero.title.after": "於 iOS、Android 與 HarmonyOS。",
+        "hero.subtitle": "AGenUI 完整實作 Google 開源的 A2UI v0.9 協定。共享的 C++ 核心解析串流並維護虛擬元件樹，三端渲染器再用系統原生 UI 畫出可互動的卡片、表單、清單、圖片與媒體。",
+        "hero.note": "專案正在積極開發。歡迎貢獻、回饋與討論。",
+        "hero.cta.install": "快速安裝",
+        "hero.cta.features": "查看能力",
+        "hero.site": "官方網站",
+        "hero.img.alt": "AGenUI 在 iOS、Android 與 HarmonyOS 上串流渲染生成式介面",
+        "hero.img.cap": "儲存庫實拍：docs/images/hero.gif",
+        "fact.platforms.v": "3",
+        "fact.platforms.l": "原生平台",
+        "fact.components.l": "內建元件",
+        "fact.fps.l": "README：捲動等核心場景",
+        "release.kicker": "新版本 ",
+        "release.date": "發布於 2026-10-19 · CHANGELOG.md",
+        "release.f1": "遞迴執行 JSON 裡嵌套的 FunctionCall，並用回傳值替換該節點。",
+        "release.f2": "讓 action 的函式參數與事件上下文可以做多層綁定解析。",
+        "release.f3": "ChoicePicker 與 Slider 補上 label 的渲染與測量，支援換行、動態更新與清空。",
+        "release.also": "1.7.0 另外修正：Android 在動態更新文字後不再丟掉 line-height。HarmonyOS 修復帶 action 的 Image 點擊當機，為 RichText 與 Tabs 補上事件類型檢查，並調整 ChoicePicker 的節點清理順序。Playground 的 catalog 網址與測試引用已同步。",
+        "showcase.kicker": "視覺佐證",
+        "showcase.title": "這些圖本來就在儲存庫裡。",
+        "showcase.lead": "下面每一張都是 docs/images 裡的檔案。流程步驟對應資料流圖與 Quick Start 的串流 API，不是另畫的示意稿。",
+        "flow.title": "從 token 到原生畫面",
+        "flow.s1.t": "LLM / AI 模型",
+        "flow.s1.d": "產生 A2UI JSON token。Go agent 可送出 createSurface、updateComponents、updateDataModel、deleteSurface。",
+        "flow.s2.t": "SurfaceManager",
+        "flow.s2.d": "beginTextStream、receiveTextChunk、endTextStream。資料流圖把橋接標成 JNI / ObjC++ / NAPI。",
+        "flow.s3.t": "C++ 核心",
+        "flow.s3.d": "stream/ 重組片段。surface/ 持有虛擬樹、資料繫結與 Yoga 版面。function_call/ 負責分派。core/include 是公開的 C API。",
+        "flow.s4.t": "原生 UI",
+        "flow.s4.d": "UIKit、Android ViewGroup 與 ArkUI。監聽：onCreateSurface、onDeleteSurface、onReceiveActionEvent。",
+        "shot.tabs": "儲存庫圖片",
+        "shot.tab.hero": "串流",
+        "shot.tab.render": "元件",
+        "shot.tab.arch": "架構",
+        "shot.tab.comp": "元件圖",
+        "shot.tab.flow": "資料流",
+        "shot.hero.alt": "AGenUI 在 iOS、Android 與 HarmonyOS 上串流渲染生成式介面",
+        "shot.hero.cap": "跨 iOS、Android、HarmonyOS 的串流生成式介面。來源：docs/images/hero.gif",
+        "shot.render.alt": "A2UI 元件渲染效果",
+        "shot.render.cap": "README 附的元件渲染效果。來源：docs/images/a2ui_rendering_effect.png",
+        "shot.arch.alt": "AGenUI SDK 架構",
+        "shot.arch.cap": "架構圖：共享 C++ 核心與三端原生渲染器。來源：docs/images/architecture.svg",
+        "shot.comp.alt": "AGenUI 內建元件",
+        "shot.comp.cap": "儲存庫裡的內建元件圖。來源：docs/images/components.svg",
+        "shot.flow.alt": "AGenUI 從 LLM token 到原生 UI 的資料流",
+        "shot.flow.cap": "資料流：LLM token、SurfaceManager、C++ 核心、原生 UI。來源：docs/images/dataflow.svg",
+        "dir.core": "C++ 引擎：解析、差分、版面、Function Call。",
+        "dir.platforms": "iOS Objective-C 橋接、Android JNI、HarmonyOS NAPI。",
+        "dir.playground": "三端示範應用，以及 Studio。",
+        "dir.skill": "用來產生 A2UI 訊息的 Agent Skill。",
+        "dir.go": "伺服器端 A2UI agent SDK。",
+        "dir.samples": "已入庫的協定範例。",
+        "cap.kicker": "能力",
+        "cap.title": "SDK 實際交付的東西。",
+        "cap.lead": "出自 README、CHANGELOG、catalog 與套件描述。下面的數字都是這些檔案寫明的。",
+        "filter.group": "篩選能力",
+        "filter.all": "全部",
+        "filter.render": "渲染",
+        "filter.protocol": "協定",
+        "filter.agent": "Agent",
+        "feat.stream.t": "即時串流渲染",
+        "feat.stream.d": "LLM 以增量方式送出結構化元件描述，畫面跟著更新。Quick Start 用 beginTextStream、receiveTextChunk、endTextStream 驅動一次工作階段。",
+        "feat.perf.t": "三端原生繪製",
+        "feat.perf.d": "iOS、Android 與 HarmonyOS 使用系統 UI。README 寫明，頁面捲動等核心場景的刷新率維持 120 fps。",
+        "feat.core.t": "共享的 C++ 核心",
+        "feat.core.d": "C++ 層解析串流、管理虛擬元件樹、快取繪製資料、解析主題與樣式，並在平台渲染器動筆前對元件變化做差分。",
+        "feat.theme.t": "Design Token、淺色與深色",
+        "feat.theme.d": "registerDefaultTheme 接收主題 JSON 與 design token JSON。setDayNightMode 接受 \"light\" 或 \"dark\"，已經顯示的 Surface 會跟著刷新顏色。",
+        "feat.components.t": "22 個內建元件",
+        "feat.components.d": "18 個元件在三端實作 A2UI 協定。另外 4 個隨 SDK 提供、不屬於協定：Table、Carousel、Web、RichText。",
+        "feat.custom.t": "自訂元件 API",
+        "feat.custom.d": "可在執行時註冊額外的原生元件，模型再依名稱產出描述。Playground 用 Chart、Markdown、Lottie 示範同一套 API。",
+        "feat.catalog.t": "可獨立使用的 catalog",
+        "feat.catalog.d": "agenui_catalog.json 已把外部 $ref 全部內嵌。README 寫明涵蓋 25 個元件與 14 個函式（驗證、格式化、邏輯與 URL 導向），以及 Styles、TextStyles。把它當作 catalogId 放進 supportedCatalogIds。",
+        "feat.functions.t": "端側函式呼叫",
+        "feat.functions.d": "可註冊模型能呼叫的端側工具。v1.7.0 的 resolveCalls 會處理嵌套 FunctionCall；registerDeepParseProperty 則讓 action 的參數與事件上下文做多層綁定解析。",
+        "feat.skill.t": "A2UI 生成 Skill",
+        "feat.skill.d": "skills/a2ui-generation 可掛到支援 Agent Skills 的執行環境。README 點名 Claude Code、Cursor、Codex、Gemini CLI、Windsurf、GitHub Copilot，並寫明支援 55 個以上的 runtime。預設產出單張 Card；使用者明確指定的版面或樣式優先。",
+        "feat.studio.t": "Studio：本地、自備金鑰",
+        "feat.studio.d": "AGenUI Studio 把描述轉成協定、即時預覽，並用 skill 的 validate_a2ui.py 驗證，再以 QR code 推到 Playground。npm 套件 agenui-studio 版本為 0.1.5。文件列出的供應者：DeepSeek、Qwen、GLM、Moonshot、MiniMax、OpenAI、Gemini、Anthropic、OpenRouter。金鑰留在 ~/.agenui。",
+        "feat.go.t": "Go agent SDK",
+        "feat.go.d": "agent_sdks/go 可串流部分 UI，檢查拓撲、可達性、循環參考與遞迴深度，並依 catalog 產生給 LLM 的 system prompt。範例在 samples/go/rizzcharts。",
+        "vocab.title": "元件詞彙",
+        "vocab.lead": "名稱與說明對照 README 的表格。協定元件三端都有。SDK 擴充隨套件提供，但不屬於 A2UI 規格。Playground 元件用來示範自訂元件 API。",
+        "vocab.all": "全部",
+        "vocab.protocol": "A2UI 協定 · 18",
+        "vocab.sdk": "SDK 擴充 · 4",
+        "vocab.play": "Playground · 3",
+        "c.text": "樣式化文字，支援 h1–h5、body、caption 等變體。",
+        "c.image": "網路圖片，支援縮放模式與圓角。",
+        "c.icon": "透過 Unicode 或 SVG 對應來畫圖示。",
+        "c.divider": "水平或垂直分隔線。",
+        "c.video": "原生影片播放器，可拖曳進度，控制項會自動隱藏。",
+        "c.audio": "音訊播放器，含進度條。",
+        "c.button": "可點選的按鈕，觸發 Action。",
+        "c.row": "水平方向的彈性容器。",
+        "c.column": "垂直方向的彈性容器。",
+        "c.card": "帶陰影的卡片容器。",
+        "c.list": "可捲動清單，子項可以是靜態的，或由模板驅動。",
+        "c.tabs": "標籤列，面板可切換。",
+        "c.modal": "原生對話框浮層。",
+        "c.field": "文字輸入，可選擇是否驗證。",
+        "c.check": "布林開關。",
+        "c.slider": "數值範圍輸入。",
+        "c.choice": "單選或多選選擇器。",
+        "c.date": "日期與時間選擇器。",
+        "c.table": "資料表格，使用 Yoga 子版面。",
+        "c.carousel": "圖片或內容輪播。",
+        "c.web": "內嵌 WebView。",
+        "c.rich": "HTML 富文字。",
+        "c.chart": "長條圖、折線圖與圓餅圖。",
+        "c.md": "Markdown 渲染，支援串流輸出。",
+        "c.lottie": "Lottie 動畫播放。",
+        "install.kicker": "安裝",
+        "install.title": "指令直接來自文件。",
+        "install.lead": "每個分頁都是儲存庫已經寫下的指令。備註只補該指令旁邊的工具鏈與版本字串，沒有臆測的套件管理器。",
+        "install.tabs": "安裝方式",
+        "tab.skill": "Skill",
+        "tab.studio": "Studio",
+        "tab.android": "Android",
+        "tab.ios": "iOS",
+        "tab.harmony": "HarmonyOS",
+        "tab.go": "Go SDK",
+        "tab.source": "複製儲存庫",
+        "install.copy": "複製",
+        "install.copied": "已複製",
+        "install.skill.file": "README · 一行安裝 Skill",
+        "install.studio.file": "playground/studio · 一般使用者啟動器",
+        "install.android.file": "scripts/android/build.sh · Release AAR",
+        "install.ios.file": "docs/QuickStart.md · CocoaPods",
+        "install.harmony.file": "scripts/harmony/build.sh · HAR",
+        "install.go.file": "agent_sdks/go/README.md",
+        "install.source.file": "git clone · 預設分支 main",
+        "install.skill.note": "README 建議的一行指令。手動方式：git clone https://github.com/AGenUI/AGenUI.git，再把 skills/a2ui-generation 複製到 ~/.claude/skills/。其他 runtime 用自己的 skills 目錄，例如 ~/.cursor/skills/ 或 ~/.codex/skills/。Skill 會要求模型產出 updateComponents 與 updateDataModel。",
+        "install.studio.note": "Studio README 給一般使用者的指令。啟動器會下載 release、建立 virtualenv，並打開瀏覽器。package.json 寫的是 agenui-studio 0.1.5、Node >= 14。從 clone 執行時，同一份 README 要求 Python 3.9+、Node.js 18+，安裝 playground/studio/server/requirements.txt、建置 web，再執行 python3 -m playground.studio.server，它會印出要開啟的本機網址。",
+        "install.android.note": "Release AAR 輸出到 dist/android/release/。README 的工具鏈：Android Studio Hedgehog 或更新、NDK 27.3.13750724、API 35 SDK、JDK 11。QuickStart 寫的最低裝置 API 是 21。QuickStart 的本地 Maven 範例是 ./scripts/android/build.sh --publish-local，以及 implementation 'com.amap.genui:agenui-sdk:0.1.0'。README 另外列出 --debug、--with-symbols、--publish-maven。",
+        "install.ios.note": "把 pod 那一行加進 Podfile，再執行 pod install。platforms/ios/publish/AGenUI.podspec 的版本是 1.7.0，deployment target 為 iOS 13.0，並指向標籤 AGenUI-<version> 的 GitHub Release zip。從原始碼建置時，./scripts/ios/build.sh 預設產出 Release XCFramework。README 工具鏈：Xcode 15 或更新、CocoaPods、CMake。",
+        "install.harmony.note": "預設輸出目錄是 dist/harmony/release/。QuickStart 接著以 \"@agenui/agenui\": \"file:./path/to/agenui.har\" 引用 HAR。README 工具鏈：DevEco Studio 4.0 或更新，以及 ohpm。QuickStart 寫的最低版本是 HarmonyOS NEXT API 17。要 debug 建置可加 --mode debug。",
+        "install.go.note": "模組路徑來自 agent_sdks/go/README.md。SDK 會解析 createSurface、updateComponents、updateDataModel、deleteSurface，並包含串流解析器。完整範例在 samples/go/rizzcharts。驗證涵蓋拓撲、可達性、循環參考與遞迴深度。",
+        "install.source.note": "預設分支是 main。Android playground：用 Android Studio 打開 playground/android。iOS：在 playground/ios/Playground 執行 pod install，再打開 Playground.xcworkspace。HarmonyOS：用 DevEco Studio 打開 playground/harmony。Playground 會直接編譯 AGenUI 原始碼。",
+        "install.docs": "SDK 快速開始與 API 參考",
+        "faq.kicker": "問答",
+        "faq.title": "授權、範圍與 CI。",
+        "faq.q1": "AGenUI 用哪一份授權？",
+        "faq.a1": "AGenUI 以 Apache License 2.0 發布。LICENSE 在儲存庫根目錄。NOTICE 寫明：除了它列出的第三方元件，專案自身的原始碼是 Apache-2.0。NOTICE 也寫明內嵌的 iksemel 為 LGPL-2.1，在 HarmonyOS 以共享程式庫建置，Android 與 iOS 不使用它，且引擎原始碼不是該程式庫的衍生作品。",
+        "faq.q2": "它和 A2UI 規格差在哪？",
+        "faq.a2": "Google 的 A2UI v0.9 是協定。AGenUI 是這份協定的實作：共享 C++ 核心、iOS／Android／HarmonyOS 原生渲染器、可獨立使用的 catalog、生成 Skill、Studio，以及 Go agent SDK。README 描述的是用系統 UI 畫出可互動的卡片、表單、清單、圖片與媒體播放器。儲存庫沒有和其他具名 UI SDK 的對照評分，這個頁面也不另行編造。",
+        "faq.q3": "該用 Skill 還是 Studio？",
+        "faq.a3": "Skill 是一個目錄，用 npx skills add AGenUI/AGenUI 掛進 agent runtime。Studio 是本地瀏覽器工作台，指令是 npx agenui-studio。它沿用 Skill 的設計規則與 scripts/validate_a2ui.py，再把 QR code 送到裝置上的 AGenUI Playground。Studio README 寫明 API 金鑰、設定與產生的協定都留在這台機器的 ~/.agenui。",
+        "faq.q4": "儲存庫裡已經有哪些 CI？",
+        "faq.a4": ".github/workflows 裡已有實際流程：CI - Android 執行 ./scripts/android/build.sh（該 workflow 會設定 JDK 17），CI - iOS 在 macos-26 上選好 Xcode 26.2 後執行 ./scripts/ios/build.sh，CI - HarmonyOS 執行 ./scripts/harmony/build.sh。它們在 push 與對 main 的 pull request 上觸發，並有路徑過濾。Release workflow 針對 AGenUI- 開頭的標籤；Studio Release 會在這些標籤上打包 agenui-studio.zip。C++ gtest 的 tests/cpp/ci/github-actions.yml 自己寫明，複製到 .github/workflows/ 之前它不是上線中的 workflow。本機測試：./tests/cpp/ci/run_tests.sh。裝置整合測試：./tests/integration/run.sh，可用 --android、--ios 或 --harmony。",
+        "faq.q5": "文件寫了哪個版本與最低系統？",
+        "faq.a5": "core/include/agenui_version.h 把 AGENUI_VERSION 訂為 1.7.0。CHANGELOG 把該版日期記為 2026-10-19。發布用的 iOS podspec 是 1.7.0，deployment target 13.0。QuickStart 寫 Android API 21 或更高，以及 HarmonyOS NEXT API 17 或更高。另外的 npm 套件 agenui-studio 是 0.1.5。QuickStart 的本地 Maven 片段仍是 implementation 'com.amap.genui:agenui-sdk:0.1.0'。",
+        "faq.q6": "貢獻要怎麼合進去？",
+        "faq.a6": "Fork 之後從 main 開分支（fix/… 或 feat/…），在受影響的平台上測試，再向 main 開 pull request。至少需要一位維護者核准。C++、Swift、Java 遵循 Google Style Guide，ArkTS 遵循 OpenHarmony。較大的變更先開 issue。細節見 CONTRIBUTING.md。Issues 與 Discussions 在 GitHub。README 列出的信箱是 tengjixiang.ttjx@alibaba-inc.com，另外有釘釘群與微信群。",
+        "footer.blurb": "高效能 A2UI SDK，在 iOS、Android 與 HarmonyOS 上做原生生成式介面。共享 C++ 核心。版本 1.7.0。",
+        "footer.licenseLead": "授權為 ",
+        "footer.licenseMid": "。儲存庫 ",
+        "footer.licenseEnd": "。授權檔：",
+        "footer.links": "專案",
+        "footer.site": "官方網站",
+        "footer.quick": "快速開始",
+        "footer.api": "API 參考",
+        "footer.contrib": "貢獻指南",
+        "footer.community": "README 裡的社群 QR code",
+        "qr.ding.alt": "AGenUI 釘釘群 QR code",
+        "qr.ding.cap": "釘釘群",
+        "qr.wechat.alt": "AGenUI 微信群 QR code",
+        "qr.wechat.cap": "微信群",
+        "footer.copy": "AGenUI · Apache License 2.0 · main",
+        "footer.top": "回到頂端"
+      }
+    };
+
+    var lang = "en";
+    var currentTab = "skill";
+    var currentShot = 0;
+    var currentStep = 0;
+
+    var shots = [
+      {
+        src: "https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/hero.gif",
+        alt: "shot.hero.alt",
+        cap: "shot.hero.cap",
+        mat: "#070b16"
+      },
+      {
+        src: "https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/a2ui_rendering_effect.png",
+        alt: "shot.render.alt",
+        cap: "shot.render.cap",
+        mat: "#ece9f6"
+      },
+      {
+        src: "https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/architecture.svg",
+        alt: "shot.arch.alt",
+        cap: "shot.arch.cap",
+        mat: "#f4f7fb"
+      },
+      {
+        src: "https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/components.svg",
+        alt: "shot.comp.alt",
+        cap: "shot.comp.cap",
+        mat: "#f8fafc"
+      },
+      {
+        src: "https://raw.githubusercontent.com/AGenUI/AGenUI/main/docs/images/dataflow.svg",
+        alt: "shot.flow.alt",
+        cap: "shot.flow.cap",
+        mat: "#ffffff"
+      }
+    ];
+
+    var flowCode = [
+      "createSurface\nupdateComponents\nupdateDataModel\ndeleteSurface",
+      "beginTextStream()\nreceiveTextChunk(chunk)\nendTextStream()",
+      "core/src/stream\ncore/src/surface\ncore/src/function_call\ncore/include",
+      "onCreateSurface\nonDeleteSurface\nonReceiveActionEvent"
+    ];
+
+    var installs = {
+      skill: { cmd: "npx skills add AGenUI/AGenUI", note: "install.skill.note", file: "install.skill.file" },
+      studio: { cmd: "npx agenui-studio", note: "install.studio.note", file: "install.studio.file" },
+      android: { cmd: "./scripts/android/build.sh", note: "install.android.note", file: "install.android.file" },
+      ios: { cmd: "pod 'AGenUI'\n\npod install", note: "install.ios.note", file: "install.ios.file" },
+      harmony: { cmd: "./scripts/harmony/build.sh", note: "install.harmony.note", file: "install.harmony.file" },
+      go: { cmd: "go get github.com/AGenUI/AGenUI/agent_sdks/go", note: "install.go.note", file: "install.go.file" },
+      source: { cmd: "git clone https://github.com/AGenUI/AGenUI.git", note: "install.source.note", file: "install.source.file" }
+    };
+
+    var docHrefs = {
+      en: {
+        quick: "https://github.com/AGenUI/AGenUI/blob/main/docs/QuickStart.md",
+        api: "https://github.com/AGenUI/AGenUI/blob/main/docs/API.md"
+      },
+      zh: {
+        quick: "https://github.com/AGenUI/AGenUI/blob/main/docs/QuickStart.zh-CN.md",
+        api: "https://github.com/AGenUI/AGenUI/blob/main/docs/API.zh-CN.md"
+      }
+    };
+
+    function t(key) {
+      var pack = translations[lang] || translations.en;
+      if (pack[key] == null) return translations.en[key] || "";
+      return pack[key];
+    }
+
+    function applyLang(next) {
+      lang = next === "zh" ? "zh" : "en";
+      document.documentElement.lang = lang === "zh" ? "zh-Hant" : "en";
+      try { localStorage.setItem("agenui-landing-lang", lang); } catch (err) {}
+
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n");
+        var value = t(key);
+        var attr = el.getAttribute("data-i18n-attr");
+        if (attr) el.setAttribute(attr, value);
+        else el.textContent = value;
+      });
+
+      document.title = t("meta.title");
+      var desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute("content", t("meta.desc"));
+
+      var em = document.getElementById("hero-em");
+      if (em) em.classList.toggle("italic", lang === "en");
+
+      var zhBtn = document.getElementById("btn-zh");
+      var enBtn = document.getElementById("btn-en");
+      var on = ["bg-white", "text-ink"];
+      var off = ["text-mute"];
+      [zhBtn, enBtn].forEach(function (btn) {
+        on.forEach(function (c) { btn.classList.remove(c); });
+        off.forEach(function (c) { btn.classList.add(c); });
+      });
+      var activeBtn = lang === "zh" ? zhBtn : enBtn;
+      off.forEach(function (c) { activeBtn.classList.remove(c); });
+      on.forEach(function (c) { activeBtn.classList.add(c); });
+      zhBtn.setAttribute("aria-pressed", lang === "zh" ? "true" : "false");
+      enBtn.setAttribute("aria-pressed", lang === "en" ? "true" : "false");
+
+      var quick = docHrefs[lang].quick;
+      var api = docHrefs[lang].api;
+      var docLink = document.getElementById("doc-link");
+      var footerQuick = document.getElementById("footer-quick");
+      var footerApi = document.getElementById("footer-api");
+      if (docLink) docLink.href = quick;
+      if (footerQuick) footerQuick.href = quick;
+      if (footerApi) footerApi.href = api;
+
+      renderTab();
+      renderShot();
+    }
+
+    function renderShot() {
+      var shot = shots[currentShot];
+      var img = document.getElementById("shot");
+      var cap = document.getElementById("shot-cap");
+      var frame = document.querySelector(".shot-frame");
+      img.src = shot.src;
+      img.setAttribute("data-i18n", shot.alt);
+      img.alt = t(shot.alt);
+      cap.setAttribute("data-i18n", shot.cap);
+      cap.textContent = t(shot.cap);
+      if (frame) frame.style.background = shot.mat;
+      document.querySelectorAll(".shot-tab").forEach(function (btn) {
+        var on = Number(btn.getAttribute("data-shot")) === currentShot;
+        btn.classList.toggle("border-signal", on);
+        btn.classList.toggle("bg-signal/15", on);
+        btn.classList.toggle("text-white", on);
+        btn.classList.toggle("border-line", !on);
+        btn.classList.toggle("text-mute", !on);
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    function renderStep() {
+      document.querySelectorAll(".flow-step").forEach(function (btn) {
+        var on = Number(btn.getAttribute("data-step")) === currentStep;
+        btn.classList.toggle("is-on", on);
+        btn.setAttribute("aria-current", on ? "step" : "false");
+      });
+      document.getElementById("flow-code").textContent = flowCode[currentStep];
+    }
+
+    function renderTab() {
+      var item = installs[currentTab];
+      document.getElementById("install-cmd").textContent = item.cmd;
+      var note = document.getElementById("install-note");
+      note.setAttribute("data-i18n", item.note);
+      note.textContent = t(item.note);
+      var file = document.getElementById("install-file");
+      file.setAttribute("data-i18n", item.file);
+      file.textContent = t(item.file);
+      document.querySelectorAll(".install-tab").forEach(function (btn) {
+        var on = btn.getAttribute("data-tab") === currentTab;
+        btn.classList.toggle("border-signal", on);
+        btn.classList.toggle("bg-signal/15", on);
+        btn.classList.toggle("text-white", on);
+        btn.classList.toggle("border-line", !on);
+        btn.classList.toggle("text-mute", !on);
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    function showToast(message) {
+      var toast = document.getElementById("toast");
+      document.getElementById("toast-text").textContent = message;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(function () {
+        toast.classList.add("translate-y-20", "opacity-0");
+        toast.classList.remove("translate-y-0", "opacity-100");
+      }, 1600);
+    }
+
+    function copyCommand() {
+      var text = installs[currentTab].cmd;
+      var done = function () { showToast(t("install.copied")); };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done).catch(function () {
+          fallbackCopy(text);
+          done();
+        });
+      } else {
+        fallbackCopy(text);
+        done();
+      }
+    }
+
+    function fallbackCopy(text) {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      try { document.execCommand("copy"); } catch (err) {}
+      document.body.removeChild(area);
+    }
+
+    function setFilter(name) {
+      document.querySelectorAll("#feat-grid [data-cat]").forEach(function (card) {
+        card.hidden = name !== "all" && card.getAttribute("data-cat") !== name;
+      });
+      document.querySelectorAll(".feat-filter").forEach(function (btn) {
+        var on = btn.getAttribute("data-filter") === name;
+        btn.classList.toggle("border-signal", on);
+        btn.classList.toggle("bg-signal/15", on);
+        btn.classList.toggle("text-white", on);
+        btn.classList.toggle("border-line", !on);
+        btn.classList.toggle("text-mute", !on);
+      });
+    }
+
+    function setGroup(name) {
+      document.querySelectorAll("#vocab-grid [data-group]").forEach(function (card) {
+        card.hidden = name !== "all" && card.getAttribute("data-group") !== name;
+      });
+      document.querySelectorAll(".group-filter").forEach(function (btn) {
+        var on = btn.getAttribute("data-group") === name;
+        btn.classList.toggle("border-signal", on);
+        btn.classList.toggle("bg-signal/15", on);
+        btn.classList.toggle("text-white", on);
+        btn.classList.toggle("border-line", !on);
+        btn.classList.toggle("text-mute", !on);
+      });
+    }
+
+    document.getElementById("btn-zh").addEventListener("click", function () { applyLang("zh"); });
+    document.getElementById("btn-en").addEventListener("click", function () { applyLang("en"); });
+    document.getElementById("copy-btn").addEventListener("click", copyCommand);
+
+    document.querySelectorAll(".shot-tab").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentShot = Number(btn.getAttribute("data-shot"));
+        renderShot();
+      });
+    });
+
+    document.querySelectorAll(".flow-step").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentStep = Number(btn.getAttribute("data-step"));
+        currentShot = 4;
+        renderStep();
+        renderShot();
+      });
+    });
+
+    document.querySelectorAll(".install-tab").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        currentTab = btn.getAttribute("data-tab");
+        renderTab();
+      });
+    });
+
+    document.querySelectorAll(".feat-filter").forEach(function (btn) {
+      btn.addEventListener("click", function () { setFilter(btn.getAttribute("data-filter")); });
+    });
+
+    document.querySelectorAll(".group-filter").forEach(function (btn) {
+      btn.addEventListener("click", function () { setGroup(btn.getAttribute("data-group")); });
+    });
+
+    document.querySelectorAll(".faq-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var item = btn.closest(".faq-item");
+        var panel = item.querySelector(".faq-panel");
+        var open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+        panel.classList.toggle("is-open", !open);
+        var icon = btn.querySelector(".faq-chevron");
+        if (icon) icon.classList.toggle("is-open", !open);
+      });
+    });
+
+    try {
+      var saved = localStorage.getItem("agenui-landing-lang");
+      if (saved === "zh" || saved === "en") lang = saved;
+    } catch (err) {}
+
+    applyLang(lang);
+    renderStep();
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+
+    (function auditI18n() {
+      var missing = [];
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n");
+        if (!translations.en[key]) missing.push("en:" + key);
+        if (!translations.zh[key]) missing.push("zh:" + key);
+      });
+      Object.keys(translations.en).forEach(function (key) {
+        if (!translations.zh[key]) missing.push("zh-only-missing:" + key);
+      });
+      Object.keys(translations.zh).forEach(function (key) {
+        if (!translations.en[key]) missing.push("en-only-missing:" + key);
+      });
+      if (missing.length && window.console) console.warn("i18n mismatch", missing);
+    })();
+  </script>
+</body>
+</html>
