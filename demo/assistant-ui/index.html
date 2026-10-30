@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="meta.title">assistant-ui — The UX of ChatGPT in your React app</title>
+  <meta name="description" data-i18n-content="meta.description" content="Open-source TypeScript/React library for production-grade AI chat. Composable primitives, generative UI, and runtimes for the AI SDK, LangGraph, and your own backend.">
+  <meta name="author" content="AgentbaseAI Inc.">
+  <meta name="theme-color" content="#100e0c">
+  <link rel="canonical" href="https://github.com/assistant-ui/assistant-ui">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/assistant-ui/assistant-ui">
+  <meta property="og:title" data-i18n-content="meta.title" content="assistant-ui — The UX of ChatGPT in your React app">
+  <meta property="og:description" data-i18n-content="meta.description" content="Open-source TypeScript/React library for production-grade AI chat. Composable primitives, generative UI, and runtimes for the AI SDK, LangGraph, and your own backend.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/demo.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" data-i18n-content="meta.title" content="assistant-ui — The UX of ChatGPT in your React app">
+  <meta name="twitter:description" data-i18n-content="meta.description" content="Open-source TypeScript/React library for production-grade AI chat. Composable primitives, generative UI, and runtimes for the AI SDK, LangGraph, and your own backend.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/demo.webp">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Play CDN is pinned for this prototype. It sends no CORS headers, so SRI is not used. -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', '"Noto Serif TC"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { overflow-x: clip; }
+    body {
+      background-color: #100e0c;
+      background-image:
+        radial-gradient(ellipse 90% 55% at 0% -10%, rgba(224, 179, 106, 0.16), transparent 52%),
+        radial-gradient(ellipse 70% 45% at 100% 0%, rgba(183, 221, 212, 0.10), transparent 46%),
+        linear-gradient(rgba(239, 230, 214, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(239, 230, 214, 0.035) 1px, transparent 1px);
+      background-size: auto, auto, 56px 56px, 56px 56px;
+    }
+    :focus-visible {
+      outline: 2px solid #e0b36a;
+      outline-offset: 3px;
+    }
+    .is-on {
+      background: #e0b36a;
+      color: #1a1208;
+      border-color: transparent;
+    }
+    .logo-rail img { height: 1.25rem; width: auto; max-width: 8.5rem; }
+    pre { max-width: 100%; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .animate-ping { animation: none !important; }
+    }
+  </style>
+</head>
+<body id="top" class="text-[#efe6d6] antialiased font-sans min-h-screen">
+
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-[#e0b36a] focus:px-4 focus:py-2 focus:text-[#1a1208]" data-i18n="nav.skip">Skip to content</a>
+
+  <header class="sticky top-0 z-50 border-b border-[#efe6d6]/10 bg-[#100e0c]/75 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 md:px-6">
+      <a href="#top" class="flex min-w-0 items-center gap-2">
+        <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[#e0b36a]/30 bg-[#e0b36a]/10 text-[#e0b36a]">
+          <i data-lucide="messages-square" class="h-4 w-4"></i>
+        </span>
+        <span class="truncate font-semibold tracking-tight">assistant-ui</span>
+        <span class="hidden rounded-full border border-[#efe6d6]/15 px-2 py-0.5 font-mono text-[10px] text-[#e0b36a] sm:inline" data-i18n="badge.version">react 0.15.32</span>
+        <span class="hidden rounded-full border border-[#efe6d6]/15 px-2 py-0.5 font-mono text-[10px] text-[#b7ddd4] sm:inline">MIT</span>
+      </a>
+
+      <nav class="ml-auto hidden items-center gap-5 text-sm text-[#efe6d6]/75 md:flex" aria-label="Primary">
+        <a class="hover:text-[#efe6d6]" href="#proof" data-i18n="nav.proof">Product</a>
+        <a class="hover:text-[#efe6d6]" href="#architecture" data-i18n="nav.architecture">Architecture</a>
+        <a class="hover:text-[#efe6d6]" href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+        <a class="hover:text-[#efe6d6]" href="#install" data-i18n="nav.install">Install</a>
+        <a class="hover:text-[#efe6d6]" href="#faq" data-i18n="nav.faq">FAQ</a>
+        <a class="hover:text-[#efe6d6]" href="https://www.assistant-ui.com/docs" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+      </nav>
+
+      <div class="ml-auto flex items-center gap-2 md:ml-0">
+        <div class="hidden rounded-full border border-[#efe6d6]/15 p-0.5 text-xs md:inline-flex" role="group" data-i18n-aria-label="nav.langGroup" aria-label="Language">
+          <button type="button" class="is-on rounded-full px-2.5 py-1" data-set-lang="en" aria-pressed="true">English</button>
+          <button type="button" class="rounded-full px-2.5 py-1" data-set-lang="zh" aria-pressed="false">繁體中文</button>
+        </div>
+        <a href="https://github.com/assistant-ui/assistant-ui" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-full bg-[#e0b36a] px-3 py-1.5 text-xs font-semibold text-[#1a1208]">
+          <i data-lucide="star" class="h-3.5 w-3.5"></i>
+          <span data-i18n="nav.star">Star on GitHub</span>
+        </a>
+        <button type="button" class="grid h-9 w-9 place-items-center rounded-full border border-[#efe6d6]/15 md:hidden" data-menu aria-expanded="false" aria-controls="mobile-nav" data-i18n-aria-label="nav.menu" aria-label="Open menu">
+          <i data-lucide="menu" class="h-4 w-4"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-nav" class="hidden border-t border-[#efe6d6]/10 px-4 py-4 md:hidden">
+      <div class="mb-4 inline-flex rounded-full border border-[#efe6d6]/15 p-0.5 text-xs" role="group" data-i18n-aria-label="nav.langGroup" aria-label="Language">
+        <button type="button" class="is-on rounded-full px-2.5 py-1" data-set-lang="en" aria-pressed="true">English</button>
+        <button type="button" class="rounded-full px-2.5 py-1" data-set-lang="zh" aria-pressed="false">繁體中文</button>
+      </div>
+      <div class="grid gap-3 text-sm">
+        <a href="#proof" data-i18n="nav.proof">Product</a>
+        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+        <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+        <a href="#install" data-i18n="nav.install">Install</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+        <a href="https://www.assistant-ui.com/docs" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 md:px-6 md:py-24 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+      <div class="min-w-0">
+        <p class="inline-flex items-center gap-2 rounded-full border border-[#b7ddd4]/30 bg-[#b7ddd4]/10 px-3 py-1 text-xs font-medium text-[#b7ddd4]">
+          <span class="relative flex h-2 w-2" aria-hidden="true">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#b7ddd4] opacity-70"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-[#b7ddd4]"></span>
+          </span>
+          <span data-i18n="hero.pill">Open source · TypeScript / React</span>
+        </p>
+        <h1 class="mt-6 font-serif text-4xl font-semibold leading-[1.08] tracking-tight text-[#f6efe4] sm:text-6xl">
+          <span data-i18n="hero.titleLead">The UX of ChatGPT</span>
+          <span class="mt-1 block italic text-[#e0b36a]" data-i18n="hero.titleAccent">in your React app.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-relaxed text-[#efe6d6]/75 sm:text-lg" data-i18n="hero.subtitle">assistant-ui is an open-source TypeScript/React library to build production-grade AI chat experiences fast. The docs overview describes the same primitives for web, native, and the terminal.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#install" class="inline-flex items-center gap-2 rounded-full bg-[#e0b36a] px-5 py-2.5 text-sm font-semibold text-[#1a1208]">
+            <i data-lucide="terminal" class="h-4 w-4"></i>
+            <span data-i18n="hero.ctaInstall">Quick install</span>
+          </a>
+          <a href="#capabilities" class="inline-flex items-center gap-2 rounded-full border border-[#efe6d6]/20 px-5 py-2.5 text-sm font-medium text-[#efe6d6]">
+            <span data-i18n="hero.ctaFeatures">Browse capabilities</span>
+          </a>
+          <a href="https://www.assistant-ui.com/docs" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-full px-3 py-2.5 text-sm text-[#efe6d6]/70">
+            <span data-i18n="hero.ctaDocs">Documentation</span>
+            <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
+          </a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[#efe6d6]/70">
+          <li class="rounded-full border border-[#efe6d6]/15 px-3 py-1" data-i18n="badge.mit">MIT License</li>
+          <li class="rounded-full border border-[#efe6d6]/15 px-3 py-1" data-i18n="badge.reactPeer">React 18 or 19</li>
+          <li class="rounded-full border border-[#efe6d6]/15 px-3 py-1" data-i18n="badge.cli">CLI 0.0.127</li>
+          <li class="rounded-full border border-[#efe6d6]/15 px-3 py-1" data-i18n="badge.yc">Backed by Y Combinator</li>
+        </ul>
+      </div>
+
+      <figure class="min-w-0">
+        <div class="overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-black shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
+          <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/header-dark.png" data-i18n-alt="alt.header" alt="assistant-ui: the frontend library for AI agents" class="h-auto w-full">
+        </div>
+        <figcaption class="mt-3 text-xs leading-relaxed text-[#efe6d6]/50" data-i18n="hero.headerCaption">Wordmark from the repository header: the frontend library for AI agents. Primitives and a runtime for production chat. Any backend, through adapters.</figcaption>
+      </figure>
+    </section>
+
+    <section class="border-y border-[#1a1208]/10 bg-[#efe6d6] text-[#3a332c]" aria-labelledby="logos-heading">
+      <div class="mx-auto max-w-6xl px-4 py-8 md:px-6">
+        <p id="logos-heading" class="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#6b5c49]" data-i18n="logos.heading">Used in production by</p>
+        <ul class="logo-rail mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+          <li><a href="https://mastra.ai/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Mastra.svg" alt="Mastra"></a></li>
+          <li><a href="https://langchain.com/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/LangChain.svg" alt="LangChain"></a></li>
+          <li><a href="https://athenaintelligence.ai/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Athena-Intelligence.svg" alt="Athena Intelligence"></a></li>
+          <li><a href="https://browser-use.com/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Browser-Use.svg" alt="Browser Use"></a></li>
+          <li><a href="https://stack-ai.com/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Stack.svg" alt="Stack"></a></li>
+          <li><a href="https://inconvo.com/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Inconvo.svg" alt="Inconvo"></a></li>
+          <li><a href="https://iterable.com/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Iterable.svg" alt="Iterable"></a></li>
+          <li><a href="https://helicone.ai/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/helicone.svg" alt="Helicone"></a></li>
+          <li><a href="https://getgram.ai/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/gram.svg" alt="Gram"></a></li>
+          <li><a href="https://coreviz.io/?ref=assistant-ui" target="_blank" rel="noopener noreferrer"><img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/logos/Coreviz.svg" alt="Coreviz"></a></li>
+        </ul>
+        <p class="mt-4 text-center text-xs text-[#6b5c49]" data-i18n="logos.more">…and many more.</p>
+      </div>
+    </section>
+
+    <section id="proof" class="mx-auto max-w-6xl px-4 py-20 md:px-6">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#e0b36a]" data-i18n="proof.kicker">Visual proof</p>
+        <h2 class="mt-3 font-serif text-3xl text-[#f6efe4] sm:text-5xl" data-i18n="proof.title">Chat, tools, and the parts that build them.</h2>
+        <p class="mt-4 text-[#efe6d6]/70" data-i18n="proof.lead">Screenshots shipped in .github/assets. Switch the frame to inspect the chat, a generative tool card, the annotated anatomy, the CLI, and the primitive map.</p>
+      </div>
+      <div class="mt-8 flex gap-2 overflow-x-auto pb-1" role="group" data-i18n-aria-label="proof.tabs" aria-label="Screenshots">
+        <button type="button" class="is-on shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="shot" data-tab="demo" aria-pressed="true" data-i18n="proof.tab.demo">Chat</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="shot" data-tab="gen" aria-pressed="false" data-i18n="proof.tab.gen">Generative UI</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="shot" data-tab="anatomy" aria-pressed="false" data-i18n="proof.tab.anatomy">Anatomy</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="shot" data-tab="cli" aria-pressed="false" data-i18n="proof.tab.cli">CLI</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="shot" data-tab="map" aria-pressed="false" data-i18n="proof.tab.map">Primitives</button>
+      </div>
+
+      <figure class="mt-4 overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-[#171310]" data-panel-group="shot" data-panel="demo">
+        <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/demo.webp" data-i18n-alt="alt.demo" alt="An assistant-ui chat: a hotel search tool call, a streamed reply, an approval card that the user allows, and follow-up suggestions" class="w-full h-auto">
+        <figcaption class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/65" data-i18n="alt.demo">An assistant-ui chat: a hotel search tool call, a streamed reply, an approval card that the user allows, and follow-up suggestions</figcaption>
+      </figure>
+      <figure class="mt-4 hidden overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-[#171310]" data-panel-group="shot" data-panel="gen">
+        <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/generative-ui.png" data-i18n-alt="alt.gen" alt="A get_weather tool call rendered as a weather card inside an assistant-ui chat" class="w-full h-auto">
+        <figcaption class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/65" data-i18n="alt.gen">A get_weather tool call rendered as a weather card inside an assistant-ui chat</figcaption>
+      </figure>
+      <figure class="mt-4 hidden overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-[#171310]" data-panel-group="shot" data-panel="anatomy">
+        <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/anatomy.webp" data-i18n-alt="alt.anatomy" alt="A chat UI annotated with the primitives that build it: ThreadPrimitive.Viewport, MessagePrimitive.Root and Parts, makeAssistantToolUI, ActionBarPrimitive, BranchPickerPrimitive, and ComposerPrimitive.Input, Send and AddAttachment" class="w-full h-auto">
+        <figcaption class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/65" data-i18n="alt.anatomy">A chat UI annotated with the primitives that build it: ThreadPrimitive.Viewport, MessagePrimitive.Root and Parts, makeAssistantToolUI, ActionBarPrimitive, BranchPickerPrimitive, and ComposerPrimitive.Input, Send and AddAttachment</figcaption>
+      </figure>
+      <figure class="mt-4 hidden overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-[#171310]" data-panel-group="shot" data-panel="cli">
+        <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/cli-init.webp" data-i18n-alt="alt.cli" alt="Running npx assistant-ui@latest init in a terminal" class="w-full h-auto">
+        <figcaption class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/65" data-i18n="alt.cli">Running npx assistant-ui@latest init in a terminal</figcaption>
+      </figure>
+      <figure class="mt-4 hidden overflow-hidden rounded-3xl border border-[#efe6d6]/10 bg-[#171310]" data-panel-group="shot" data-panel="map">
+        <img src="https://raw.githubusercontent.com/assistant-ui/assistant-ui/main/.github/assets/components.png" data-i18n-alt="alt.map" alt="A browser chat annotated with ThreadPrimitive.Viewport, ThreadPrimitive.Messages, MessagePrimitive.Content, ActionBarPrimitive.Reload, ActionBarPrimitive.Copy, and ComposerPrimitive parts" class="w-full h-auto">
+        <figcaption class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/65" data-i18n="alt.map">A browser chat annotated with ThreadPrimitive.Viewport, ThreadPrimitive.Messages, MessagePrimitive.Content, ActionBarPrimitive.Reload, ActionBarPrimitive.Copy, and ComposerPrimitive parts</figcaption>
+      </figure>
+
+      <div class="mt-6 flex flex-wrap gap-3 text-sm">
+        <a class="inline-flex items-center gap-2 rounded-full border border-[#efe6d6]/15 px-4 py-2" href="https://youtu.be/ZW56UHlqTCQ" target="_blank" rel="noopener noreferrer">
+          <i data-lucide="play" class="h-4 w-4 text-[#e0b36a]"></i>
+          <span data-i18n="proof.short">Short Demo</span>
+        </a>
+        <a class="inline-flex items-center gap-2 rounded-full border border-[#efe6d6]/15 px-4 py-2" href="https://youtu.be/9eLKs9AM4tU" target="_blank" rel="noopener noreferrer">
+          <i data-lucide="play" class="h-4 w-4 text-[#e0b36a]"></i>
+          <span data-i18n="proof.long">Long Demo</span>
+        </a>
+        <a class="inline-flex items-center gap-2 rounded-full border border-[#efe6d6]/15 px-4 py-2" href="https://www.assistant-ui.com/examples" target="_blank" rel="noopener noreferrer">
+          <span data-i18n="proof.examples">Examples</span>
+          <i data-lucide="arrow-up-right" class="h-4 w-4"></i>
+        </a>
+      </div>
+    </section>
+
+    <section id="architecture" class="border-t border-[#efe6d6]/10 bg-[#14110e]/80">
+      <div class="mx-auto max-w-6xl px-4 py-20 md:px-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#b7ddd4]" data-i18n="arch.kicker">Architecture</p>
+        <h2 class="mt-3 max-w-3xl font-serif text-3xl text-[#f6efe4] sm:text-5xl" data-i18n="arch.title">Three ways the pieces connect.</h2>
+        <p class="mt-4 max-w-2xl text-[#efe6d6]/70" data-i18n="arch.lead">The architecture doc names three pillars — frontend components, a runtime, and Assistant Cloud — and three common application shapes. Pick one to trace the path.</p>
+
+        <div class="mt-8 flex flex-wrap gap-2" role="group" data-i18n-aria-label="arch.tabs" aria-label="Architecture modes">
+          <button type="button" class="is-on rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="arch" data-tab="direct" aria-pressed="true" data-i18n="arch.tab.direct">Direct providers</button>
+          <button type="button" class="rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="arch" data-tab="api" aria-pressed="false" data-i18n="arch.tab.api">Your API</button>
+          <button type="button" class="rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-tab-group="arch" data-tab="cloud" aria-pressed="false" data-i18n="arch.tab.cloud">Assistant Cloud</button>
+        </div>
+
+        <div class="mt-6 rounded-3xl border border-[#efe6d6]/10 bg-[#100e0c]/80 p-5 sm:p-8" data-panel-group="arch" data-panel="direct">
+          <ol class="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+            <li class="rounded-2xl border border-[#e0b36a]/40 bg-[#e0b36a]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.ui">Frontend components</li>
+            <li class="hidden text-center text-[#efe6d6]/40 sm:block" aria-hidden="true">→</li>
+            <li class="rounded-2xl border border-[#b7ddd4]/40 bg-[#b7ddd4]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.runtime">Runtime</li>
+            <li class="hidden text-center text-[#efe6d6]/40 sm:block" aria-hidden="true">→</li>
+            <li class="rounded-2xl border border-[#efe6d6]/15 px-4 py-4 text-sm" data-i18n="arch.node.providers">External providers or LLM APIs</li>
+          </ol>
+          <p class="mt-4 text-sm text-[#efe6d6]/65" data-i18n="arch.copy.direct">Direct integration: components talk to the runtime, and the runtime talks to external providers or LLM APIs.</p>
+        </div>
+        <div class="mt-6 hidden rounded-3xl border border-[#efe6d6]/10 bg-[#100e0c]/80 p-5 sm:p-8" data-panel-group="arch" data-panel="api">
+          <ol class="grid gap-3 md:grid-cols-4">
+            <li class="rounded-2xl border border-[#e0b36a]/40 bg-[#e0b36a]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.ui">Frontend components</li>
+            <li class="rounded-2xl border border-[#b7ddd4]/40 bg-[#b7ddd4]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.runtime">Runtime</li>
+            <li class="rounded-2xl border border-[#efe6d6]/20 px-4 py-4 text-sm" data-i18n="arch.node.api">Your API backend</li>
+            <li class="rounded-2xl border border-[#efe6d6]/15 px-4 py-4 text-sm" data-i18n="arch.node.providers">External providers or LLM APIs</li>
+          </ol>
+          <p class="mt-4 text-sm text-[#efe6d6]/65" data-i18n="arch.copy.api">Your own API endpoint sits between the runtime and the model providers.</p>
+        </div>
+        <div class="mt-6 hidden rounded-3xl border border-[#efe6d6]/10 bg-[#100e0c]/80 p-5 sm:p-8" data-panel-group="arch" data-panel="cloud">
+          <div class="grid gap-3">
+            <div class="rounded-2xl border border-[#e0b36a]/40 bg-[#e0b36a]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.ui">Frontend components</div>
+            <div class="rounded-2xl border border-[#b7ddd4]/40 bg-[#b7ddd4]/10 px-4 py-4 text-sm font-medium" data-i18n="arch.node.runtime">Runtime</div>
+            <div class="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+              <div class="rounded-2xl border border-[#efe6d6]/20 px-4 py-4 text-sm" data-i18n="arch.node.api">Your API backend</div>
+              <div class="text-center text-[#efe6d6]/40" aria-hidden="true">→</div>
+              <div class="rounded-2xl border border-[#b7ddd4]/30 bg-[#1c2422] px-4 py-4 text-sm" data-i18n="arch.node.cloud">Cloud</div>
+            </div>
+            <div class="rounded-2xl border border-[#efe6d6]/15 px-4 py-4 text-sm" data-i18n="arch.node.providers">External providers or LLM APIs</div>
+          </div>
+          <p class="mt-4 text-sm text-[#efe6d6]/65" data-i18n="arch.copy.cloud">With Assistant Cloud, the runtime reaches both your API backend and Cloud. Cloud sits on the path to external providers. The docs also show the backend connected to Cloud.</p>
+        </div>
+
+        <h3 class="mt-14 font-serif text-2xl text-[#f6efe4]" data-i18n="arch.layersTitle">What each layer owns</h3>
+        <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714] p-5">
+            <h4 class="font-semibold text-[#e0b36a]" data-i18n="layer.ui.t">UI layer</h4>
+            <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="layer.ui.b">Primitives and prebuilt components render the thread, messages, composer, message parts, actions, attachments, and suggestions. They read and write through the runtime context.</p>
+          </article>
+          <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714] p-5">
+            <h4 class="font-semibold text-[#b7ddd4]" data-i18n="layer.rt.t">Runtime layer</h4>
+            <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="layer.rt.b">The boundary between UI and backend. It owns or adapts messages, thread state, composer state, run lifecycle, branching, editing, and regeneration. LocalRuntime keeps state internal. ExternalStoreRuntime delegates to your store.</p>
+          </article>
+          <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714] p-5">
+            <h4 class="font-semibold" data-i18n="layer.be.t">Backend / agent layer</h4>
+            <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="layer.be.b">Produces assistant output: text, message parts, tool calls, metadata, agent state, attachments, or other events that the runtime maps into UI state.</p>
+          </article>
+          <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714] p-5">
+            <h4 class="font-semibold" data-i18n="layer.pr.t">Integration / protocol layer</h4>
+            <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="layer.pr.b">Adapters bridge AI SDK, LangGraph, LangChain, ADK, A2A, AG-UI, OpenCode, or your own backend. DataStream and AssistantTransport let a generic backend talk to assistant-ui without a custom adapter per app.</p>
+          </article>
+          <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714] p-5 md:col-span-2 xl:col-span-2">
+            <h4 class="font-semibold" data-i18n="layer.ps.t">Persistence layer</h4>
+            <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="layer.ps.b">Thread and message history can live in Assistant Cloud or in your own database through thread and history adapters. Persistence stays separate from rendering and from model generation. The runtime coordinates with it.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" class="mx-auto max-w-6xl px-4 py-20 md:px-6">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-2xl">
+          <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#e0b36a]" data-i18n="cap.kicker">Capabilities</p>
+          <h2 class="mt-3 font-serif text-3xl text-[#f6efe4] sm:text-5xl" data-i18n="cap.title">What the repository actually ships.</h2>
+          <p class="mt-4 text-[#efe6d6]/70" data-i18n="cap.lead">Filtered from the README, the primitives docs, and the package manifests in this checkout. Versions below are those manifest versions.</p>
+        </div>
+      </div>
+      <div class="mt-8 flex gap-2 overflow-x-auto pb-1" role="group" data-i18n-aria-label="cap.filters" aria-label="Filter capabilities">
+        <button type="button" class="is-on shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="all" aria-pressed="true" data-i18n="cap.all">All</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="primitives" aria-pressed="false" data-i18n="cap.primitives">Primitives</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="ux" aria-pressed="false" data-i18n="cap.ux">Production UX</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="generative" aria-pressed="false" data-i18n="cap.gen">Generative UI</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="runtimes" aria-pressed="false" data-i18n="cap.runtimes">Runtimes</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="surfaces" aria-pressed="false" data-i18n="cap.surfaces">Surfaces</button>
+        <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 text-sm" data-filter="cloud" aria-pressed="false" data-i18n="cap.cloud">Cloud</button>
+      </div>
+
+      <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3" id="feature-grid">
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="primitives">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.primitives">Primitives</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.compose.t">Composable primitives</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.compose.b">Build a chat from Thread, Message, Composer, ThreadList, ActionBar, and related parts. Style every pixel, or start from the shadcn/ui theme the CLI copies into the project.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="primitives">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.primitives">Primitives</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.radix.t">Radix-style parts</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.radix.b">Each primitive uses Root plus named parts, asChild, and AuiIf. They read the nearest AssistantRuntimeProvider, so there is no prop drilling for chat state. The docs list Composer, Thread, Message, ActionBar, BranchPicker, ThreadList, AssistantModal, Attachment, Suggestion, SelectionToolbar, Error, and ChainOfThought.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="ux">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.ux">Production UX</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.ux.t">Streaming chat behavior</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.ux.b">The README includes streaming, auto-scroll, retries, attachments, markdown, code highlighting, voice dictation, keyboard shortcuts, and accessibility.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="ux">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.ux">Production UX</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.ts.t">Strong TypeScript</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.ts.b">Typed runtime APIs, tool schemas, message parts, and adapters end to end. @assistant-ui/react 0.15.32 describes itself as an open-source TypeScript/React library for production-grade AI chat.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="generative">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.gen">Generative UI</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.gen.t">Tools as React</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.gen.b">Render tool calls and JSON as React components, collect inline human approvals, and expose safe frontend actions to the model. @assistant-ui/generative-ui 0.0.8 is the framework-neutral package in this repo.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="runtimes">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.runtimes">Runtimes</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.swap.t">Swap the runtime</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.swap.b">useChatRuntime connects to the Vercel AI SDK. Swap it for useLangGraphRuntime, useDataStreamRuntime, or any custom runtime. @assistant-ui/ai-sdk in this repo is 0.0.16.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="runtimes">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.runtimes">Runtimes</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.models.t">Providers named in the README</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.models.b">OpenAI, Anthropic, Google Gemini, Mistral, Perplexity, AWS Bedrock, Azure, Fireworks, and Ollama, plus community providers through the AI SDK, and a custom HTTP backend. The installation guide also documents Groq, Cohere, Google Vertex, and Chrome AI.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="surfaces">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.surfaces">Surfaces</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.surfaces.t">Web, Vue, native, terminal</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.surfaces.b">Docs overview: components, runtimes, and primitives for React, Vue, React Native, and the terminal. This checkout has @assistant-ui/vue 0.0.7, @assistant-ui/react-native 0.1.51, @assistant-ui/react-ink 0.0.54, and framework-agnostic @assistant-ui/core 0.3.32. The CLI scaffolds Expo with --native and React Ink with --ink.</p>
+        </article>
+        <article class="rounded-2xl border border-[#efe6d6]/10 bg-[#1b1714]/90 p-5" data-feature="cloud">
+          <p class="font-mono text-[11px] uppercase tracking-wider text-[#e0b36a]" data-i18n="cap.cloud">Cloud</p>
+          <h3 class="mt-2 text-lg font-semibold" data-i18n="f.cloud.t">Assistant Cloud</h3>
+          <p class="mt-2 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="f.cloud.b">Optional hosted backend. The cloud docs describe persistence, thread titles, run reports, OpenTelemetry traces, engagement, intelligence, and a dashboard. The assistant-cloud package in this repo is 0.2.9. The README also lists it for managed thread history, telemetry, and file storage.</p>
+        </article>
+      </div>
+
+      <div class="mt-12">
+        <h3 class="font-serif text-2xl text-[#f6efe4]" data-i18n="ver.title">Versions in this repository</h3>
+        <p class="mt-2 max-w-2xl text-sm text-[#efe6d6]/60" data-i18n="ver.lead">Read from package.json and pyproject.toml in this checkout. These are manifest versions, not download counts or GitHub stars.</p>
+        <ul class="mt-5 grid gap-2 sm:grid-cols-2">
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react</span><span class="shrink-0 text-[#e0b36a]">0.15.32</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">assistant-ui CLI</span><span class="shrink-0 text-[#e0b36a]">0.0.127</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/core</span><span class="shrink-0 text-[#e0b36a]">0.3.32</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/ai-sdk</span><span class="shrink-0 text-[#e0b36a]">0.0.16</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-langgraph</span><span class="shrink-0 text-[#e0b36a]">0.14.38</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-langchain</span><span class="shrink-0 text-[#e0b36a]">0.0.39</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-ag-ui</span><span class="shrink-0 text-[#e0b36a]">0.1.1</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-a2a</span><span class="shrink-0 text-[#e0b36a]">0.2.49</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-google-adk</span><span class="shrink-0 text-[#e0b36a]">0.0.41</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-opencode</span><span class="shrink-0 text-[#e0b36a]">0.2.34</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-data-stream</span><span class="shrink-0 text-[#e0b36a]">0.12.40</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">assistant-cloud</span><span class="shrink-0 text-[#e0b36a]">0.2.9</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/vue</span><span class="shrink-0 text-[#e0b36a]">0.0.7</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-native</span><span class="shrink-0 text-[#e0b36a]">0.1.51</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-ink</span><span class="shrink-0 text-[#e0b36a]">0.0.54</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/generative-ui</span><span class="shrink-0 text-[#e0b36a]">0.0.8</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/react-mcp</span><span class="shrink-0 text-[#e0b36a]">0.1.26</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">@assistant-ui/eve</span><span class="shrink-0 text-[#e0b36a]">0.0.24</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">assistant-stream (Python)</span><span class="shrink-0 text-[#e0b36a]">0.0.36</span></li>
+          <li class="flex items-baseline justify-between gap-3 rounded-xl border border-[#efe6d6]/10 px-3 py-2 font-mono text-xs"><span class="min-w-0 break-all">assistant-ui-sync-server-api</span><span class="shrink-0 text-[#e0b36a]">0.1.1</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="install" class="border-t border-[#efe6d6]/10 bg-[#14110e]/80">
+      <div class="mx-auto max-w-6xl px-4 py-20 md:px-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#e0b36a]" data-i18n="inst.kicker">Install</p>
+        <h2 class="mt-3 font-serif text-3xl text-[#f6efe4] sm:text-5xl" data-i18n="inst.title">Commands taken from the repo.</h2>
+        <p class="mt-4 max-w-2xl text-[#efe6d6]/70" data-i18n="inst.lead">The CLI scaffolds a Next.js app or adds styled components to an existing project. Package-manager tabs use the runners and flags documented in the CLI README. Python commands come from the Python package docs.</p>
+
+        <div class="mt-8 flex gap-2 overflow-x-auto pb-1" role="group" data-i18n-aria-label="inst.tabs" aria-label="Install methods">
+          <button type="button" class="is-on shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="npm" aria-pressed="true">npm</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="pnpm" aria-pressed="false">pnpm</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="yarn" aria-pressed="false">yarn</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="bun" aria-pressed="false">bun</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="registry" aria-pressed="false">shadcn</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="python" aria-pressed="false">pip</button>
+          <button type="button" class="shrink-0 rounded-full border border-[#efe6d6]/15 px-3 py-1.5 font-mono text-sm" data-tab-group="pm" data-tab="repo" aria-pressed="false" data-i18n="inst.tab.repo">monorepo</button>
+        </div>
+
+        <div class="mt-4 overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="npm">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">npm</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>npx assistant-ui@latest create
+npx assistant-ui@latest init
+npx assistant-ui@latest init --yes
+npm install @assistant-ui/react @assistant-ui/ai-sdk ai</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.npm">create starts a project. init adds assistant-ui to an existing project, and falls back to create when no package.json is found. Pass --yes when the shell cannot prompt, including CI. The npm install line is the direct package install from the README.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="pnpm">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">pnpm</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>pnpm dlx assistant-ui@latest create --use-pnpm
+pnpm dlx assistant-ui@latest init --yes --use-pnpm</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.pnpm">The CLI README lists pnpm dlx assistant-ui@latest, and init accepts --use-pnpm and --yes.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="yarn">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">yarn</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>yarn dlx assistant-ui@latest create --use-yarn
+yarn dlx assistant-ui@latest init --yes --use-yarn</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.yarn">The CLI README lists yarn dlx assistant-ui@latest, and init accepts --use-yarn.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="bun">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">bun</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>bunx assistant-ui@latest create --use-bun
+bunx assistant-ui@latest init --yes --use-bun</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.bun">The CLI README lists bunx assistant-ui@latest, and init accepts --use-bun.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="registry">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">shadcn</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>npx shadcn@latest add https://r.assistant-ui.com/thread.json</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.registry">The installation guide also shows a components.json registry at https://r.assistant-ui.com/styles/{style}/{name}.json. Styles whose names start with base- receive Base UI components. Other styles receive Radix components. Existing Radix projects can keep https://r.assistant-ui.com/{name}.json.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="python">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">pip / uv</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>pip install assistant-stream[langgraph]
+pip install assistant-ui-sync-server-api
+uv add assistant-ui-sync-server-api</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.python">assistant-stream 0.0.36 requires Python &gt;=3.10 and &lt;4.0. The langgraph extra is documented in python/assistant-stream/README_LANGGRAPH.md. assistant-ui-sync-server-api 0.1.1 is the Python client for the sync server API and requires Python &gt;=3.10. Its README shows both pip and uv.</p>
+        </div>
+        <div class="mt-4 hidden overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]" data-panel-group="pm" data-panel="repo">
+          <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+            <span class="font-mono text-xs text-[#efe6d6]/50">pnpm</span>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="inst.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>pnpm install
+pnpm turbo build
+cd apps/docs
+pnpm dev
+pnpm changeset</code></pre>
+          <p class="border-t border-[#efe6d6]/10 px-4 py-3 text-sm text-[#efe6d6]/60" data-i18n="inst.note.repo">From CONTRIBUTING. The root package.json sets packageManager pnpm@12.15.0 and engines node &gt;=24.11. Some packages need the turbo build before dev. pnpm changeset is how published package edits get a changeset.</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-2">
+          <article class="min-w-0 overflow-hidden rounded-2xl border border-[#efe6d6]/10 bg-[#0e0c0a]">
+            <div class="flex items-center justify-between gap-3 border-b border-[#efe6d6]/10 px-4 py-2">
+              <span class="font-mono text-xs text-[#efe6d6]/50" data-i18n="usage.label">Usage · README</span>
+              <button type="button" class="inline-flex items-center gap-1.5 rounded-full border border-[#efe6d6]/15 px-2.5 py-1 text-xs" data-copy>
+                <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+                <span data-i18n="inst.copy">Copy</span>
+              </button>
+            </div>
+            <pre class="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-[#f3e6cf]"><code>"use client";
+
+import { AssistantRuntimeProvider } from "@assistant-ui/react";
+import { useChatRuntime } from "@assistant-ui/ai-sdk";
+import { Thread } from "@/components/assistant-ui/elements/thread.aui";
+
+export function Chat() {
+  const runtime = useChatRuntime();
+  return (
+    &lt;AssistantRuntimeProvider runtime={runtime}&gt;
+      &lt;Thread /&gt;
+    &lt;/AssistantRuntimeProvider&gt;
+  );
+}</code></pre>
+          </article>
+          <div class="min-w-0">
+            <h3 class="font-serif text-2xl text-[#f6efe4]" data-i18n="usage.title">The first runtime is one hook.</h3>
+            <p class="mt-3 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="usage.body">useChatRuntime connects to the Vercel AI SDK out of the box. Swap it for useLangGraphRuntime, useDataStreamRuntime, or any custom runtime to integrate with your own backend. The snippet above is the Usage example from the README.</p>
+            <h3 class="mt-8 font-serif text-2xl text-[#f6efe4]" data-i18n="tpl.title">CLI templates</h3>
+            <ul class="mt-4 grid gap-2 text-sm">
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">default</span> — <span data-i18n="tpl.default">Default template with Vercel AI SDK. npx assistant-ui create</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">minimal</span> — <span data-i18n="tpl.minimal">Bare-bones starting point. npx assistant-ui create -t minimal</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">cloud</span> — <span data-i18n="tpl.cloud">Cloud-backed persistence starter. npx assistant-ui create -t cloud</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">cloud-clerk</span> — <span data-i18n="tpl.clerk">Cloud-backed starter with Clerk auth. npx assistant-ui create -t cloud-clerk</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">cloud-harness</span> — <span data-i18n="tpl.harness">Hosted harness with a shared conversation. npx assistant-ui@latest cloud setup my-app</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">langchain</span> — <span data-i18n="tpl.langchain">LangGraph starter with the react-langchain adapter. npx assistant-ui create -t langchain</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">mcp</span> — <span data-i18n="tpl.mcp">MCP tools and MCP Apps renderer starter. npx assistant-ui create -t mcp</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">eve</span> — <span data-i18n="tpl.eve">Eve agent and Next.js starter. npx assistant-ui create -t eve</span></li>
+              <li class="rounded-xl border border-[#efe6d6]/10 px-3 py-2"><span class="font-mono text-[#e0b36a]">--native / --ink</span> — <span data-i18n="tpl.flags">Expo / React Native, or a React Ink terminal project. Also --example, such as with-ai-sdk-v7.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="mx-auto max-w-3xl px-4 py-20 md:px-6">
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-[#e0b36a]" data-i18n="faq.kicker">FAQ</p>
+      <h2 class="mt-3 font-serif text-3xl text-[#f6efe4] sm:text-5xl" data-i18n="faq.title">License, shape, backends, CI.</h2>
+      <div class="mt-8 divide-y divide-[#efe6d6]/10 border-y border-[#efe6d6]/10">
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-1">
+            <span class="font-medium" data-i18n="faq.q1">What license covers the code?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-1" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="faq.a1">The LICENSE file is the MIT License, copyright 2026 AgentbaseAI Inc. The README says the project is MIT, with optional Assistant Cloud for managed thread persistence and analytics. The library does not require Cloud.</div>
+        </div>
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-2">
+            <span class="font-medium" data-i18n="faq.q2">How is the UI put together?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-2" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="faq.a2">You compose primitives and bring your own styles. The README sets that against a single monolithic chat component. Elements are the styled, installable layer. Primitives are the unstyled accessible layer, with Root, parts, asChild, and AuiIf. The CLI ships a starter in Base UI by default, or Radix UI.</div>
+        </div>
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-3">
+            <span class="font-medium" data-i18n="faq.q3">Which backends and models are documented?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-3" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="faq.a3">useChatRuntime targets the Vercel AI SDK. The README says to swap in useLangGraphRuntime, useDataStreamRuntime, or a custom runtime. Named packages: @assistant-ui/ai-sdk, @assistant-ui/react-langgraph, @assistant-ui/react-langchain, @assistant-ui/react-ag-ui, @assistant-ui/react-a2a, @assistant-ui/react-google-adk, @assistant-ui/react-opencode, @assistant-ui/react-data-stream, and assistant-cloud. Models named in the README: OpenAI, Anthropic, Google Gemini, Mistral, Perplexity, AWS Bedrock, Azure, Fireworks, and Ollama, plus community providers via the AI SDK. The installation guide also lists Groq, Cohere, Google Vertex, and Chrome AI.</div>
+        </div>
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-4">
+            <span class="font-medium" data-i18n="faq.q4">How does setup behave in CI?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-4" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="faq.a4">In a non-interactive shell, pass --yes: npx assistant-ui@latest init --yes. Without it, init exits because it cannot prompt. A pull request that changes a published package's shipped files needs a changeset (pnpm changeset); CONTRIBUTING says the Changeset Semver Check fails the PR otherwise. Every pull request gets a review tier from T0 to T3. Merge waits on the checks named there, including autofix, Build Changed Packages, Typecheck Changed Packages, Review Policy Scripts, Test Coverage, and review-tier, then the merge queue.</div>
+        </div>
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-5">
+            <span class="font-medium" data-i18n="faq.q5">Which React versions, and how are APIs deprecated?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-5" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70" data-i18n="faq.a5">@assistant-ui/react 0.15.32 declares peer dependencies react and react-dom at ^18 or ^19. The deprecation policy says the project aims to keep the API stable. Anything marked unstable_ or experimental_, anything marked internal, and the RuntimeCore API may change in any release. Beta features, including styled UI components and shadcn/ui styles, get a notice shorter than one month. Stable features get a notice longer than three months.</div>
+        </div>
+        <div>
+          <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" data-faq aria-expanded="false" aria-controls="faq-6">
+            <span class="font-medium" data-i18n="faq.q6">How do I report a security issue?</span>
+            <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 transition-transform" data-chevron></i>
+          </button>
+          <div id="faq-6" class="hidden pb-4 text-sm leading-relaxed text-[#efe6d6]/70">
+            <span data-i18n="faq.a6">SECURITY.md asks you to use GitHub Security Advisories, Report a Vulnerability, and to avoid a public issue. If GitHub is unavailable, email security@assistant-ui.com. Security fixes ship for the latest version of each published @assistant-ui/* package.</span>
+            <a class="mt-2 block text-[#e0b36a] underline-offset-2 hover:underline" href="https://github.com/assistant-ui/assistant-ui/security/advisories/new" target="_blank" rel="noopener noreferrer">https://github.com/assistant-ui/assistant-ui/security/advisories/new</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-[#efe6d6]/10 bg-[#0c0a09]">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4 md:px-6">
+      <div class="md:col-span-2">
+        <p class="font-serif text-2xl text-[#f6efe4]">assistant-ui</p>
+        <p class="mt-3 max-w-sm text-sm leading-relaxed text-[#efe6d6]/65" data-i18n="foot.blurb">Open-source TypeScript/React chat UI by AgentbaseAI Inc. MIT licensed. Optional Assistant Cloud for managed thread persistence and analytics.</p>
+        <p class="mt-4 text-xs text-[#efe6d6]/45" data-i18n="foot.copy">Copyright 2026 AgentbaseAI Inc.</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-[#e0b36a]" data-i18n="foot.product">Product</p>
+        <ul class="mt-3 space-y-2 text-sm text-[#efe6d6]/75">
+          <li><a class="hover:text-[#efe6d6]" href="https://www.assistant-ui.com" target="_blank" rel="noopener noreferrer" data-i18n="foot.site">assistant-ui.com</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://www.assistant-ui.com/docs" target="_blank" rel="noopener noreferrer" data-i18n="nav.docs">Docs</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://www.assistant-ui.com/docs/cli" target="_blank" rel="noopener noreferrer" data-i18n="foot.cli">CLI reference</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://www.assistant-ui.com/examples" target="_blank" rel="noopener noreferrer" data-i18n="proof.examples">Examples</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://cloud.assistant-ui.com" target="_blank" rel="noopener noreferrer" data-i18n="foot.cloud">Assistant Cloud</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://www.npmjs.com/package/@assistant-ui/react" target="_blank" rel="noopener noreferrer">@assistant-ui/react</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://www.npmjs.com/package/assistant-ui" target="_blank" rel="noopener noreferrer">assistant-ui</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-[#e0b36a]" data-i18n="foot.project">Repository</p>
+        <ul class="mt-3 space-y-2 text-sm text-[#efe6d6]/75">
+          <li><a class="hover:text-[#efe6d6]" href="https://github.com/assistant-ui/assistant-ui" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://github.com/assistant-ui/assistant-ui/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-i18n="foot.license">MIT License</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://github.com/assistant-ui/assistant-ui/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" data-i18n="foot.contributing">Contributing</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://github.com/assistant-ui/assistant-ui/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer" data-i18n="foot.coc">Code of Conduct</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://github.com/assistant-ui/assistant-ui/issues" target="_blank" rel="noopener noreferrer" data-i18n="foot.issues">Issues</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://discord.gg/S9dwgCNEFs" target="_blank" rel="noopener noreferrer">Discord</a></li>
+          <li><a class="hover:text-[#efe6d6]" href="https://cal.com/simon-farshid/assistant-ui" target="_blank" rel="noopener noreferrer" data-i18n="foot.sales">Contact Sales</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mx-auto flex max-w-6xl justify-end px-4 pb-10 md:px-6">
+      <a href="#top" class="inline-flex items-center gap-2 rounded-full border border-[#efe6d6]/15 px-4 py-2 text-sm">
+        <i data-lucide="arrow-up" class="h-4 w-4"></i>
+        <span data-i18n="foot.top">Back to top</span>
+      </a>
+    </div>
+  </footer>
+
+  <div id="toast" class="pointer-events-none fixed bottom-4 right-4 z-50 max-w-[calc(100vw-2rem)] translate-y-6 opacity-0 transition-all duration-300" role="status" aria-live="polite">
+    <div class="rounded-lg border border-[#efe6d6]/15 bg-[#1b1714] px-4 py-2.5 font-mono text-xs text-[#efe6d6] shadow-xl">
+      <span id="toast-text">Copied</span>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" integrity="sha384-hJnF5AwidE18GSWTAGHv3ByzzvfNZ1Tcx5y1UUV3WkauuMCEzBJBMSwSt/PUPXnM" crossorigin="anonymous"></script>
+  <script>
+    var translations = {
+      en: {
+        "meta.title": "assistant-ui — The UX of ChatGPT in your React app",
+        "meta.description": "Open-source TypeScript/React library for production-grade AI chat. Composable primitives, generative UI, and runtimes for the AI SDK, LangGraph, and your own backend.",
+        "nav.skip": "Skip to content",
+        "nav.proof": "Product",
+        "nav.architecture": "Architecture",
+        "nav.capabilities": "Capabilities",
+        "nav.install": "Install",
+        "nav.faq": "FAQ",
+        "nav.docs": "Docs",
+        "nav.star": "Star on GitHub",
+        "nav.menu": "Open menu",
+        "nav.menuClose": "Close menu",
+        "nav.langGroup": "Language",
+        "badge.version": "react 0.15.32",
+        "badge.mit": "MIT License",
+        "badge.reactPeer": "React 18 or 19",
+        "badge.cli": "CLI 0.0.127",
+        "badge.yc": "Backed by Y Combinator",
+        "hero.pill": "Open source · TypeScript / React",
+        "hero.titleLead": "The UX of ChatGPT",
+        "hero.titleAccent": "in your React app.",
+        "hero.subtitle": "assistant-ui is an open-source TypeScript/React library to build production-grade AI chat experiences fast. The docs overview describes the same primitives for web, native, and the terminal.",
+        "hero.ctaInstall": "Quick install",
+        "hero.ctaFeatures": "Browse capabilities",
+        "hero.ctaDocs": "Documentation",
+        "hero.headerCaption": "Wordmark from the repository header: the frontend library for AI agents. Primitives and a runtime for production chat. Any backend, through adapters.",
+        "logos.heading": "Used in production by",
+        "logos.more": "…and many more.",
+        "proof.kicker": "Visual proof",
+        "proof.title": "Chat, tools, and the parts that build them.",
+        "proof.lead": "Screenshots shipped in .github/assets. Switch the frame to inspect the chat, a generative tool card, the annotated anatomy, the CLI, and the primitive map.",
+        "proof.tabs": "Screenshots",
+        "proof.tab.demo": "Chat",
+        "proof.tab.gen": "Generative UI",
+        "proof.tab.anatomy": "Anatomy",
+        "proof.tab.cli": "CLI",
+        "proof.tab.map": "Primitives",
+        "proof.short": "Short Demo",
+        "proof.long": "Long Demo",
+        "proof.examples": "Examples",
+        "alt.header": "assistant-ui: the frontend library for AI agents",
+        "alt.demo": "An assistant-ui chat: a hotel search tool call, a streamed reply, an approval card that the user allows, and follow-up suggestions",
+        "alt.gen": "A get_weather tool call rendered as a weather card inside an assistant-ui chat",
+        "alt.anatomy": "A chat UI annotated with the primitives that build it: ThreadPrimitive.Viewport, MessagePrimitive.Root and Parts, makeAssistantToolUI, ActionBarPrimitive, BranchPickerPrimitive, and ComposerPrimitive.Input, Send and AddAttachment",
+        "alt.cli": "Running npx assistant-ui@latest init in a terminal",
+        "alt.map": "A browser chat annotated with ThreadPrimitive.Viewport, ThreadPrimitive.Messages, MessagePrimitive.Content, ActionBarPrimitive.Reload, ActionBarPrimitive.Copy, and ComposerPrimitive parts",
+        "arch.kicker": "Architecture",
+        "arch.title": "Three ways the pieces connect.",
+        "arch.lead": "The architecture doc names three pillars — frontend components, a runtime, and Assistant Cloud — and three common application shapes. Pick one to trace the path.",
+        "arch.tabs": "Architecture modes",
+        "arch.tab.direct": "Direct providers",
+        "arch.tab.api": "Your API",
+        "arch.tab.cloud": "Assistant Cloud",
+        "arch.node.ui": "Frontend components",
+        "arch.node.runtime": "Runtime",
+        "arch.node.providers": "External providers or LLM APIs",
+        "arch.node.api": "Your API backend",
+        "arch.node.cloud": "Cloud",
+        "arch.copy.direct": "Direct integration: components talk to the runtime, and the runtime talks to external providers or LLM APIs.",
+        "arch.copy.api": "Your own API endpoint sits between the runtime and the model providers.",
+        "arch.copy.cloud": "With Assistant Cloud, the runtime reaches both your API backend and Cloud. Cloud sits on the path to external providers. The docs also show the backend connected to Cloud.",
+        "arch.layersTitle": "What each layer owns",
+        "layer.ui.t": "UI layer",
+        "layer.ui.b": "Primitives and prebuilt components render the thread, messages, composer, message parts, actions, attachments, and suggestions. They read and write through the runtime context.",
+        "layer.rt.t": "Runtime layer",
+        "layer.rt.b": "The boundary between UI and backend. It owns or adapts messages, thread state, composer state, run lifecycle, branching, editing, and regeneration. LocalRuntime keeps state internal. ExternalStoreRuntime delegates to your store.",
+        "layer.be.t": "Backend / agent layer",
+        "layer.be.b": "Produces assistant output: text, message parts, tool calls, metadata, agent state, attachments, or other events that the runtime maps into UI state.",
+        "layer.pr.t": "Integration / protocol layer",
+        "layer.pr.b": "Adapters bridge AI SDK, LangGraph, LangChain, ADK, A2A, AG-UI, OpenCode, or your own backend. DataStream and AssistantTransport let a generic backend talk to assistant-ui without a custom adapter per app.",
+        "layer.ps.t": "Persistence layer",
+        "layer.ps.b": "Thread and message history can live in Assistant Cloud or in your own database through thread and history adapters. Persistence stays separate from rendering and from model generation. The runtime coordinates with it.",
+        "cap.kicker": "Capabilities",
+        "cap.title": "What the repository actually ships.",
+        "cap.lead": "Filtered from the README, the primitives docs, and the package manifests in this checkout. Versions below are those manifest versions.",
+        "cap.filters": "Filter capabilities",
+        "cap.all": "All",
+        "cap.primitives": "Primitives",
+        "cap.ux": "Production UX",
+        "cap.gen": "Generative UI",
+        "cap.runtimes": "Runtimes",
+        "cap.surfaces": "Surfaces",
+        "cap.cloud": "Cloud",
+        "f.compose.t": "Composable primitives",
+        "f.compose.b": "Build a chat from Thread, Message, Composer, ThreadList, ActionBar, and related parts. Style every pixel, or start from the shadcn/ui theme the CLI copies into the project.",
+        "f.radix.t": "Radix-style parts",
+        "f.radix.b": "Each primitive uses Root plus named parts, asChild, and AuiIf. They read the nearest AssistantRuntimeProvider, so there is no prop drilling for chat state. The docs list Composer, Thread, Message, ActionBar, BranchPicker, ThreadList, AssistantModal, Attachment, Suggestion, SelectionToolbar, Error, and ChainOfThought.",
+        "f.ux.t": "Streaming chat behavior",
+        "f.ux.b": "The README includes streaming, auto-scroll, retries, attachments, markdown, code highlighting, voice dictation, keyboard shortcuts, and accessibility.",
+        "f.ts.t": "Strong TypeScript",
+        "f.ts.b": "Typed runtime APIs, tool schemas, message parts, and adapters end to end. @assistant-ui/react 0.15.32 describes itself as an open-source TypeScript/React library for production-grade AI chat.",
+        "f.gen.t": "Tools as React",
+        "f.gen.b": "Render tool calls and JSON as React components, collect inline human approvals, and expose safe frontend actions to the model. @assistant-ui/generative-ui 0.0.8 is the framework-neutral package in this repo.",
+        "f.swap.t": "Swap the runtime",
+        "f.swap.b": "useChatRuntime connects to the Vercel AI SDK. Swap it for useLangGraphRuntime, useDataStreamRuntime, or any custom runtime. @assistant-ui/ai-sdk in this repo is 0.0.16.",
+        "f.models.t": "Providers named in the README",
+        "f.models.b": "OpenAI, Anthropic, Google Gemini, Mistral, Perplexity, AWS Bedrock, Azure, Fireworks, and Ollama, plus community providers through the AI SDK, and a custom HTTP backend. The installation guide also documents Groq, Cohere, Google Vertex, and Chrome AI.",
+        "f.surfaces.t": "Web, Vue, native, terminal",
+        "f.surfaces.b": "Docs overview: components, runtimes, and primitives for React, Vue, React Native, and the terminal. This checkout has @assistant-ui/vue 0.0.7, @assistant-ui/react-native 0.1.51, @assistant-ui/react-ink 0.0.54, and framework-agnostic @assistant-ui/core 0.3.32. The CLI scaffolds Expo with --native and React Ink with --ink.",
+        "f.cloud.t": "Assistant Cloud",
+        "f.cloud.b": "Optional hosted backend. The cloud docs describe persistence, thread titles, run reports, OpenTelemetry traces, engagement, intelligence, and a dashboard. The assistant-cloud package in this repo is 0.2.9. The README also lists it for managed thread history, telemetry, and file storage.",
+        "ver.title": "Versions in this repository",
+        "ver.lead": "Read from package.json and pyproject.toml in this checkout. These are manifest versions, not download counts or GitHub stars.",
+        "inst.kicker": "Install",
+        "inst.title": "Commands taken from the repo.",
+        "inst.lead": "The CLI scaffolds a Next.js app or adds styled components to an existing project. Package-manager tabs use the runners and flags documented in the CLI README. Python commands come from the Python package docs.",
+        "inst.tabs": "Install methods",
+        "inst.tab.repo": "monorepo",
+        "inst.copy": "Copy",
+        "inst.copied": "Copied",
+        "inst.copyFail": "Copy failed",
+        "inst.note.npm": "create starts a project. init adds assistant-ui to an existing project, and falls back to create when no package.json is found. Pass --yes when the shell cannot prompt, including CI. The npm install line is the direct package install from the README.",
+        "inst.note.pnpm": "The CLI README lists pnpm dlx assistant-ui@latest, and init accepts --use-pnpm and --yes.",
+        "inst.note.yarn": "The CLI README lists yarn dlx assistant-ui@latest, and init accepts --use-yarn.",
+        "inst.note.bun": "The CLI README lists bunx assistant-ui@latest, and init accepts --use-bun.",
+        "inst.note.registry": "The installation guide also shows a components.json registry at https://r.assistant-ui.com/styles/{style}/{name}.json. Styles whose names start with base- receive Base UI components. Other styles receive Radix components. Existing Radix projects can keep https://r.assistant-ui.com/{name}.json.",
+        "inst.note.python": "assistant-stream 0.0.36 requires Python >=3.10 and <4.0. The langgraph extra is documented in python/assistant-stream/README_LANGGRAPH.md. assistant-ui-sync-server-api 0.1.1 is the Python client for the sync server API and requires Python >=3.10. Its README shows both pip and uv.",
+        "inst.note.repo": "From CONTRIBUTING. The root package.json sets packageManager pnpm@12.15.0 and engines node >=24.11. Some packages need the turbo build before dev. pnpm changeset is how published package edits get a changeset.",
+        "usage.label": "Usage · README",
+        "usage.title": "The first runtime is one hook.",
+        "usage.body": "useChatRuntime connects to the Vercel AI SDK out of the box. Swap it for useLangGraphRuntime, useDataStreamRuntime, or any custom runtime to integrate with your own backend. The snippet above is the Usage example from the README.",
+        "tpl.title": "CLI templates",
+        "tpl.default": "Default template with Vercel AI SDK. npx assistant-ui create",
+        "tpl.minimal": "Bare-bones starting point. npx assistant-ui create -t minimal",
+        "tpl.cloud": "Cloud-backed persistence starter. npx assistant-ui create -t cloud",
+        "tpl.clerk": "Cloud-backed starter with Clerk auth. npx assistant-ui create -t cloud-clerk",
+        "tpl.harness": "Hosted harness with a shared conversation. npx assistant-ui@latest cloud setup my-app",
+        "tpl.langchain": "LangGraph starter with the react-langchain adapter. npx assistant-ui create -t langchain",
+        "tpl.mcp": "MCP tools and MCP Apps renderer starter. npx assistant-ui create -t mcp",
+        "tpl.eve": "Eve agent and Next.js starter. npx assistant-ui create -t eve",
+        "tpl.flags": "Expo / React Native, or a React Ink terminal project. Also --example, such as with-ai-sdk-v7.",
+        "faq.kicker": "FAQ",
+        "faq.title": "License, shape, backends, CI.",
+        "faq.q1": "What license covers the code?",
+        "faq.a1": "The LICENSE file is the MIT License, copyright 2026 AgentbaseAI Inc. The README says the project is MIT, with optional Assistant Cloud for managed thread persistence and analytics. The library does not require Cloud.",
+        "faq.q2": "How is the UI put together?",
+        "faq.a2": "You compose primitives and bring your own styles. The README sets that against a single monolithic chat component. Elements are the styled, installable layer. Primitives are the unstyled accessible layer, with Root, parts, asChild, and AuiIf. The CLI ships a starter in Base UI by default, or Radix UI.",
+        "faq.q3": "Which backends and models are documented?",
+        "faq.a3": "useChatRuntime targets the Vercel AI SDK. The README says to swap in useLangGraphRuntime, useDataStreamRuntime, or a custom runtime. Named packages: @assistant-ui/ai-sdk, @assistant-ui/react-langgraph, @assistant-ui/react-langchain, @assistant-ui/react-ag-ui, @assistant-ui/react-a2a, @assistant-ui/react-google-adk, @assistant-ui/react-opencode, @assistant-ui/react-data-stream, and assistant-cloud. Models named in the README: OpenAI, Anthropic, Google Gemini, Mistral, Perplexity, AWS Bedrock, Azure, Fireworks, and Ollama, plus community providers via the AI SDK. The installation guide also lists Groq, Cohere, Google Vertex, and Chrome AI.",
+        "faq.q4": "How does setup behave in CI?",
+        "faq.a4": "In a non-interactive shell, pass --yes: npx assistant-ui@latest init --yes. Without it, init exits because it cannot prompt. A pull request that changes a published package's shipped files needs a changeset (pnpm changeset); CONTRIBUTING says the Changeset Semver Check fails the PR otherwise. Every pull request gets a review tier from T0 to T3. Merge waits on the checks named there, including autofix, Build Changed Packages, Typecheck Changed Packages, Review Policy Scripts, Test Coverage, and review-tier, then the merge queue.",
+        "faq.q5": "Which React versions, and how are APIs deprecated?",
+        "faq.a5": "@assistant-ui/react 0.15.32 declares peer dependencies react and react-dom at ^18 or ^19. The deprecation policy says the project aims to keep the API stable. Anything marked unstable_ or experimental_, anything marked internal, and the RuntimeCore API may change in any release. Beta features, including styled UI components and shadcn/ui styles, get a notice shorter than one month. Stable features get a notice longer than three months.",
+        "faq.q6": "How do I report a security issue?",
+        "faq.a6": "SECURITY.md asks you to use GitHub Security Advisories, Report a Vulnerability, and to avoid a public issue. If GitHub is unavailable, email security@assistant-ui.com. Security fixes ship for the latest version of each published @assistant-ui/* package.",
+        "foot.blurb": "Open-source TypeScript/React chat UI by AgentbaseAI Inc. MIT licensed. Optional Assistant Cloud for managed thread persistence and analytics.",
+        "foot.copy": "Copyright 2026 AgentbaseAI Inc.",
+        "foot.product": "Product",
+        "foot.site": "assistant-ui.com",
+        "foot.cli": "CLI reference",
+        "foot.cloud": "Assistant Cloud",
+        "foot.project": "Repository",
+        "foot.license": "MIT License",
+        "foot.contributing": "Contributing",
+        "foot.coc": "Code of Conduct",
+        "foot.issues": "Issues",
+        "foot.sales": "Contact Sales",
+        "foot.top": "Back to top"
+      },
+      zh: {
+        "meta.title": "assistant-ui — 把 ChatGPT 的使用體驗放進你的 React 應用",
+        "meta.description": "開源 TypeScript／React 函式庫，用來打造可上線的 AI 對話體驗。可組合的 primitive、生成式 UI，以及接上 AI SDK、LangGraph 或自有後端的 runtime。",
+        "nav.skip": "跳至主要內容",
+        "nav.proof": "產品",
+        "nav.architecture": "架構",
+        "nav.capabilities": "能力",
+        "nav.install": "安裝",
+        "nav.faq": "問答",
+        "nav.docs": "文件",
+        "nav.star": "到 GitHub 加星",
+        "nav.menu": "開啟選單",
+        "nav.menuClose": "關閉選單",
+        "nav.langGroup": "語言",
+        "badge.version": "react 0.15.32",
+        "badge.mit": "MIT 授權",
+        "badge.reactPeer": "React 18 或 19",
+        "badge.cli": "CLI 0.0.127",
+        "badge.yc": "Y Combinator 支持",
+        "hero.pill": "開源 · TypeScript / React",
+        "hero.titleLead": "把 ChatGPT 的使用體驗",
+        "hero.titleAccent": "放進你的 React 應用。",
+        "hero.subtitle": "assistant-ui 是開源的 TypeScript／React 函式庫，用來快速做出可上線的 AI 對話體驗。文件總覽寫明：同一套 primitive 涵蓋網頁、原生與終端機。",
+        "hero.ctaInstall": "快速安裝",
+        "hero.ctaFeatures": "瀏覽能力",
+        "hero.ctaDocs": "文件",
+        "hero.headerCaption": "倉庫頁首圖上的字標：AI agent 的前端函式庫。可上線對話用的 primitive 與 runtime。任何後端，透過 adapter 接上。",
+        "logos.heading": "已在正式環境使用",
+        "logos.more": "……以及更多團隊。",
+        "proof.kicker": "畫面實證",
+        "proof.title": "對話、工具，以及組成它們的零件。",
+        "proof.lead": "圖片來自倉庫的 .github/assets。切換畫面即可查看對話、生成式工具卡、標註解剖圖、CLI，以及 primitive 對照。",
+        "proof.tabs": "截圖",
+        "proof.tab.demo": "對話",
+        "proof.tab.gen": "生成式 UI",
+        "proof.tab.anatomy": "解剖圖",
+        "proof.tab.cli": "CLI",
+        "proof.tab.map": "Primitive",
+        "proof.short": "短示範",
+        "proof.long": "長示範",
+        "proof.examples": "範例",
+        "alt.header": "assistant-ui：AI agent 的前端函式庫",
+        "alt.demo": "assistant-ui 對話畫面：飯店搜尋工具呼叫、串流回覆、使用者允許的核准卡，以及後續建議",
+        "alt.gen": "get_weather 工具呼叫在 assistant-ui 對話中渲染成天氣卡",
+        "alt.anatomy": "標註了組成零件的對話介面：ThreadPrimitive.Viewport、MessagePrimitive.Root 與 Parts、makeAssistantToolUI、ActionBarPrimitive、BranchPickerPrimitive，以及 ComposerPrimitive.Input、Send 與 AddAttachment",
+        "alt.cli": "在終端機執行 npx assistant-ui@latest init",
+        "alt.map": "瀏覽器中的對話，標註了 ThreadPrimitive.Viewport、ThreadPrimitive.Messages、MessagePrimitive.Content、ActionBarPrimitive.Reload、ActionBarPrimitive.Copy，以及 ComposerPrimitive 的各個部分",
+        "arch.kicker": "架構",
+        "arch.title": "三種接法。",
+        "arch.lead": "架構文件寫了三根支柱：前端元件、runtime、Assistant Cloud，以及三種常見的應用形狀。選一種，沿著路徑看資料怎麼走。",
+        "arch.tabs": "架構模式",
+        "arch.tab.direct": "直連供應商",
+        "arch.tab.api": "你的 API",
+        "arch.tab.cloud": "Assistant Cloud",
+        "arch.node.ui": "前端元件",
+        "arch.node.runtime": "Runtime",
+        "arch.node.providers": "外部供應商或 LLM API",
+        "arch.node.api": "你的 API 後端",
+        "arch.node.cloud": "Cloud",
+        "arch.copy.direct": "直連：元件對 runtime 說話，runtime 再對外部供應商或 LLM API 說話。",
+        "arch.copy.api": "你自己的 API 端點站在 runtime 與模型供應商之間。",
+        "arch.copy.cloud": "接上 Assistant Cloud 時，runtime 同時連到你的 API 後端與 Cloud。Cloud 位於通往外部供應商的路徑上。文件也畫出後端連到 Cloud。",
+        "arch.layersTitle": "每一層負責什麼",
+        "layer.ui.t": "UI 層",
+        "layer.ui.b": "Primitive 與預先做好的元件負責畫出 thread、訊息、composer、訊息部分、動作、附件與建議。它們透過 runtime context 讀寫，直接面對的是 runtime。",
+        "layer.rt.t": "Runtime 層",
+        "layer.rt.b": "UI 與後端之間的邊界。它擁有或轉接訊息、thread 狀態、composer 狀態、執行生命週期、分支、編輯與重新生成。LocalRuntime 把狀態留在內部。ExternalStoreRuntime 交給你的 store。",
+        "layer.be.t": "後端／agent 層",
+        "layer.be.b": "產生助理輸出：文字、訊息部分、工具呼叫、中繼資料、agent 狀態、附件，或其他事件，再由 runtime 映射成 UI 狀態。",
+        "layer.pr.t": "整合／協定層",
+        "layer.pr.b": "Adapter 橋接 AI SDK、LangGraph、LangChain、ADK、A2A、AG-UI、OpenCode，或你自己的後端。DataStream 與 AssistantTransport 讓通用後端不必為每個應用另寫 adapter。",
+        "layer.ps.t": "持久化層",
+        "layer.ps.b": "Thread 與訊息歷史可以放在 Assistant Cloud，或透過 thread 與 history adapter 放進你自己的資料庫。持久化與畫面渲染、模型生成分開。runtime 負責協調。",
+        "cap.kicker": "能力",
+        "cap.title": "這個倉庫實際提供的東西。",
+        "cap.lead": "取材自 README、primitive 文件，以及本次檢出的套件清單。下方版本是這些清單裡的版本。",
+        "cap.filters": "篩選能力",
+        "cap.all": "全部",
+        "cap.primitives": "Primitive",
+        "cap.ux": "上線體驗",
+        "cap.gen": "生成式 UI",
+        "cap.runtimes": "Runtime",
+        "cap.surfaces": "執行表面",
+        "cap.cloud": "Cloud",
+        "f.compose.t": "可組合的 primitive",
+        "f.compose.b": "用 Thread、Message、Composer、ThreadList、ActionBar 及相關零件組出對話。每一個像素自己定樣式，或從 CLI 複製進專案的 shadcn/ui 主題開始。",
+        "f.radix.t": "Radix 風格的零件",
+        "f.radix.b": "每個 primitive 都是 Root 加上具名零件、asChild 與 AuiIf。它們讀取最近的 AssistantRuntimeProvider，對話狀態不用一層層傳 props。文件列出 Composer、Thread、Message、ActionBar、BranchPicker、ThreadList、AssistantModal、Attachment、Suggestion、SelectionToolbar、Error 與 ChainOfThought。",
+        "f.ux.t": "串流對話行為",
+        "f.ux.b": "README 列出串流、自動捲動、重試、附件、Markdown、程式碼高亮、語音聽寫、鍵盤快捷鍵與無障礙。",
+        "f.ts.t": "扎實的 TypeScript",
+        "f.ts.b": "runtime API、工具 schema、訊息部分與 adapter 全程有型別。本倉庫的 @assistant-ui/react 0.15.32 自我描述為用來打造可上線 AI 對話的開源 TypeScript／React 函式庫。",
+        "f.gen.t": "工具變成 React",
+        "f.gen.b": "把工具呼叫與 JSON 渲染成 React 元件，在訊息裡收集人工核准，並把安全的前端動作交給模型。本倉庫的 @assistant-ui/generative-ui 0.0.8 是與框架無關的套件。",
+        "f.swap.t": "換掉 runtime",
+        "f.swap.b": "useChatRuntime 接上 Vercel AI SDK。可以換成 useLangGraphRuntime、useDataStreamRuntime，或任何自訂 runtime。本倉庫的 @assistant-ui/ai-sdk 是 0.0.16。",
+        "f.models.t": "README 點名的供應商",
+        "f.models.b": "OpenAI、Anthropic、Google Gemini、Mistral、Perplexity、AWS Bedrock、Azure、Fireworks 與 Ollama，加上透過 AI SDK 的社群供應商，以及自訂 HTTP 後端。安裝指南另外寫了 Groq、Cohere、Google Vertex 與 Chrome AI。",
+        "f.surfaces.t": "網頁、Vue、原生、終端機",
+        "f.surfaces.b": "文件總覽：元件、runtime 與 primitive 用於 React、Vue、React Native 與終端機。本次檢出包含 @assistant-ui/vue 0.0.7、@assistant-ui/react-native 0.1.51、@assistant-ui/react-ink 0.0.54，以及與框架無關的 @assistant-ui/core 0.3.32。CLI 可用 --native 產生 Expo，用 --ink 產生 React Ink。",
+        "f.cloud.t": "Assistant Cloud",
+        "f.cloud.b": "可選的託管後端。Cloud 文件描述持久化、thread 標題、執行報告、OpenTelemetry trace、互動事件、intelligence，以及儀表板。本倉庫的 assistant-cloud 是 0.2.9。README 也把它列為受管理的 thread 歷史、遙測與檔案儲存。",
+        "ver.title": "本倉庫中的版本",
+        "ver.lead": "讀自本次檢出的 package.json 與 pyproject.toml。這些是清單上的版本，不是下載數，也不是 GitHub 星數。",
+        "inst.kicker": "安裝",
+        "inst.title": "命令都來自倉庫。",
+        "inst.lead": "CLI 會產生 Next.js 應用，或把有樣式的元件加進既有專案。各套件管理員分頁使用 CLI README 寫明的啟動器與旗標。Python 命令來自 Python 套件文件。",
+        "inst.tabs": "安裝方式",
+        "inst.tab.repo": "monorepo",
+        "inst.copy": "複製",
+        "inst.copied": "已複製",
+        "inst.copyFail": "複製失敗",
+        "inst.note.npm": "create 會建立新專案。init 把 assistant-ui 加進既有專案；找不到 package.json 時會改走 create。殼層無法提問時（包含 CI）加上 --yes。npm install 那一行是 README 裡的直接安裝。",
+        "inst.note.pnpm": "CLI README 列出 pnpm dlx assistant-ui@latest，init 接受 --use-pnpm 與 --yes。",
+        "inst.note.yarn": "CLI README 列出 yarn dlx assistant-ui@latest，init 接受 --use-yarn。",
+        "inst.note.bun": "CLI README 列出 bunx assistant-ui@latest，init 接受 --use-bun。",
+        "inst.note.registry": "安裝指南也展示 components.json 的 registry：https://r.assistant-ui.com/styles/{style}/{name}.json。名稱以 base- 開頭的 style 會拿到 Base UI 元件，其餘拿到 Radix 元件。既有的 Radix 專案可以繼續用 https://r.assistant-ui.com/{name}.json。",
+        "inst.note.python": "assistant-stream 0.0.36 需要 Python >=3.10 且 <4.0。langgraph extra 寫在 python/assistant-stream/README_LANGGRAPH.md。assistant-ui-sync-server-api 0.1.1 是 sync server API 的 Python 用戶端，需要 Python >=3.10。它的 README 同時寫了 pip 與 uv。",
+        "inst.note.repo": "來自 CONTRIBUTING。根目錄 package.json 設定 packageManager 為 pnpm@12.15.0，engines 為 node >=24.11。部分套件在開發前需要先 turbo build。要改已發佈套件時，用 pnpm changeset 補上 changeset。",
+        "usage.label": "用法 · README",
+        "usage.title": "第一個 runtime 就是一個 hook。",
+        "usage.body": "useChatRuntime 預設接上 Vercel AI SDK。可換成 useLangGraphRuntime、useDataStreamRuntime，或任何自訂 runtime，以接上你自己的後端。上面的程式片段是 README 的 Usage 範例。",
+        "tpl.title": "CLI 範本",
+        "tpl.default": "預設範本，使用 Vercel AI SDK。npx assistant-ui create",
+        "tpl.minimal": "最精簡的起點。npx assistant-ui create -t minimal",
+        "tpl.cloud": "帶 Cloud 持久化的起點。npx assistant-ui create -t cloud",
+        "tpl.clerk": "帶 Cloud 與 Clerk 驗證的起點。npx assistant-ui create -t cloud-clerk",
+        "tpl.harness": "託管 harness，瀏覽器之間共用一段對話。npx assistant-ui@latest cloud setup my-app",
+        "tpl.langchain": "LangGraph 起點，使用 react-langchain adapter。npx assistant-ui create -t langchain",
+        "tpl.mcp": "MCP 工具與 MCP Apps 渲染器起點。npx assistant-ui create -t mcp",
+        "tpl.eve": "Eve agent 與 Next.js 起點。npx assistant-ui create -t eve",
+        "tpl.flags": "Expo／React Native，或 React Ink 終端機專案。也可以用 --example，例如 with-ai-sdk-v7。",
+        "faq.kicker": "問答",
+        "faq.title": "授權、組成、後端、CI。",
+        "faq.q1": "程式以什麼授權發布？",
+        "faq.a1": "LICENSE 檔是 MIT License，著作權為 2026 AgentbaseAI Inc.。README 寫明專案為 MIT，並可選用 Assistant Cloud 做受管理的 thread 持久化與分析。函式庫本身不需要 Cloud。",
+        "faq.q2": "介面是怎麼組起來的？",
+        "faq.a2": "你組合 primitive，並帶上自己的樣式。README 把這件事對照成單一、整塊的對話元件。Elements 是有樣式、可安裝的那一層。Primitives 是無樣式、可及性完整的那一層，含 Root、零件、asChild 與 AuiIf。CLI 預設提供 Base UI 起點，也可以選 Radix UI。",
+        "faq.q3": "文件寫了哪些後端與模型？",
+        "faq.a3": "useChatRuntime 對應 Vercel AI SDK。README 說可以換成 useLangGraphRuntime、useDataStreamRuntime 或自訂 runtime。點名的套件有 @assistant-ui/ai-sdk、@assistant-ui/react-langgraph、@assistant-ui/react-langchain、@assistant-ui/react-ag-ui、@assistant-ui/react-a2a、@assistant-ui/react-google-adk、@assistant-ui/react-opencode、@assistant-ui/react-data-stream 與 assistant-cloud。README 點名的模型：OpenAI、Anthropic、Google Gemini、Mistral、Perplexity、AWS Bedrock、Azure、Fireworks 與 Ollama，再加上透過 AI SDK 的社群供應商。安裝指南另外列出 Groq、Cohere、Google Vertex 與 Chrome AI。",
+        "faq.q4": "在 CI 裡要怎麼安裝？",
+        "faq.a4": "無法互動的殼層要加上 --yes：npx assistant-ui@latest init --yes。不加的話，init 會因為無法提問而結束。變更已發佈套件的出貨檔案時需要 changeset（pnpm changeset）；CONTRIBUTING 寫明，少了它 Changeset Semver Check 會讓 PR 失敗。每個 PR 會得到 T0 到 T3 的審查層級。合併前要通過該處點名的檢查，包括 autofix、Build Changed Packages、Typecheck Changed Packages、Review Policy Scripts、Test Coverage 與 review-tier，再進入 merge queue。",
+        "faq.q5": "支援哪些 React 版本？API 如何淘汰？",
+        "faq.a5": "@assistant-ui/react 0.15.32 將 react 與 react-dom 的 peer dependency 標為 ^18 或 ^19。淘汰政策寫明專案以維持 API 穩定為目標。標成 unstable_、experimental_ 或 internal 的項目，以及 RuntimeCore API，任何版本都可能改變。Beta 功能（包含有樣式的 UI 元件與 shadcn/ui styles）的通知期短於一個月。穩定功能的通知期長於三個月。",
+        "faq.q6": "如何回報安全問題？",
+        "faq.a6": "SECURITY.md 要求使用 GitHub Security Advisories 的 Report a Vulnerability，不要開公開 issue。無法使用 GitHub 時，寄信到 security@assistant-ui.com。安全性修正針對每個已發佈 @assistant-ui/* 套件的最新版本發布。",
+        "foot.blurb": "AgentbaseAI Inc. 的開源 TypeScript／React 對話介面。MIT 授權。可選用 Assistant Cloud 做受管理的 thread 持久化與分析。",
+        "foot.copy": "著作權 2026 AgentbaseAI Inc.",
+        "foot.product": "產品",
+        "foot.site": "assistant-ui.com",
+        "foot.cli": "CLI 參考",
+        "foot.cloud": "Assistant Cloud",
+        "foot.project": "倉庫",
+        "foot.license": "MIT 授權",
+        "foot.contributing": "貢獻指南",
+        "foot.coc": "行為準則",
+        "foot.issues": "議題",
+        "foot.sales": "聯絡業務",
+        "foot.top": "回到頂端"
+      }
+    };
+
+    var currentLang = "en";
+
+    function lookup(lang, key) {
+      var bag = translations[lang] || {};
+      return Object.prototype.hasOwnProperty.call(bag, key) ? bag[key] : undefined;
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang === "zh" ? "zh" : "en";
+      document.documentElement.lang = currentLang === "zh" ? "zh-Hant" : "en";
+      try { localStorage.setItem("aui-lang", currentLang); } catch (err) {}
+
+      var missing = [];
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n");
+        var value = lookup(currentLang, key);
+        if (value == null) missing.push(key);
+        else el.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-content]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n-content");
+        var value = lookup(currentLang, key);
+        if (value == null) missing.push(key);
+        else el.setAttribute("content", value);
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n-alt");
+        var value = lookup(currentLang, key);
+        if (value == null) missing.push(key);
+        else el.setAttribute("alt", value);
+      });
+      document.querySelectorAll("[data-i18n-aria-label]").forEach(function (el) {
+        var key = el.getAttribute("data-i18n-aria-label");
+        var value = lookup(currentLang, key);
+        if (value == null) missing.push(key);
+        else el.setAttribute("aria-label", value);
+      });
+      document.querySelectorAll("[data-set-lang]").forEach(function (btn) {
+        var on = btn.getAttribute("data-set-lang") === currentLang;
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.classList.toggle("is-on", on);
+      });
+      document.querySelectorAll("[data-menu]").forEach(function (btn) {
+        var open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-label", lookup(currentLang, open ? "nav.menuClose" : "nav.menu"));
+      });
+      if (missing.length) console.error("Missing i18n keys:", missing.join(", "));
+    }
+
+    function showToast(text) {
+      var toast = document.getElementById("toast");
+      var label = document.getElementById("toast-text");
+      label.textContent = text;
+      toast.classList.remove("translate-y-6", "opacity-0");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () {
+        toast.classList.add("translate-y-6", "opacity-0");
+      }, 1600);
+    }
+
+    function copyFrom(button) {
+      var panel = button.closest("[data-panel], article");
+      var code = panel ? panel.querySelector("code") : null;
+      var text = code ? code.textContent : "";
+      var done = function () { showToast(lookup(currentLang, "inst.copied")); };
+      var fail = function () { showToast(lookup(currentLang, "inst.copyFail")); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fail);
+      } else {
+        fail();
+      }
+    }
+
+    document.addEventListener("click", function (event) {
+      var langBtn = event.target.closest("[data-set-lang]");
+      if (langBtn) {
+        applyLanguage(langBtn.getAttribute("data-set-lang"));
+        return;
+      }
+
+      var tab = event.target.closest("[data-tab]");
+      if (tab) {
+        var group = tab.getAttribute("data-tab-group");
+        var id = tab.getAttribute("data-tab");
+        document.querySelectorAll('[data-tab-group="' + group + '"]').forEach(function (btn) {
+          var on = btn === tab;
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+          btn.classList.toggle("is-on", on);
+        });
+        document.querySelectorAll('[data-panel-group="' + group + '"]').forEach(function (panel) {
+          panel.classList.toggle("hidden", panel.getAttribute("data-panel") !== id);
+        });
+        return;
+      }
+
+      var filter = event.target.closest("[data-filter]");
+      if (filter) {
+        var cat = filter.getAttribute("data-filter");
+        document.querySelectorAll("[data-filter]").forEach(function (btn) {
+          var on = btn === filter;
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+          btn.classList.toggle("is-on", on);
+        });
+        document.querySelectorAll("[data-feature]").forEach(function (card) {
+          var show = cat === "all" || card.getAttribute("data-feature") === cat;
+          card.classList.toggle("hidden", !show);
+        });
+        return;
+      }
+
+      var faq = event.target.closest("[data-faq]");
+      if (faq) {
+        var panel = document.getElementById(faq.getAttribute("aria-controls"));
+        var open = faq.getAttribute("aria-expanded") === "true";
+        faq.setAttribute("aria-expanded", open ? "false" : "true");
+        if (panel) panel.classList.toggle("hidden", open);
+        var chevron = faq.querySelector("[data-chevron]");
+        if (chevron) chevron.classList.toggle("rotate-180", !open);
+        return;
+      }
+
+      var copy = event.target.closest("[data-copy]");
+      if (copy) {
+        copyFrom(copy);
+        return;
+      }
+
+      var menuBtn = event.target.closest("[data-menu]");
+      if (menuBtn) {
+        var menu = document.getElementById("mobile-nav");
+        var expanded = menuBtn.getAttribute("aria-expanded") === "true";
+        menuBtn.setAttribute("aria-expanded", expanded ? "false" : "true");
+        menu.classList.toggle("hidden", expanded);
+        menuBtn.setAttribute("aria-label", lookup(currentLang, expanded ? "nav.menu" : "nav.menuClose"));
+        return;
+      }
+
+      if (event.target.closest("#mobile-nav a")) {
+        var nav = document.getElementById("mobile-nav");
+        var toggle = document.querySelector("[data-menu]");
+        nav.classList.add("hidden");
+        if (toggle) toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    var saved = "en";
+    try {
+      var stored = localStorage.getItem("aui-lang");
+      if (stored === "zh" || stored === "en") saved = stored;
+    } catch (err) {}
+    applyLanguage(saved);
+    if (window.lucide && typeof lucide.createIcons === "function") lucide.createIcons();
+  </script>
+</body>
+</html>
