@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="meta.title">Magic UI — UI Library for Design Engineers</title>
+  <meta name="description" data-i18n-content="meta.description" content="Beautifully designed landing page components built with React &amp; Tailwind CSS.">
+  <meta name="keywords" content="React, Tailwind CSS, Motion, Landing Page, Components, Next.js">
+  <meta name="author" content="Magic UI">
+  <meta name="theme-color" content="#0c0a09">
+  <link rel="icon" href="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/app/icon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://github.com/magicuidesign/magicui">
+
+  <meta property="og:title" data-i18n-content="meta.title" content="Magic UI — UI Library for Design Engineers">
+  <meta property="og:description" data-i18n-content="meta.description" content="Beautifully designed landing page components built with React &amp; Tailwind CSS.">
+  <meta property="og:image" content="https://cdn.magicui.design/bento-grid.gif">
+  <meta property="og:url" content="https://github.com/magicuidesign/magicui">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Magic UI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" data-i18n-content="meta.title" content="Magic UI — UI Library for Design Engineers">
+  <meta name="twitter:description" data-i18n-content="meta.description" content="Beautifully designed landing page components built with React &amp; Tailwind CSS.">
+  <meta name="twitter:image" content="https://cdn.magicui.design/bento-grid.gif">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', '"Noto Serif TC"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', '"Noto Sans TC"', 'monospace'],
+          },
+          colors: {
+            bone: '#0c0a09',
+            cream: '#F8EAC3',
+            brass: '#FFBD7A',
+            blush: '#FE8BBB',
+            iris: '#9E7AFF',
+            ink: '#1c100c',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { background: #0c0a09; }
+    body { overflow-x: clip; }
+    pre { max-width: 100%; }
+    #feature-grid article,
+    #feature-grid h3 { min-width: 0; }
+    body {
+      background-image:
+        radial-gradient(ellipse 70% 45% at 0% -10%, rgba(158, 122, 255, 0.16), transparent 55%),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(255, 189, 122, 0.12), transparent 50%),
+        radial-gradient(rgba(248, 234, 195, 0.045) 1px, transparent 1px);
+      background-size: auto, auto, 22px 22px;
+      background-attachment: fixed;
+    }
+    .text-brand {
+      background-image: linear-gradient(118deg, #9E7AFF 0%, #FE8BBB 42%, #FFBD7A 78%, #F8EAC3 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hairline { border-color: rgba(248, 234, 195, 0.12); }
+    .marquee-track { animation: marquee 48s linear infinite; }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .pulse-dot { box-shadow: 0 0 0 0 rgba(255, 189, 122, 0.7); animation: pulse 2.2s ease-out infinite; }
+    @keyframes pulse {
+      70% { box-shadow: 0 0 0 8px rgba(255, 189, 122, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 189, 122, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track, .pulse-dot { animation: none !important; }
+      html { scroll-behavior: auto; }
+    }
+    :focus-visible { outline: 2px solid #FFBD7A; outline-offset: 3px; }
+    section[id] { scroll-margin-top: 5.5rem; }
+    pre { tab-size: 2; }
+  </style>
+</head>
+<body class="min-h-screen bg-bone font-sans text-stone-200 antialiased">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-brass focus:px-4 focus:py-2 focus:text-ink" data-i18n="nav.skip">Skip to content</a>
+
+  <header id="top" class="sticky top-0 z-50 border-b hairline bg-[#0c0a09]/75 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+      <a href="#top" class="flex min-w-0 items-center gap-2.5">
+        <img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/app/icon.svg" width="32" height="32" alt="Magic UI" class="h-8 w-8 shrink-0 rounded-full">
+        <span class="hidden truncate font-serif text-lg tracking-tight text-cream sm:inline">Magic UI</span>
+      </a>
+      <nav class="ml-4 hidden items-center gap-5 text-sm text-stone-300 md:flex" aria-label="Primary">
+        <a href="#proof" class="hover:text-cream" data-i18n="nav.proof">Showcase</a>
+        <a href="#capabilities" class="hover:text-cream" data-i18n="nav.capabilities">Components</a>
+        <a href="#install" class="hover:text-cream" data-i18n="nav.install">Install</a>
+        <a href="#faq" class="hover:text-cream" data-i18n="nav.faq">FAQ</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <a href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" class="hidden rounded-full border hairline px-2.5 py-1 font-mono text-[11px] tracking-wide text-brass lg:inline">MIT</a>
+        <span class="hidden rounded-full border hairline px-2.5 py-1 font-mono text-[11px] text-stone-300 lg:inline" data-i18n="badge.version" data-i18n-aria="badge.version.aria">package 0.1.0</span>
+        <div class="flex shrink-0 rounded-full border hairline p-0.5 text-[11px] sm:text-xs" role="group" data-i18n-aria="nav.lang.group">
+          <button type="button" data-lang-btn="en" class="rounded-full px-2 py-1 aria-pressed:bg-cream aria-pressed:text-ink sm:px-2.5" aria-pressed="true">English</button>
+          <button type="button" data-lang-btn="zh" class="rounded-full px-2 py-1 aria-pressed:bg-cream aria-pressed:text-ink sm:px-2.5" aria-pressed="false">繁體中文</button>
+        </div>
+        <a href="https://github.com/magicuidesign/magicui" data-i18n-aria="nav.star" aria-label="Star on GitHub" class="inline-flex items-center gap-1.5 rounded-full bg-brass px-3 py-1.5 text-sm font-semibold text-ink hover:bg-cream">
+          <i data-lucide="star" class="h-4 w-4"></i>
+          <span data-i18n="nav.star" class="hidden sm:inline">Star on GitHub</span>
+        </a>
+        <button type="button" id="menu-btn" class="inline-flex h-9 w-9 items-center justify-center rounded-full border hairline md:hidden" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="nav.menu">
+          <i data-lucide="menu" class="h-4 w-4"></i>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden border-t hairline md:hidden">
+      <nav class="mx-auto flex max-w-6xl flex-col px-4 py-3 text-sm" aria-label="Mobile">
+        <a href="#proof" class="py-2 text-stone-200" data-i18n="nav.proof">Showcase</a>
+        <a href="#capabilities" class="py-2 text-stone-200" data-i18n="nav.capabilities">Components</a>
+        <a href="#install" class="py-2 text-stone-200" data-i18n="nav.install">Install</a>
+        <a href="#faq" class="py-2 text-stone-200" data-i18n="nav.faq">FAQ</a>
+        <a href="https://magicui.design/docs" class="py-2 text-brass" data-i18n="nav.docs">Documentation</a>
+      </nav>
+    </div>
+    <div class="h-px bg-gradient-to-r from-iris via-blush to-brass"></div>
+  </header>
+
+  <main id="main">
+    <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-14 lg:grid-cols-12 lg:pt-20">
+      <div class="lg:col-span-6">
+        <p class="inline-flex items-center gap-2 rounded-full border hairline bg-[#161210]/80 px-3 py-1 text-xs tracking-wide text-cream">
+          <span class="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-brass" aria-hidden="true"></span>
+          <span data-i18n="hero.pill">Landing pages and marketing UI</span>
+        </p>
+        <h1 class="mt-6 font-serif text-[2.7rem] leading-[1.05] text-[#f6f1ea] sm:text-6xl lg:text-7xl">
+          <span data-i18n="hero.h1a" class="block">UI library for</span>
+          <span data-i18n="hero.h1em" class="mt-1 block italic text-brand">design engineers.</span>
+        </h1>
+        <p data-i18n="hero.sub" class="mt-6 max-w-xl text-base leading-relaxed text-stone-300 sm:text-lg">
+          A collection of reusable components you can copy and paste into your web apps. Built for landing pages and user-facing marketing, with React, TypeScript, Tailwind CSS, and Motion.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="#install" class="inline-flex items-center justify-center gap-2 rounded-full bg-brass px-5 py-3 text-sm font-semibold text-ink hover:bg-cream">
+            <i data-lucide="terminal" class="h-4 w-4"></i>
+            <span data-i18n="hero.cta1">Quick install</span>
+          </a>
+          <a href="#capabilities" class="inline-flex items-center justify-center gap-2 rounded-full border hairline px-5 py-3 text-sm font-semibold text-cream hover:border-brass/50">
+            <i data-lucide="layout-grid" class="h-4 w-4"></i>
+            <span data-i18n="hero.cta2">Browse components</span>
+          </a>
+        </div>
+        <ul class="mt-8 flex flex-wrap gap-2 text-[11px] font-medium tracking-wide text-stone-300">
+          <li><a href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" class="inline-flex rounded-full border hairline px-2.5 py-1 hover:text-cream">MIT</a></li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.react">React 19.1.1</li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.next">Next.js ^15.5.25</li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.tw">Tailwind CSS ^4.1.13</li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.motion">Motion ^12.23.12</li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.ts">TypeScript ^5.9.2</li>
+          <li class="rounded-full border hairline px-2.5 py-1" data-i18n="hero.badge.count">77 docs sidebar components</li>
+        </ul>
+        <p data-i18n="hero.versions" class="mt-4 max-w-xl text-xs leading-relaxed text-stone-400">
+          Manifest versions in this clone: workspace package.json 0.1.0 (private), www app 0.1.1. Engines: Node &gt;=22.14.0, pnpm &gt;=9. packageManager is pnpm@9.15.0. .nvmrc is 22.
+        </p>
+      </div>
+      <div class="lg:col-span-6">
+        <figure class="overflow-hidden rounded-3xl border hairline bg-[#120e0c] shadow-[0_30px_80px_-40px_rgba(158,122,255,0.45)]">
+          <figcaption class="flex items-center gap-2 border-b hairline px-4 py-3 text-xs text-stone-400">
+            <span class="h-2 w-2 rounded-full bg-[#EF786F]"></span>
+            <span class="h-2 w-2 rounded-full bg-brass"></span>
+            <span class="h-2 w-2 rounded-full bg-[#9E7AFF]"></span>
+            <span class="ml-2 font-mono" data-i18n="hero.frame">README · bento-grid.gif</span>
+          </figcaption>
+          <img src="https://cdn.magicui.design/bento-grid.gif" alt="Magic UI bento grid demonstration used in the repository README" class="h-auto w-full">
+        </figure>
+      </div>
+    </section>
+
+    <section aria-label="Philosophy" class="border-y hairline">
+      <blockquote class="mx-auto max-w-4xl px-4 py-12">
+        <p data-i18n="quote.text" class="font-serif text-2xl leading-snug text-cream sm:text-3xl">
+          “I personally believe that good design contributes significant value to software. It's one of the main methods of establishing trust between you and an internet stranger.”
+        </p>
+        <footer class="mt-4 text-sm text-stone-400">
+          <cite class="not-italic"><a href="https://magicui.design/docs" class="underline decoration-brass/60 underline-offset-4" data-i18n="quote.cite">Introduction, magicui.design/docs</a></cite>
+        </footer>
+      </blockquote>
+    </section>
+
+    <div class="overflow-hidden border-b hairline" aria-hidden="true">
+      <div class="marquee-track flex w-max gap-8 py-3 font-mono text-xs uppercase tracking-[0.18em] text-stone-500">
+        <p class="flex gap-8">
+          <span>Marquee</span><span>Bento Grid</span><span>Globe</span><span>Dock</span><span>Terminal</span><span>Animated Beam</span><span>Border Beam</span><span>Magic Card</span><span>Blur Fade</span><span>Aurora Text</span><span>Number Ticker</span><span>Safari</span><span>iPhone</span><span>Android</span><span>Shimmer Button</span><span>Retro Grid</span><span>Particles</span><span>Confetti</span>
+        </p>
+        <p class="flex gap-8">
+          <span>Marquee</span><span>Bento Grid</span><span>Globe</span><span>Dock</span><span>Terminal</span><span>Animated Beam</span><span>Border Beam</span><span>Magic Card</span><span>Blur Fade</span><span>Aurora Text</span><span>Number Ticker</span><span>Safari</span><span>iPhone</span><span>Android</span><span>Shimmer Button</span><span>Retro Grid</span><span>Particles</span><span>Confetti</span>
+        </p>
+      </div>
+    </div>
+
+    <section id="proof" class="mx-auto max-w-6xl px-4 py-20">
+      <p data-i18n="proof.kicker" class="font-mono text-xs uppercase tracking-[0.22em] text-brass">Visual proof</p>
+      <h2 data-i18n="proof.title" class="mt-3 max-w-3xl font-serif text-4xl text-cream sm:text-5xl">Shipped pixels, not placeholders.</h2>
+      <p data-i18n="proof.lead" class="mt-4 max-w-3xl text-stone-300">
+        The bento animation above is the image in README.md. The six shots below are files in apps/www/public/showcase. More write-ups live in apps/www/content/showcase. The story page says Magic UI started in the summer of 2023 and was in users' hands within 10 days.
+      </p>
+      <p class="mt-3 text-sm">
+        <a href="https://magicui.design/docs/story" class="text-brass underline decoration-brass/40 underline-offset-4" data-i18n="proof.story.link">Read the story</a>
+      </p>
+
+      <div class="mt-8 flex gap-2 overflow-x-auto pb-1" role="tablist" data-i18n-aria="proof.tabs">
+        <button type="button" role="tab" id="tab-readme" data-proof="readme" aria-selected="true" aria-controls="panel-readme" class="shrink-0 rounded-full border hairline px-4 py-2 text-sm aria-selected:bg-cream aria-selected:text-ink" data-i18n="proof.tab.readme">README gif</button>
+        <button type="button" role="tab" id="tab-showcase" data-proof="showcase" aria-selected="false" aria-controls="panel-showcase" class="shrink-0 rounded-full border hairline px-4 py-2 text-sm aria-selected:bg-cream aria-selected:text-ink" data-i18n="proof.tab.showcase">Showcase files</button>
+        <button type="button" role="tab" id="tab-pixel" data-proof="pixel" aria-selected="false" aria-controls="panel-pixel" class="shrink-0 rounded-full border hairline px-4 py-2 text-sm aria-selected:bg-cream aria-selected:text-ink" data-i18n="proof.tab.pixel">Pixel Image demo</button>
+      </div>
+
+      <div id="panel-readme" role="tabpanel" aria-labelledby="tab-readme" data-proof-panel="readme" class="mt-6">
+        <img src="https://cdn.magicui.design/bento-grid.gif" alt="Magic UI bento grid demonstration used in the repository README" class="w-full rounded-2xl border hairline">
+        <p data-i18n="proof.readme.cap" class="mt-3 text-sm text-stone-400">Source: https://cdn.magicui.design/bento-grid.gif — the src used in README.md. Alt text there: “Magic UI - UI Library for Design Engineers”.</p>
+      </div>
+
+      <div id="panel-showcase" role="tabpanel" aria-labelledby="tab-showcase" data-proof-panel="showcase" class="mt-6 hidden">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://aryankarma.com"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/aryankarma.png" alt="Aryan Karma personal portfolio website" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">Aryan Karma</p>
+              <p data-i18n="shot.aryan" class="text-sm text-stone-400">Personal portfolio website</p>
+            </figcaption>
+          </figure>
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://d1rshan.me"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/d1rshan.png" alt="Darshan Paccha portfolio site" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">Darshan Paccha</p>
+              <p data-i18n="shot.darshan" class="text-sm text-stone-400">Darshan's Portfolio site</p>
+            </figcaption>
+          </figure>
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://imiles.me"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/miles.png" alt="Miles personal site, a bilingual digital garden built with Astro, React, and Three.js" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">imiles.me</p>
+              <p data-i18n="shot.miles" class="text-sm text-stone-400">Personal website and bilingual (EN/中文) digital garden of Miles — built with Astro, React, and Three.js.</p>
+            </figcaption>
+          </figure>
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://overlayui.vercel.app"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/overlay-ui.png" alt="Overlay UI broadcast overlays and graphics for sports live streaming" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">Overlay UI</p>
+              <p data-i18n="shot.overlay" class="text-sm text-stone-400">Broadcast overlays and graphics for sports live streaming</p>
+            </figcaption>
+          </figure>
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://pulpsense.com"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/pulpsense.png" alt="PulpSense site for AI automation of sales, marketing, and operations" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">PulpSense.com</p>
+              <p data-i18n="shot.pulp" class="text-sm text-stone-400">Grow your business, not your payroll — AI automation for sales, marketing, and operations</p>
+            </figcaption>
+          </figure>
+          <figure class="overflow-hidden rounded-2xl border hairline bg-[#120e0c]">
+            <a href="https://robot-toast.vercel.app"><img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/showcase/robot-toast.png" alt="robot-toast library site" class="aspect-[16/10] w-full object-cover"></a>
+            <figcaption class="space-y-1 p-4">
+              <p class="font-serif text-lg text-cream">robot-toast</p>
+              <p data-i18n="shot.robot" class="text-sm text-stone-400">Personality-first toast library. Animated mascots, typewriter effect, draggable, toast.promise() and more with zero dependencies.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div id="panel-pixel" role="tabpanel" aria-labelledby="tab-pixel" data-proof-panel="pixel" class="mt-6 hidden">
+        <img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/public/pixel-image-demo.jpg" alt="Still used by the Pixel Image demo at pixel-image-demo.jpg" class="max-h-[540px] w-full rounded-2xl border hairline object-cover">
+        <p data-i18n="proof.pixel.cap" class="mt-3 text-sm text-stone-400">apps/www/public/pixel-image-demo.jpg — referenced by the Pixel Image demo as src="/pixel-image-demo.jpg".</p>
+      </div>
+    </section>
+
+    <section id="capabilities" class="border-t hairline bg-[#100d0b]/60">
+      <div class="mx-auto max-w-6xl px-4 py-20">
+        <p data-i18n="cap.kicker" class="font-mono text-xs uppercase tracking-[0.22em] text-brass">Catalog</p>
+        <h2 data-i18n="cap.title" class="mt-3 font-serif text-4xl text-cream sm:text-5xl">Eight groups from the docs sidebar.</h2>
+        <p data-i18n="cap.lead" class="mt-4 max-w-3xl text-stone-300">
+          apps/www/config/docs.ts links 77 component pages: Components, Special Effects, Animations, Text Animations, Device Mocks, Buttons, Backgrounds, and Community. Descriptions below are taken from those component docs. This grid is a selection, not the full 77.
+        </p>
+        <div class="mt-8 flex gap-2 overflow-x-auto pb-2" role="toolbar" data-i18n-aria="cap.filters">
+          <button type="button" data-filter="all" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="true" data-i18n="filter.all">All</button>
+          <button type="button" data-filter="components" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.components">Components</button>
+          <button type="button" data-filter="effects" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.effects">Special Effects</button>
+          <button type="button" data-filter="animations" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.animations">Animations</button>
+          <button type="button" data-filter="text" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.text">Text Animations</button>
+          <button type="button" data-filter="devices" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.devices">Device Mocks</button>
+          <button type="button" data-filter="buttons" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.buttons">Buttons</button>
+          <button type="button" data-filter="backgrounds" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.backgrounds">Backgrounds</button>
+          <button type="button" data-filter="community" class="shrink-0 rounded-full border hairline px-3 py-1.5 text-sm aria-pressed:bg-cream aria-pressed:text-ink" aria-pressed="false" data-i18n="filter.community">Community</button>
+        </div>
+
+        <div id="feature-grid" class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Marquee</h3>
+              <a href="https://magicui.design/docs/components/marquee" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.marquee" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An infinite scrolling component that can be used to display text, images, or videos.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Bento Grid</h3>
+              <a href="https://magicui.design/docs/components/bento-grid" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.bento" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Bento grid is a layout used to showcase the features of a product in a simple and elegant way.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Globe</h3>
+              <a href="https://magicui.design/docs/components/globe" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.globe" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An autorotating, interactive, and highly performant globe made using WebGL.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Dock</h3>
+              <a href="https://magicui.design/docs/components/dock" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.dock" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An implementation of the MacOS dock using react + tailwindcss + framer motion</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Animated List</h3>
+              <a href="https://magicui.design/docs/components/animated-list" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.animatedList" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A list that animates each item in sequence with a delay. Used to showcase notifications or events on your landing page.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Terminal</h3>
+              <a href="https://magicui.design/docs/components/terminal" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.terminal" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An implementation of the MacOS terminal. Useful for showcasing a command line interface.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Tweet Card</h3>
+              <a href="https://magicui.design/docs/components/tweet-card" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.tweet" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A card that displays a tweet with the author's name, handle, and profile picture.</p>
+          </article>
+          <article data-cat="components" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Avatar Circles</h3>
+              <a href="https://magicui.design/docs/components/avatar-circles" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.avatars" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Overlapping circles of avatars.</p>
+          </article>
+
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Animated Beam</h3>
+              <a href="https://magicui.design/docs/components/animated-beam" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.beam" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An animated beam of light which travels along a path. Useful for showcasing the "integration" features of a website.</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Border Beam</h3>
+              <a href="https://magicui.design/docs/components/border-beam" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.border" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An animated beam of light which travels along the border of its container.</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Magic Card</h3>
+              <a href="https://magicui.design/docs/components/magic-card" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.magic" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A spotlight effect that follows your mouse cursor and highlights borders on hover.</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Meteors</h3>
+              <a href="https://magicui.design/docs/components/meteors" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.meteors" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A meteor shower effect.</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Confetti</h3>
+              <a href="https://magicui.design/docs/components/confetti" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.confetti" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Confetti animations are best used to delight your users when something special happens</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Particles</h3>
+              <a href="https://magicui.design/docs/components/particles" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.particles" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Particles are a fun way to add some visual flair to your website. They can be used to create a sense of depth, movement, and interactivity.</p>
+          </article>
+          <article data-cat="effects" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Shine Border</h3>
+              <a href="https://magicui.design/docs/components/shine-border" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.shine" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Shine border is an animated background border effect.</p>
+          </article>
+
+          <article data-cat="animations" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Blur Fade</h3>
+              <a href="https://magicui.design/docs/components/blur-fade" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.blur" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Blur fade in and out animation. Used to smoothly fade in and out content.</p>
+          </article>
+
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Text Animate</h3>
+              <a href="https://magicui.design/docs/components/text-animate" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.textAnimate" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A text animation component that animates text using a variety of different animations.</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Aurora Text</h3>
+              <a href="https://magicui.design/docs/components/aurora-text" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.aurora" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A beautiful aurora text effect</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Number Ticker</h3>
+              <a href="https://magicui.design/docs/components/number-ticker" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.ticker" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Animate numbers to count up or down to a target number</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Typing Animation <span data-i18n="badge.new" class="ml-1 align-middle font-sans text-[10px] font-semibold uppercase tracking-wider text-brass">New</span></h3>
+              <a href="https://magicui.design/docs/components/typing-animation" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.typing" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">Characters appearing in typed animation</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Sparkles Text</h3>
+              <a href="https://magicui.design/docs/components/sparkles-text" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.sparkles" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A dynamic text that generates continuous sparkles with smooth transitions, perfect for highlighting text with animated stars.</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Hyper Text</h3>
+              <a href="https://magicui.design/docs/components/hyper-text" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.hyper" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A text animation that scrambles letters before revealing the final text.</p>
+          </article>
+          <article data-cat="text" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Text Highlighter <span data-i18n="badge.new" class="ml-1 align-middle font-sans text-[10px] font-semibold uppercase tracking-wider text-brass">New</span></h3>
+              <a href="https://magicui.design/docs/components/highlighter" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.highlighter" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A text highlighter that mimics the effect of a human-drawn marker stroke.</p>
+          </article>
+
+          <article data-cat="devices" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Safari</h3>
+              <a href="https://magicui.design/docs/components/safari" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.safari" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A safari browser mockup to showcase your website.</p>
+          </article>
+          <article data-cat="devices" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">iPhone</h3>
+              <a href="https://magicui.design/docs/components/iphone" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.iphone" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A mockup of the iPhone</p>
+          </article>
+          <article data-cat="devices" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Android</h3>
+              <a href="https://magicui.design/docs/components/android" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.android" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A mockup of an Android device.</p>
+          </article>
+
+          <article data-cat="buttons" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Rainbow Button</h3>
+              <a href="https://magicui.design/docs/components/rainbow-button" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.rainbow" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An animated button with a rainbow effect.</p>
+          </article>
+          <article data-cat="buttons" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Shimmer Button</h3>
+              <a href="https://magicui.design/docs/components/shimmer-button" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.shimmer" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A button with a shimmering light which travels around the perimeter.</p>
+          </article>
+          <article data-cat="buttons" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Ripple Button</h3>
+              <a href="https://magicui.design/docs/components/ripple-button" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.ripple" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An animated button with ripple useful for user engagement.</p>
+          </article>
+
+          <article data-cat="backgrounds" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Retro Grid</h3>
+              <a href="https://magicui.design/docs/components/retro-grid" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.retro" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">An animated scrolling retro grid effect</p>
+          </article>
+          <article data-cat="backgrounds" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Flickering Grid</h3>
+              <a href="https://magicui.design/docs/components/flickering-grid" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.flicker" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A flickering grid background made with SVGs, fully customizable using Tailwind CSS.</p>
+          </article>
+          <article data-cat="backgrounds" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Dot Pattern</h3>
+              <a href="https://magicui.design/docs/components/dot-pattern" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.dots" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A background dot pattern made with SVGs, fully customizable using Tailwind CSS.</p>
+          </article>
+          <article data-cat="backgrounds" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Light Rays <span data-i18n="badge.new" class="ml-1 align-middle font-sans text-[10px] font-semibold uppercase tracking-wider text-brass">New</span></h3>
+              <a href="https://magicui.design/docs/components/light-rays" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.rays" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A component with animated light rays which shine down from above.</p>
+          </article>
+          <article data-cat="backgrounds" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Hexagon Pattern <span data-i18n="badge.new" class="ml-1 align-middle font-sans text-[10px] font-semibold uppercase tracking-wider text-brass">New</span></h3>
+              <a href="https://magicui.design/docs/components/hexagon-pattern" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.hex" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A background hexagon pattern made with SVGs, fully customizable using Tailwind CSS.</p>
+          </article>
+
+          <article data-cat="community" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Pixel Image</h3>
+              <a href="https://magicui.design/docs/components/pixel-image" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.pixel" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A component that displays your image with a pixelated effect, enhancing the visual appeal of any image in your website.</p>
+          </article>
+          <article data-cat="community" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Warp Background</h3>
+              <a href="https://magicui.design/docs/components/warp-background" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.warp" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A card with a time warping background effect.</p>
+          </article>
+          <article data-cat="community" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Neon Gradient Card</h3>
+              <a href="https://magicui.design/docs/components/neon-gradient-card" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.neon" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A beautiful neon card effect</p>
+          </article>
+          <article data-cat="community" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">Code Comparison</h3>
+              <a href="https://magicui.design/docs/components/code-comparison" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.compare" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A component which compares two code snippets.</p>
+          </article>
+          <article data-cat="community" class="flex flex-col rounded-2xl border hairline bg-[#161210]/80 p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-2xl text-cream">File Tree</h3>
+              <a href="https://magicui.design/docs/components/file-tree" class="shrink-0 text-xs text-brass underline decoration-brass/40 underline-offset-4" data-i18n="card.docs">Docs</a>
+            </div>
+            <p data-i18n="feat.tree" class="mt-3 flex-1 text-sm leading-relaxed text-stone-300">A component used to showcase the folder and file structure of a directory.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="mx-auto max-w-6xl px-4 py-20">
+      <p data-i18n="install.kicker" class="font-mono text-xs uppercase tracking-[0.22em] text-brass">Install</p>
+      <h2 data-i18n="install.title" class="mt-3 font-serif text-4xl text-cream sm:text-5xl">Registry, MCP, or the monorepo.</h2>
+      <p data-i18n="install.lead" class="mt-4 max-w-3xl text-stone-300">
+        Consumers add components through the shadcn registry. AI IDEs can install the documented MCP server. Contributors fork the repo and run it with pnpm. The workspace package is private, so these tabs follow the files in the repo rather than an npm install of “magicui”.
+      </p>
+
+      <ol class="mt-8 grid gap-3 md:grid-cols-3">
+        <li class="rounded-2xl border hairline bg-[#161210]/70 p-5">
+          <p class="font-mono text-xs text-brass">01</p>
+          <h3 data-i18n="install.step1" class="mt-2 font-serif text-2xl text-cream">Init the project</h3>
+          <p class="mt-2 font-mono text-xs text-stone-400">npx shadcn@latest init</p>
+        </li>
+        <li class="rounded-2xl border hairline bg-[#161210]/70 p-5">
+          <p class="font-mono text-xs text-brass">02</p>
+          <h3 data-i18n="install.step2" class="mt-2 font-serif text-2xl text-cream">Add a component</h3>
+          <p class="mt-2 break-all font-mono text-xs text-stone-400">npx shadcn@latest add @magicui/globe</p>
+        </li>
+        <li class="rounded-2xl border hairline bg-[#161210]/70 p-5">
+          <p class="font-mono text-xs text-brass">03</p>
+          <h3 data-i18n="install.step3" class="mt-2 font-serif text-2xl text-cream">Import it</h3>
+          <p class="mt-2 break-all font-mono text-xs text-stone-400">@/components/ui/globe</p>
+        </li>
+      </ol>
+
+      <div class="mt-8 flex gap-2 overflow-x-auto pb-1" role="tablist" data-i18n-aria="install.tabs">
+        <button type="button" role="tab" data-tab="shadcn" aria-selected="true" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">shadcn</button>
+        <button type="button" role="tab" data-tab="cursor" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Cursor</button>
+        <button type="button" role="tab" data-tab="claude" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Claude</button>
+        <button type="button" role="tab" data-tab="windsurf" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Windsurf</button>
+        <button type="button" role="tab" data-tab="cline" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Cline</button>
+        <button type="button" role="tab" data-tab="roo" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Roo-Cline</button>
+        <button type="button" role="tab" data-tab="manual" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">Manual</button>
+        <button type="button" role="tab" data-tab="pnpm" aria-selected="false" class="shrink-0 rounded-full border hairline px-3 py-1.5 font-mono text-xs aria-selected:bg-cream aria-selected:text-ink">pnpm</button>
+      </div>
+
+      <div class="mt-4 rounded-2xl border hairline bg-[#120e0c]">
+        <div data-panel="shadcn" class="p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p data-i18n="install.label.commands" class="font-mono text-xs text-stone-400">Commands from the installation docs</p>
+            <button type="button" data-copy-target="code-shadcn" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream">
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="install.copy">Copy</span>
+            </button>
+          </div>
+          <pre id="code-shadcn" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx shadcn@latest init
+npx shadcn@latest add @magicui/globe</pre>
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <p data-i18n="install.label.import" class="font-mono text-xs text-stone-400">Import example from the same page</p>
+            <button type="button" data-copy-target="code-import" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream">
+              <i data-lucide="copy" class="h-3.5 w-3.5"></i>
+              <span data-i18n="install.copy">Copy</span>
+            </button>
+          </div>
+          <pre id="code-import" class="mt-3 overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">import { Globe } from "@/components/ui/globe"
+
+export default function Home() {
+  return &lt;Globe /&gt;
+}</pre>
+          <p data-i18n="install.note.shadcn" class="mt-4 text-sm leading-relaxed text-stone-400">The installation page says Magic UI uses the same process as shadcn/ui. registry.json targets Globe at components/magicui/globe.tsx and lists dependencies cobe and motion. If the CLI writes a different import path, use that path.</p>
+        </div>
+
+        <div data-panel="cursor" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p class="font-mono text-xs text-stone-400">Cursor</p>
+            <button type="button" data-copy-target="code-cursor" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-cursor" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx @magicuidesign/cli@latest install cursor</pre>
+          <p data-i18n="install.note.ide" class="mt-4 text-sm leading-relaxed text-stone-400">From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.</p>
+        </div>
+        <div data-panel="claude" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p class="font-mono text-xs text-stone-400">Claude</p>
+            <button type="button" data-copy-target="code-claude" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-claude" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx @magicuidesign/cli@latest install claude</pre>
+          <p data-i18n="install.note.ide" class="mt-4 text-sm leading-relaxed text-stone-400">From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.</p>
+        </div>
+        <div data-panel="windsurf" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p class="font-mono text-xs text-stone-400">Windsurf</p>
+            <button type="button" data-copy-target="code-windsurf" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-windsurf" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx @magicuidesign/cli@latest install windsurf</pre>
+          <p data-i18n="install.note.ide" class="mt-4 text-sm leading-relaxed text-stone-400">From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.</p>
+        </div>
+        <div data-panel="cline" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p class="font-mono text-xs text-stone-400">Cline</p>
+            <button type="button" data-copy-target="code-cline" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-cline" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx @magicuidesign/cli@latest install cline</pre>
+          <p data-i18n="install.note.ide" class="mt-4 text-sm leading-relaxed text-stone-400">From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.</p>
+        </div>
+        <div data-panel="roo" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p class="font-mono text-xs text-stone-400">Roo-Cline</p>
+            <button type="button" data-copy-target="code-roo" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-roo" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">npx @magicuidesign/cli@latest install roo-cline</pre>
+          <p data-i18n="install.note.ide" class="mt-4 text-sm leading-relaxed text-stone-400">From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.</p>
+        </div>
+        <div data-panel="manual" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p data-i18n="install.label.manual" class="font-mono text-xs text-stone-400">apps/www/public/mcp.json</p>
+            <button type="button" data-copy-target="code-manual" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-manual" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">{
+  "mcpServers": {
+    "magicuidesign-mcp": {
+      "command": "npx",
+      "args": ["-y", "@magicuidesign/mcp@latest"]
+    }
+  }
+}</pre>
+          <p data-i18n="install.note.manual" class="mt-4 text-sm leading-relaxed text-stone-400">Manual setup from the MCP docs and apps/www/public/mcp.json. Add this to your MCP config, then restart the IDE.</p>
+        </div>
+        <div data-panel="pnpm" class="hidden p-4 sm:p-5">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <p data-i18n="install.label.pnpm" class="font-mono text-xs text-stone-400">CONTRIBUTING.md</p>
+            <button type="button" data-copy-target="code-pnpm" class="inline-flex items-center gap-1.5 rounded-full border hairline px-3 py-1 text-xs text-cream"><i data-lucide="copy" class="h-3.5 w-3.5"></i><span data-i18n="install.copy">Copy</span></button>
+          </div>
+          <pre id="code-pnpm" class="overflow-x-auto font-mono text-[13px] leading-relaxed text-cream">git clone https://github.com/&lt;YOUR_USERNAME&gt;/magicui.git
+cd magicui
+pnpm i
+touch .env.local &amp;&amp; echo "NEXT_PUBLIC_APP_URL=http://localhost:3000" &gt; .env.local
+pnpm dev</pre>
+          <p data-i18n="install.note.pnpm" class="mt-4 text-sm leading-relaxed text-stone-400">Contributor setup from CONTRIBUTING.md. Fork first at github.com/magicuidesign/magicui/fork, then clone your fork. Requires Node 22 (.nvmrc). package.json engines: Node &gt;=22.14.0 and pnpm &gt;=9. packageManager is pnpm@9.15.0. Root dev runs Turbo, which runs the www Next.js dev server.</p>
+        </div>
+      </div>
+      <p class="mt-4 text-sm text-stone-400">
+        <a href="https://magicui.design/docs/installation" class="text-brass underline decoration-brass/40 underline-offset-4" data-i18n="install.link.docs">Installation docs</a>
+        <span aria-hidden="true"> · </span>
+        <a href="https://magicui.design/docs/mcp" class="text-brass underline decoration-brass/40 underline-offset-4" data-i18n="install.link.mcp">MCP docs</a>
+        <span aria-hidden="true"> · </span>
+        <a href="https://github.com/magicuidesign/magicui/blob/main/CONTRIBUTING.md" class="text-brass underline decoration-brass/40 underline-offset-4" data-i18n="install.link.contributing">Contributing guide</a>
+      </p>
+    </section>
+
+    <section id="faq" class="border-t hairline">
+      <div class="mx-auto max-w-3xl px-4 py-20">
+        <p data-i18n="faq.kicker" class="font-mono text-xs uppercase tracking-[0.22em] text-brass">FAQ</p>
+        <h2 data-i18n="faq.title" class="mt-3 font-serif text-4xl text-cream sm:text-5xl">License, shadcn, and CI.</h2>
+        <div class="mt-8 divide-y divide-[#3a312c] border-y border-[#3a312c]">
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a1">
+              <span data-i18n="faq.q1" class="font-medium text-cream">What license is Magic UI under?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a1" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a1">LICENSE.md is the MIT License, copyright (c) Magic UI. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if the copyright notice and permission notice stay with the software. It is provided as is, without warranty. https://github.com/magicuidesign/magicui/blob/main/LICENSE.md</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a2">
+              <span data-i18n="faq.q2" class="font-medium text-cream">How does it compare with shadcn/ui?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a2" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a2">The introduction says the library is heavily inspired by ui.shadcn.com. The installation page says it uses the same process as shadcn/ui. The site hero calls it a companion for shadcn/ui and lists React, TypeScript, Tailwind CSS, and Motion. The root package.json name is magicui and private is true, so the documented consumer install is the @magicui registry, not npm install of this workspace.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a3">
+              <span data-i18n="faq.q3" class="font-medium text-cream">How many components are documented?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a3" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a3">The docs sidebar in apps/www/config/docs.ts links 77 component pages across eight groups. The marketing hero in apps/www/components/sections/hero.tsx says “150+ free and open-source animated components and effects”. This page uses the sidebar count. Star and download counts are not stored in the local files, so they are omitted.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a4">
+              <span data-i18n="faq.q4" class="font-medium text-cream">What about Tailwind v3?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a4" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a4">The legacy page documents older components that use Tailwind CSS v3 at v3.magicui.design, and points upgrades to the shadcn Tailwind v4 migration guide. The www app declares tailwindcss ^4.1.13.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a5">
+              <span data-i18n="faq.q5" class="font-medium text-cream">How does CI work?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a5" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a5">Pull requests run the GitHub Actions workflow “Code check” on ubuntu-latest with Node 22 and pnpm 9.15.0. Jobs are pnpm lint, pnpm format:check, pnpm typecheck, pnpm registry-deps:check, pnpm build, and a registry artifact drift check that runs pnpm build:registry. Lefthook rebuilds registry artifacts and runs eslint and prettier on pre-commit, typecheck on pre-push, and commitlint on commit messages. The root check script is pnpm lint &amp;&amp; pnpm typecheck &amp;&amp; pnpm format:check &amp;&amp; pnpm registry-deps:check.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a6">
+              <span data-i18n="faq.q6" class="font-medium text-cream">Are the templates free?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a6" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a6">The docs nav lists nine templates. CodeForge, AI Agent, Dev Tool, Mobile, SaaS, and Startup are marked paid. Changelog and Blog are marked paid: false. Portfolio has no paid flag; its page links to github.com/dillionverma/portfolio and a live preview at portfolio-magicui.vercel.app. The header also links templates to pro.magicui.design. These local files do not state a price.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a7">
+              <span data-i18n="faq.q7" class="font-medium text-cream">How do I contribute a component?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a7" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a7">README says it only takes about 5 minutes to add your own. CONTRIBUTING.md says you write 5 files (component, demo, sidebar entry, MDX docs, registry export) plus the artifacts pnpm build:registry generates, and that it takes around 10 minutes. Open the pull request from your fork to the main repo.</p>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="flex w-full items-center justify-between gap-4 py-4 text-left" aria-expanded="false" aria-controls="faq-a8">
+              <span data-i18n="faq.q8" class="font-medium text-cream">What is the MCP server?</span>
+              <i data-lucide="chevron-down" class="h-4 w-4 shrink-0 text-brass"></i>
+            </button>
+            <div id="faq-a8" class="hidden pb-4 text-sm leading-relaxed text-stone-300">
+              <p data-i18n="faq.a8">The MCP page says Magic UI has an official MCP server so an AI-assisted IDE can use the components. Install with npx @magicuidesign/cli@latest install and one of cursor, windsurf, claude, cline, or roo-cline, or add the JSON in apps/www/public/mcp.json. Then restart the IDE.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t hairline">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <div class="flex items-center gap-2.5">
+          <img src="https://raw.githubusercontent.com/magicuidesign/magicui/main/apps/www/app/icon.svg" width="28" height="28" alt="" class="h-7 w-7 rounded-full">
+          <p class="font-serif text-xl text-cream">Magic UI</p>
+        </div>
+        <p data-i18n="footer.blurb" class="mt-4 max-w-sm text-sm leading-relaxed text-stone-400">Beautifully designed landing page components built with React &amp; Tailwind CSS. UI library for design engineers.</p>
+        <p data-i18n="footer.copy" class="mt-4 text-xs text-stone-500">Copyright (c) Magic UI. MIT License.</p>
+      </div>
+      <div class="md:col-span-3">
+        <p data-i18n="footer.project" class="font-mono text-xs uppercase tracking-[0.18em] text-brass">Project</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="hover:text-cream" href="https://github.com/magicuidesign/magicui" data-i18n="footer.github">GitHub repository</a></li>
+          <li><a class="hover:text-cream" href="https://magicui.design/docs" data-i18n="footer.docs">Documentation</a></li>
+          <li><a class="hover:text-cream" href="https://magicui.design/showcase" data-i18n="footer.showcase">Showcase</a></li>
+          <li><a class="hover:text-cream" href="https://pro.magicui.design" data-i18n="footer.templates">Templates</a></li>
+          <li><a class="hover:text-cream" href="https://github.com/magicuidesign/magicui/blob/main/LICENSE.md" data-i18n="footer.license">MIT license</a></li>
+          <li><a class="hover:text-cream" href="https://github.com/magicuidesign/magicui/blob/main/CONTRIBUTING.md" data-i18n="footer.contributing">Contributing</a></li>
+        </ul>
+      </div>
+      <div class="md:col-span-4">
+        <p data-i18n="footer.community" class="font-mono text-xs uppercase tracking-[0.18em] text-brass">Community</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a class="hover:text-cream" href="https://twitter.com/dillionverma" data-i18n="footer.dillion">Built by dillion</a></li>
+          <li><a class="hover:text-cream" href="https://twitter.com/magicuidesign" data-i18n="footer.twitter">Twitter @magicuidesign</a></li>
+          <li><a class="hover:text-cream" href="https://discord.gg/87p2vpsat5" data-i18n="footer.discord">Discord</a></li>
+          <li><a class="hover:text-cream" href="https://instagram.com/magicuidesign/" data-i18n="footer.instagram">Instagram</a></li>
+          <li><a class="hover:text-cream" href="https://magicui.design/docs/story" data-i18n="footer.story">Story</a></li>
+          <li><a class="hover:text-cream" href="https://v3.magicui.design" data-i18n="footer.legacy">Legacy (Tailwind v3)</a></li>
+        </ul>
+        <a href="#top" class="mt-6 inline-flex items-center gap-2 text-sm text-brass" data-i18n="footer.top">Back to top</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="pointer-events-none fixed bottom-6 right-4 z-50 max-w-[calc(100vw-2rem)] translate-y-20 opacity-0 transition-all duration-300" role="status" aria-live="polite">
+    <div class="rounded-lg border hairline bg-[#1c1614] px-4 py-2.5 font-mono text-xs text-stone-100 shadow-xl">
+      <span id="toast-text" data-i18n="toast.copied">Copied</span>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        "meta.title": "Magic UI — UI Library for Design Engineers",
+        "meta.description": "Beautifully designed landing page components built with React & Tailwind CSS.",
+        "nav.skip": "Skip to content",
+        "nav.proof": "Showcase",
+        "nav.capabilities": "Components",
+        "nav.install": "Install",
+        "nav.faq": "FAQ",
+        "nav.docs": "Documentation",
+        "nav.star": "Star on GitHub",
+        "nav.menu": "Open menu",
+        "nav.lang.group": "Language",
+        "badge.version": "package 0.1.0",
+        "badge.version.aria": "Workspace package.json version 0.1.0",
+        "hero.pill": "Landing pages and marketing UI",
+        "hero.h1a": "UI library for",
+        "hero.h1em": "design engineers.",
+        "hero.sub": "A collection of reusable components you can copy and paste into your web apps. Built for landing pages and user-facing marketing, with React, TypeScript, Tailwind CSS, and Motion.",
+        "hero.cta1": "Quick install",
+        "hero.cta2": "Browse components",
+        "hero.badge.react": "React 19.1.1",
+        "hero.badge.next": "Next.js ^15.5.25",
+        "hero.badge.tw": "Tailwind CSS ^4.1.13",
+        "hero.badge.motion": "Motion ^12.23.12",
+        "hero.badge.ts": "TypeScript ^5.9.2",
+        "hero.badge.count": "77 docs sidebar components",
+        "hero.versions": "Manifest versions in this clone: workspace package.json 0.1.0 (private), www app 0.1.1. Engines: Node >=22.14.0, pnpm >=9. packageManager is pnpm@9.15.0. .nvmrc is 22.",
+        "hero.frame": "README · bento-grid.gif",
+        "quote.text": "“I personally believe that good design contributes significant value to software. It's one of the main methods of establishing trust between you and an internet stranger.”",
+        "quote.cite": "Introduction, magicui.design/docs",
+        "proof.kicker": "Visual proof",
+        "proof.title": "Shipped pixels, not placeholders.",
+        "proof.lead": "The bento animation above is the image in README.md. The six shots below are files in apps/www/public/showcase. More write-ups live in apps/www/content/showcase. The story page says Magic UI started in the summer of 2023 and was in users' hands within 10 days.",
+        "proof.story.link": "Read the story",
+        "proof.tabs": "Visual proof views",
+        "proof.tab.readme": "README gif",
+        "proof.tab.showcase": "Showcase files",
+        "proof.tab.pixel": "Pixel Image demo",
+        "proof.readme.cap": "Source: https://cdn.magicui.design/bento-grid.gif — the src used in README.md. Alt text there: “Magic UI - UI Library for Design Engineers”.",
+        "proof.pixel.cap": "apps/www/public/pixel-image-demo.jpg — referenced by the Pixel Image demo as src=\"/pixel-image-demo.jpg\".",
+        "shot.aryan": "Personal portfolio website",
+        "shot.darshan": "Darshan's Portfolio site",
+        "shot.miles": "Personal website and bilingual (EN/中文) digital garden of Miles — built with Astro, React, and Three.js.",
+        "shot.overlay": "Broadcast overlays and graphics for sports live streaming",
+        "shot.pulp": "Grow your business, not your payroll — AI automation for sales, marketing, and operations",
+        "shot.robot": "Personality-first toast library. Animated mascots, typewriter effect, draggable, toast.promise() and more with zero dependencies.",
+        "cap.kicker": "Catalog",
+        "cap.title": "Eight groups from the docs sidebar.",
+        "cap.lead": "apps/www/config/docs.ts links 77 component pages: Components, Special Effects, Animations, Text Animations, Device Mocks, Buttons, Backgrounds, and Community. Descriptions below are taken from those component docs. This grid is a selection, not the full 77.",
+        "cap.filters": "Filter components",
+        "filter.all": "All",
+        "filter.components": "Components",
+        "filter.effects": "Special Effects",
+        "filter.animations": "Animations",
+        "filter.text": "Text Animations",
+        "filter.devices": "Device Mocks",
+        "filter.buttons": "Buttons",
+        "filter.backgrounds": "Backgrounds",
+        "filter.community": "Community",
+        "badge.new": "New",
+        "card.docs": "Docs",
+        "feat.marquee": "An infinite scrolling component that can be used to display text, images, or videos.",
+        "feat.bento": "Bento grid is a layout used to showcase the features of a product in a simple and elegant way.",
+        "feat.globe": "An autorotating, interactive, and highly performant globe made using WebGL.",
+        "feat.dock": "An implementation of the MacOS dock using react + tailwindcss + framer motion",
+        "feat.animatedList": "A list that animates each item in sequence with a delay. Used to showcase notifications or events on your landing page.",
+        "feat.terminal": "An implementation of the MacOS terminal. Useful for showcasing a command line interface.",
+        "feat.tweet": "A card that displays a tweet with the author's name, handle, and profile picture.",
+        "feat.avatars": "Overlapping circles of avatars.",
+        "feat.beam": "An animated beam of light which travels along a path. Useful for showcasing the \"integration\" features of a website.",
+        "feat.border": "An animated beam of light which travels along the border of its container.",
+        "feat.magic": "A spotlight effect that follows your mouse cursor and highlights borders on hover.",
+        "feat.meteors": "A meteor shower effect.",
+        "feat.confetti": "Confetti animations are best used to delight your users when something special happens",
+        "feat.particles": "Particles are a fun way to add some visual flair to your website. They can be used to create a sense of depth, movement, and interactivity.",
+        "feat.shine": "Shine border is an animated background border effect.",
+        "feat.blur": "Blur fade in and out animation. Used to smoothly fade in and out content.",
+        "feat.textAnimate": "A text animation component that animates text using a variety of different animations.",
+        "feat.aurora": "A beautiful aurora text effect",
+        "feat.ticker": "Animate numbers to count up or down to a target number",
+        "feat.typing": "Characters appearing in typed animation",
+        "feat.sparkles": "A dynamic text that generates continuous sparkles with smooth transitions, perfect for highlighting text with animated stars.",
+        "feat.hyper": "A text animation that scrambles letters before revealing the final text.",
+        "feat.highlighter": "A text highlighter that mimics the effect of a human-drawn marker stroke.",
+        "feat.safari": "A safari browser mockup to showcase your website.",
+        "feat.iphone": "A mockup of the iPhone",
+        "feat.android": "A mockup of an Android device.",
+        "feat.rainbow": "An animated button with a rainbow effect.",
+        "feat.shimmer": "A button with a shimmering light which travels around the perimeter.",
+        "feat.ripple": "An animated button with ripple useful for user engagement.",
+        "feat.retro": "An animated scrolling retro grid effect",
+        "feat.flicker": "A flickering grid background made with SVGs, fully customizable using Tailwind CSS.",
+        "feat.dots": "A background dot pattern made with SVGs, fully customizable using Tailwind CSS.",
+        "feat.rays": "A component with animated light rays which shine down from above.",
+        "feat.hex": "A background hexagon pattern made with SVGs, fully customizable using Tailwind CSS.",
+        "feat.pixel": "A component that displays your image with a pixelated effect, enhancing the visual appeal of any image in your website.",
+        "feat.warp": "A card with a time warping background effect.",
+        "feat.neon": "A beautiful neon card effect",
+        "feat.compare": "A component which compares two code snippets.",
+        "feat.tree": "A component used to showcase the folder and file structure of a directory.",
+        "install.kicker": "Install",
+        "install.title": "Registry, MCP, or the monorepo.",
+        "install.lead": "Consumers add components through the shadcn registry. AI IDEs can install the documented MCP server. Contributors fork the repo and run it with pnpm. The workspace package is private, so these tabs follow the files in the repo rather than an npm install of “magicui”.",
+        "install.step1": "Init the project",
+        "install.step2": "Add a component",
+        "install.step3": "Import it",
+        "install.tabs": "Install methods",
+        "install.copy": "Copy",
+        "install.label.commands": "Commands from the installation docs",
+        "install.label.import": "Import example from the same page",
+        "install.label.manual": "apps/www/public/mcp.json",
+        "install.label.pnpm": "CONTRIBUTING.md",
+        "install.note.shadcn": "The installation page says Magic UI uses the same process as shadcn/ui. registry.json targets Globe at components/magicui/globe.tsx and lists dependencies cobe and motion. If the CLI writes a different import path, use that path.",
+        "install.note.ide": "From the MCP docs: restart your IDE after installing. Example prompts: “Add a blur fade text animation”, “Add a grid background”, “Add a vertical marquee of logos”.",
+        "install.note.manual": "Manual setup from the MCP docs and apps/www/public/mcp.json. Add this to your MCP config, then restart the IDE.",
+        "install.note.pnpm": "Contributor setup from CONTRIBUTING.md. Fork first at github.com/magicuidesign/magicui/fork, then clone your fork. Requires Node 22 (.nvmrc). package.json engines: Node >=22.14.0 and pnpm >=9. packageManager is pnpm@9.15.0. Root dev runs Turbo, which runs the www Next.js dev server.",
+        "install.link.docs": "Installation docs",
+        "install.link.mcp": "MCP docs",
+        "install.link.contributing": "Contributing guide",
+        "faq.kicker": "FAQ",
+        "faq.title": "License, shadcn, and CI.",
+        "faq.q1": "What license is Magic UI under?",
+        "faq.a1": "LICENSE.md is the MIT License, copyright (c) Magic UI. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies if the copyright notice and permission notice stay with the software. It is provided as is, without warranty. https://github.com/magicuidesign/magicui/blob/main/LICENSE.md",
+        "faq.q2": "How does it compare with shadcn/ui?",
+        "faq.a2": "The introduction says the library is heavily inspired by ui.shadcn.com. The installation page says it uses the same process as shadcn/ui. The site hero calls it a companion for shadcn/ui and lists React, TypeScript, Tailwind CSS, and Motion. The root package.json name is magicui and private is true, so the documented consumer install is the @magicui registry, not npm install of this workspace.",
+        "faq.q3": "How many components are documented?",
+        "faq.a3": "The docs sidebar in apps/www/config/docs.ts links 77 component pages across eight groups. The marketing hero in apps/www/components/sections/hero.tsx says “150+ free and open-source animated components and effects”. This page uses the sidebar count. Star and download counts are not stored in the local files, so they are omitted.",
+        "faq.q4": "What about Tailwind v3?",
+        "faq.a4": "The legacy page documents older components that use Tailwind CSS v3 at v3.magicui.design, and points upgrades to the shadcn Tailwind v4 migration guide. The www app declares tailwindcss ^4.1.13.",
+        "faq.q5": "How does CI work?",
+        "faq.a5": "Pull requests run the GitHub Actions workflow “Code check” on ubuntu-latest with Node 22 and pnpm 9.15.0. Jobs are pnpm lint, pnpm format:check, pnpm typecheck, pnpm registry-deps:check, pnpm build, and a registry artifact drift check that runs pnpm build:registry. Lefthook rebuilds registry artifacts and runs eslint and prettier on pre-commit, typecheck on pre-push, and commitlint on commit messages. The root check script is pnpm lint && pnpm typecheck && pnpm format:check && pnpm registry-deps:check.",
+        "faq.q6": "Are the templates free?",
+        "faq.a6": "The docs nav lists nine templates. CodeForge, AI Agent, Dev Tool, Mobile, SaaS, and Startup are marked paid. Changelog and Blog are marked paid: false. Portfolio has no paid flag; its page links to github.com/dillionverma/portfolio and a live preview at portfolio-magicui.vercel.app. The header also links templates to pro.magicui.design. These local files do not state a price.",
+        "faq.q7": "How do I contribute a component?",
+        "faq.a7": "README says it only takes about 5 minutes to add your own. CONTRIBUTING.md says you write 5 files (component, demo, sidebar entry, MDX docs, registry export) plus the artifacts pnpm build:registry generates, and that it takes around 10 minutes. Open the pull request from your fork to the main repo.",
+        "faq.q8": "What is the MCP server?",
+        "faq.a8": "The MCP page says Magic UI has an official MCP server so an AI-assisted IDE can use the components. Install with npx @magicuidesign/cli@latest install and one of cursor, windsurf, claude, cline, or roo-cline, or add the JSON in apps/www/public/mcp.json. Then restart the IDE.",
+        "footer.blurb": "Beautifully designed landing page components built with React & Tailwind CSS. UI library for design engineers.",
+        "footer.copy": "Copyright (c) Magic UI. MIT License.",
+        "footer.project": "Project",
+        "footer.community": "Community",
+        "footer.github": "GitHub repository",
+        "footer.docs": "Documentation",
+        "footer.showcase": "Showcase",
+        "footer.templates": "Templates",
+        "footer.license": "MIT license",
+        "footer.contributing": "Contributing",
+        "footer.dillion": "Built by dillion",
+        "footer.twitter": "Twitter @magicuidesign",
+        "footer.discord": "Discord",
+        "footer.instagram": "Instagram",
+        "footer.story": "Story",
+        "footer.legacy": "Legacy (Tailwind v3)",
+        "footer.top": "Back to top",
+        "toast.copied": "Copied",
+        "toast.failed": "Copy failed"
+      },
+      zh: {
+        "meta.title": "Magic UI — 給設計工程師的介面元件庫",
+        "meta.description": "以 React 與 Tailwind CSS 打造、適合落地頁的精緻元件。",
+        "nav.skip": "跳至內容",
+        "nav.proof": "展示",
+        "nav.capabilities": "元件",
+        "nav.install": "安裝",
+        "nav.faq": "問答",
+        "nav.docs": "文件",
+        "nav.star": "在 GitHub 加星",
+        "nav.menu": "開啟選單",
+        "nav.lang.group": "語言",
+        "badge.version": "套件 0.1.0",
+        "badge.version.aria": "workspace package.json 版本 0.1.0",
+        "hero.pill": "落地頁與行銷介面",
+        "hero.h1a": "給設計工程師的",
+        "hero.h1em": "介面元件庫。",
+        "hero.sub": "一組可複製貼上到網頁應用的可重用元件，主要用來做落地頁與面向使用者的行銷素材。以 React、TypeScript、Tailwind CSS 與 Motion 打造。",
+        "hero.cta1": "快速安裝",
+        "hero.cta2": "瀏覽元件",
+        "hero.badge.react": "React 19.1.1",
+        "hero.badge.next": "Next.js ^15.5.25",
+        "hero.badge.tw": "Tailwind CSS ^4.1.13",
+        "hero.badge.motion": "Motion ^12.23.12",
+        "hero.badge.ts": "TypeScript ^5.9.2",
+        "hero.badge.count": "文件側邊欄 77 個元件",
+        "hero.versions": "此 clone 的清單版本：workspace package.json 為 0.1.0（private），www 應用為 0.1.1。engines：Node >=22.14.0、pnpm >=9。packageManager 為 pnpm@9.15.0。.nvmrc 為 22。",
+        "hero.frame": "README · bento-grid.gif",
+        "quote.text": "「我個人相信好的設計會為軟體帶來可觀的價值。它是你和網路上的陌生人建立信任的主要方法之一。」",
+        "quote.cite": "簡介，magicui.design/docs",
+        "proof.kicker": "視覺證明",
+        "proof.title": "用倉庫裡的畫面，不靠占位圖。",
+        "proof.lead": "上方的 bento 動畫就是 README.md 裡的圖。下面六張截圖是 apps/www/public/showcase 的檔案。更多案例寫在 apps/www/content/showcase。故事頁寫道 Magic UI 始於 2023 年夏天，十天內就交到使用者手上。",
+        "proof.story.link": "閱讀故事",
+        "proof.tabs": "視覺證明檢視",
+        "proof.tab.readme": "README 動圖",
+        "proof.tab.showcase": "Showcase 檔案",
+        "proof.tab.pixel": "Pixel Image 示範",
+        "proof.readme.cap": "來源：https://cdn.magicui.design/bento-grid.gif，即 README.md 使用的 src。該處 alt 為 “Magic UI - UI Library for Design Engineers”。",
+        "proof.pixel.cap": "apps/www/public/pixel-image-demo.jpg。Pixel Image 示範以 src=\"/pixel-image-demo.jpg\" 引用它。",
+        "shot.aryan": "個人作品集網站",
+        "shot.darshan": "Darshan 的作品集網站",
+        "shot.miles": "Miles 的個人網站與雙語（EN/中文）數位花園，以 Astro、React 與 Three.js 打造。",
+        "shot.overlay": "體育直播用的轉播疊加層與圖像",
+        "shot.pulp": "讓事業成長，而不是讓薪資單成長——銷售、行銷與營運的 AI 自動化",
+        "shot.robot": "以個性為先的 toast 元件庫。有動畫吉祥物、打字機效果、可拖曳、toast.promise() 等，且零相依。",
+        "cap.kicker": "目錄",
+        "cap.title": "文件側邊欄的八個分類。",
+        "cap.lead": "apps/www/config/docs.ts 連到 77 個元件頁，分成 Components、Special Effects、Animations、Text Animations、Device Mocks、Buttons、Backgrounds、Community。下方描述取自這些元件文件。這是節選，不是全部 77 個。",
+        "cap.filters": "篩選元件",
+        "filter.all": "全部",
+        "filter.components": "元件",
+        "filter.effects": "特效",
+        "filter.animations": "動畫",
+        "filter.text": "文字動畫",
+        "filter.devices": "裝置模型",
+        "filter.buttons": "按鈕",
+        "filter.backgrounds": "背景",
+        "filter.community": "社群",
+        "badge.new": "新",
+        "card.docs": "文件",
+        "feat.marquee": "可無限捲動的元件，用來展示文字、圖片或影片。",
+        "feat.bento": "用簡潔、優雅的版面展示產品功能的 Bento 格狀佈局。",
+        "feat.globe": "以 WebGL 製作、可自動旋轉且可互動的高效能地球。",
+        "feat.dock": "用 React、Tailwind CSS 與 Framer Motion 實作的 macOS Dock。",
+        "feat.animatedList": "依序、帶延遲播放每一項的清單，用來在落地頁展示通知或事件。",
+        "feat.terminal": "macOS 風格的終端機，適合展示命令列介面。",
+        "feat.tweet": "顯示推文作者名稱、帳號與頭像的卡片。",
+        "feat.avatars": "互相重疊的頭像圓形。",
+        "feat.beam": "沿著路徑移動的光束，適合展示網站的整合功能。",
+        "feat.border": "沿著容器邊框移動的光束。",
+        "feat.magic": "跟隨游標的聚光效果，並在懸停時突顯邊框。",
+        "feat.meteors": "流星雨效果。",
+        "feat.confetti": "在特別的時刻取悅使用者的彩帶動畫。",
+        "feat.particles": "為網站增添深度、動感與互動的粒子效果。",
+        "feat.shine": "會動的背景邊框光澤效果。",
+        "feat.blur": "模糊淡入淡出，用來平滑地顯示或隱藏內容。",
+        "feat.textAnimate": "以多種動畫方式驅動文字的元件。",
+        "feat.aurora": "極光般的文字效果。",
+        "feat.ticker": "讓數字遞增或遞減到目標值。",
+        "feat.typing": "以打字方式逐字出現。",
+        "feat.sparkles": "持續產生平滑星光、用來強調文字的動態文字。",
+        "feat.hyper": "先打亂字母、再揭示最終文字的動畫。",
+        "feat.highlighter": "模仿手繪螢光筆筆觸的文字高亮。",
+        "feat.safari": "用來展示網站的 Safari 瀏覽器模型。",
+        "feat.iphone": "iPhone 的裝置模型。",
+        "feat.android": "Android 裝置的模型。",
+        "feat.rainbow": "帶有彩虹效果的動態按鈕。",
+        "feat.shimmer": "光澤沿邊緣流動的按鈕。",
+        "feat.ripple": "帶有漣漪、用來提高互動的動態按鈕。",
+        "feat.retro": "會捲動的復古網格效果。",
+        "feat.flicker": "以 SVG 製作、可用 Tailwind CSS 調整的閃爍網格背景。",
+        "feat.dots": "以 SVG 製作、可用 Tailwind CSS 調整的點陣背景。",
+        "feat.rays": "從上方灑下的動態光線。",
+        "feat.hex": "以 SVG 製作、可用 Tailwind CSS 調整的六角背景。",
+        "feat.pixel": "以像素化效果呈現圖片。",
+        "feat.warp": "帶有時間扭曲背景的卡片。",
+        "feat.neon": "霓虹漸層卡片效果。",
+        "feat.compare": "並排比較兩段程式碼的元件。",
+        "feat.tree": "用來展示目錄中資料夾與檔案結構的元件。",
+        "install.kicker": "安裝",
+        "install.title": "Registry、MCP，或整個 monorepo。",
+        "install.lead": "使用者透過 shadcn registry 加入元件。AI IDE 可以安裝文件中的 MCP server。貢獻者 fork 後用 pnpm 跑起來。workspace 套件是 private，所以這些分頁依倉庫裡的檔案，而不是 npm install “magicui”。",
+        "install.step1": "初始化專案",
+        "install.step2": "加入元件",
+        "install.step3": "匯入它",
+        "install.tabs": "安裝方式",
+        "install.copy": "複製",
+        "install.label.commands": "安裝文件中的指令",
+        "install.label.import": "同一頁的匯入範例",
+        "install.label.manual": "apps/www/public/mcp.json",
+        "install.label.pnpm": "CONTRIBUTING.md",
+        "install.note.shadcn": "安裝頁寫道 Magic UI 與 shadcn/ui 使用相同流程。registry.json 把 Globe 的 target 設為 components/magicui/globe.tsx，並列出相依 cobe 與 motion。若 CLI 寫入的匯入路徑不同，請用那個路徑。",
+        "install.note.ide": "MCP 文件寫道：安裝後請重新啟動 IDE。範例提問：「Add a blur fade text animation」、「Add a grid background」、「Add a vertical marquee of logos」。",
+        "install.note.manual": "手動設定來自 MCP 文件與 apps/www/public/mcp.json。把這段加進 MCP 設定後，重新啟動 IDE。",
+        "install.note.pnpm": "貢獻者設定來自 CONTRIBUTING.md。先到 github.com/magicuidesign/magicui/fork，再 clone 你的 fork。需要 Node 22（.nvmrc）。package.json engines：Node >=22.14.0、pnpm >=9。packageManager 為 pnpm@9.15.0。根目錄的 dev 會跑 Turbo，再啟動 www 的 Next.js 開發伺服器。",
+        "install.link.docs": "安裝文件",
+        "install.link.mcp": "MCP 文件",
+        "install.link.contributing": "貢獻指南",
+        "faq.kicker": "問答",
+        "faq.title": "授權、shadcn，以及 CI。",
+        "faq.q1": "Magic UI 用什麼授權？",
+        "faq.a1": "LICENSE.md 是 MIT License，著作權人為 Magic UI。你可以自由使用、複製、修改、合併、發布、散布、再授權或販售，但必須保留著作權聲明與許可聲明。軟體以現況提供，不含任何保證。https://github.com/magicuidesign/magicui/blob/main/LICENSE.md",
+        "faq.q2": "它和 shadcn/ui 是什麼關係？",
+        "faq.a2": "簡介寫道這個元件庫深受 ui.shadcn.com 啟發。安裝頁寫道流程與 shadcn/ui 相同。官網 hero 稱它為 shadcn/ui 的搭配，並列出 React、TypeScript、Tailwind CSS 與 Motion。根目錄 package.json 的 name 是 magicui，且 private 為 true，所以文件中的使用方式是 @magicui registry，而不是 npm install 這個 workspace。",
+        "faq.q3": "文件裡有多少元件？",
+        "faq.a3": "apps/www/config/docs.ts 的側邊欄連到 77 個元件頁，分成八個分類。官網 hero（apps/www/components/sections/hero.tsx）寫著「150+ free and open-source animated components and effects」。本頁採用側邊欄的數量。星數與下載數不在本機檔案裡，所以略過。",
+        "faq.q4": "Tailwind v3 呢？",
+        "faq.a4": "舊版頁面把使用 Tailwind CSS v3 的元件放在 v3.magicui.design，並把升級指向 shadcn 的 Tailwind v4 遷移指南。www 應用宣告 tailwindcss ^4.1.13。",
+        "faq.q5": "CI 怎麼跑？",
+        "faq.a5": "Pull request 會跑 GitHub Actions 工作流程「Code check」，環境是 ubuntu-latest、Node 22、pnpm 9.15.0。工作包含 pnpm lint、pnpm format:check、pnpm typecheck、pnpm registry-deps:check、pnpm build，以及執行 pnpm build:registry 的 registry 產物漂移檢查。Lefthook 在 pre-commit 重建 registry 產物並跑 eslint 與 prettier，pre-push 做 typecheck，commit-msg 用 commitlint。根目錄的 check 腳本是 pnpm lint && pnpm typecheck && pnpm format:check && pnpm registry-deps:check。",
+        "faq.q6": "模板是免費的嗎？",
+        "faq.a6": "文件導覽列出九個模板。CodeForge、AI Agent、Dev Tool、Mobile、SaaS、Startup 標為付費。Changelog 與 Blog 的 paid 為 false。Portfolio 沒有 paid 標記，頁面連到 github.com/dillionverma/portfolio，預覽在 portfolio-magicui.vercel.app。頁首也把模板連到 pro.magicui.design。這些本機檔案沒有標價。",
+        "faq.q7": "要怎麼貢獻一個元件？",
+        "faq.a7": "README 說自己加一個大約 5 分鐘。CONTRIBUTING.md 說要寫 5 個檔案（元件、示範、側邊欄、MDX 文件、registry 匯出），再加上 pnpm build:registry 產生的產物，大約 10 分鐘。從你的 fork 對主倉庫開 pull request。",
+        "faq.q8": "MCP server 是什麼？",
+        "faq.a8": "MCP 頁寫道 Magic UI 有官方 MCP server，讓 AI IDE 能使用這些元件。用 npx @magicuidesign/cli@latest install，目標為 cursor、windsurf、claude、cline 或 roo-cline，或加入 apps/www/public/mcp.json 的 JSON。然後重新啟動 IDE。",
+        "footer.blurb": "以 React 與 Tailwind CSS 打造、適合落地頁的精緻元件。給設計工程師的介面元件庫。",
+        "footer.copy": "Copyright (c) Magic UI。MIT License。",
+        "footer.project": "專案",
+        "footer.community": "社群",
+        "footer.github": "GitHub 倉庫",
+        "footer.docs": "文件",
+        "footer.showcase": "Showcase",
+        "footer.templates": "模板",
+        "footer.license": "MIT 授權",
+        "footer.contributing": "貢獻指南",
+        "footer.dillion": "由 dillion 打造",
+        "footer.twitter": "Twitter @magicuidesign",
+        "footer.discord": "Discord",
+        "footer.instagram": "Instagram",
+        "footer.story": "故事",
+        "footer.legacy": "舊版（Tailwind v3）",
+        "footer.top": "回到頂端",
+        "toast.copied": "已複製",
+        "toast.failed": "複製失敗"
+      }
+    };
+
+    function currentLang() {
+      return document.documentElement.dataset.lang === "zh" ? "zh" : "en";
+    }
+
+    function translate(lang, key) {
+      const pack = translations[lang] || translations.en;
+      if (Object.prototype.hasOwnProperty.call(pack, key)) return pack[key];
+      return translations.en[key];
+    }
+
+    function applyLanguage(lang) {
+      const next = lang === "zh" ? "zh" : "en";
+      document.documentElement.lang = next === "zh" ? "zh-Hant" : "en";
+      document.documentElement.dataset.lang = next;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const value = translate(next, el.getAttribute("data-i18n"));
+        if (typeof value === "string") el.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+        const value = translate(next, el.getAttribute("data-i18n-aria"));
+        if (typeof value === "string") el.setAttribute("aria-label", value);
+      });
+      document.querySelectorAll("[data-i18n-content]").forEach((el) => {
+        const value = translate(next, el.getAttribute("data-i18n-content"));
+        if (typeof value === "string") el.setAttribute("content", value);
+      });
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.setAttribute("aria-pressed", btn.getAttribute("data-lang-btn") === next ? "true" : "false");
+      });
+      try { localStorage.setItem("magicui-landing-lang", next); } catch (err) { /* ignore */ }
+    }
+
+    document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+      btn.addEventListener("click", () => applyLanguage(btn.getAttribute("data-lang-btn")));
+    });
+
+    const menu = document.getElementById("mobile-menu");
+    const menuBtn = document.getElementById("menu-btn");
+    menuBtn.addEventListener("click", () => {
+      const willOpen = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden", !willOpen);
+      menuBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        menu.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    document.querySelectorAll("[data-filter]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cat = btn.getAttribute("data-filter");
+        document.querySelectorAll("[data-filter]").forEach((peer) => {
+          peer.setAttribute("aria-pressed", peer === btn ? "true" : "false");
+        });
+        document.querySelectorAll("[data-cat]").forEach((card) => {
+          const show = cat === "all" || card.getAttribute("data-cat") === cat;
+          card.classList.toggle("hidden", !show);
+        });
+      });
+    });
+
+    function selectGroup(attr, value) {
+      document.querySelectorAll("[" + attr + "]").forEach((btn) => {
+        const on = btn.getAttribute(attr) === value;
+        btn.setAttribute("aria-selected", on ? "true" : "false");
+      });
+    }
+
+    document.querySelectorAll("[data-proof]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-proof");
+        selectGroup("data-proof", id);
+        document.querySelectorAll("[data-proof-panel]").forEach((panel) => {
+          panel.classList.toggle("hidden", panel.getAttribute("data-proof-panel") !== id);
+        });
+      });
+    });
+
+    document.querySelectorAll("[data-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-tab");
+        selectGroup("data-tab", id);
+        document.querySelectorAll("[data-panel]").forEach((panel) => {
+          panel.classList.toggle("hidden", panel.getAttribute("data-panel") !== id);
+        });
+      });
+    });
+
+    document.querySelectorAll("[aria-controls]").forEach((btn) => {
+      if (!btn.getAttribute("aria-controls").startsWith("faq-")) return;
+      btn.addEventListener("click", () => {
+        const panel = document.getElementById(btn.getAttribute("aria-controls"));
+        const open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+        panel.classList.toggle("hidden", open);
+        const icon = btn.querySelector("svg");
+        if (icon) icon.style.transform = open ? "" : "rotate(180deg)";
+      });
+    });
+
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toast-text");
+    let toastTimer = 0;
+    function showToast(key) {
+      toastText.setAttribute("data-i18n", key);
+      toastText.textContent = translate(currentLang(), key);
+      toast.classList.remove("translate-y-20", "opacity-0");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (err) {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.setAttribute("readonly", "");
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+        let ok = false;
+        try { ok = document.execCommand("copy"); } catch (copyErr) { ok = false; }
+        document.body.removeChild(area);
+        return ok;
+      }
+    }
+
+    document.querySelectorAll("[data-copy-target]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const node = document.getElementById(btn.getAttribute("data-copy-target"));
+        const ok = await copyText(node ? node.textContent : "");
+        showToast(ok ? "toast.copied" : "toast.failed");
+      });
+    });
+
+    let saved = "en";
+    try {
+      const stored = localStorage.getItem("magicui-landing-lang");
+      if (stored === "zh" || stored === "en") saved = stored;
+    } catch (err) { /* ignore */ }
+    applyLanguage(saved);
+    if (window.lucide && typeof window.lucide.createIcons === "function") {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
