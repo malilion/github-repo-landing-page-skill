@@ -26,7 +26,7 @@ An agent skill (standard `SKILL.md` format, usable by any AI coding agent that s
 - **CDN only**: Tailwind CSS, Google Fonts (incl. Noto TC) and Lucide Icons, with pinned versions and SRI where supported.
 - **Adaptive design**: picks a visual direction that matches the repo (CLI/DevOps, AI/SaaS, design tools, consumer/gaming).
 - **Instant bilingual switch**: 繁體中文 / English via a client-side `data-i18n` dictionary, no reload.
-- **No broken assets, no invented facts**: uses the repo's real screenshots when they exist, otherwise Tailwind mockups and SVGs; content comes only from the repo (local files first).
+- **No broken assets, no invented facts**: uses the repo's real screenshots when they exist (key images are copied next to the page instead of hot-linked, and every image is checked as loaded before acceptance), otherwise Tailwind mockups and SVGs; content comes only from the repo (local files first).
 - **Complete sections**: SEO/Open Graph meta, sticky header, hero, visual showcase, feature grid, multi-platform install tabs with copy button, FAQ accordion, footer.
 
 ## Usage

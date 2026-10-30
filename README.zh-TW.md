@@ -26,7 +26,7 @@
 - **僅使用 CDN**:Tailwind CSS、Google Fonts(含 Noto TC 繁中字型)、Lucide Icons,固定版本並在可行處加 SRI。
 - **自適應設計**:依專案性質自動選擇視覺風格(CLI/DevOps、AI/SaaS、設計工具、消費/遊戲)。
 - **即時雙語切換**:以前端 `data-i18n` 字典切換 繁體中文 / English,無需重新載入。
-- **無破圖、不編造**:repo 有真實截圖就優先使用,沒有才用 Tailwind 擬真介面與 SVG;內容只取自 repo(優先本機檔案)。
+- **無破圖、不編造**:repo 有真實截圖就優先使用(主要圖片會複製到頁面旁、不盜連上游網址,驗收前會確認每張圖都已載入),沒有才用 Tailwind 擬真介面與 SVG;內容只取自 repo(優先本機檔案)。
 - **完整區塊**:SEO/Open Graph meta、置頂導覽列、Hero、視覺展示、功能網格、含複製按鈕的多平台安裝分頁、FAQ 手風琴、頁尾。
 
 ## 使用方式
