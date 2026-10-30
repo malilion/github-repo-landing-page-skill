@@ -83,8 +83,13 @@ Checked afterwards with Playwright:
 | `assets/demo.gif` | Demo recording shown above |
 | `index.html` | Demo portal (gallery of all demo pages), served at the GitHub Pages root |
 | `portal/*.webp` | Thumbnails used by the portal |
+| `portal/template.html` | HTML template for the portal |
+| `scripts/build-portal.mjs` | Generates `index.html` from `demo/**/index.html` (plain Node, no dependencies) |
+| `.github/workflows/build-portal.yml` | GitHub Action that regenerates `index.html` when `demo/**`, `portal/**` or the script changes |
 | `demo/index.html` | The generated demo page, served on GitHub Pages |
 | `demo/macro/index.html` | A second generated demo page (macro-inc/macro), served on GitHub Pages |
 | `demo/assistant-ui/index.html` | Another generated demo page (assistant-ui/assistant-ui), served on GitHub Pages |
 | `demo/magicui/index.html` | One more generated demo page (magicuidesign/magicui), served on GitHub Pages |
 | `demo/agenui/index.html` | And one more generated demo page (AGenUI/AGenUI), served on GitHub Pages |
+
+The portal is generated: to add a demo, drop a folder `demo/<name>/index.html` and push; the Action adds its card. Optional `<meta>` tags in the demo page: `portal-name`, `portal-order`, `upstream-repo`, `upstream-license`, `description:zh-TW`. Optional thumbnail: `portal/<name>.webp`.

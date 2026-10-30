@@ -83,8 +83,13 @@ grok --prompt-file prompt.md --cwd <repo> --trust --permission-mode dontAsk \
 | `assets/demo.gif` | 上方的示範動畫 |
 | `index.html` | 示範入口頁(所有示範頁的集中列表),作為 GitHub Pages 首頁 |
 | `portal/*.webp` | 入口頁使用的縮圖 |
+| `portal/template.html` | 入口頁的 HTML 範本 |
+| `scripts/build-portal.mjs` | 由 `demo/**/index.html` 產生 `index.html`(純 Node,無相依套件) |
+| `.github/workflows/build-portal.yml` | 當 `demo/**`、`portal/**` 或腳本變動時,自動重新產生 `index.html` 的 GitHub Action |
 | `demo/index.html` | 產生的示範頁,以 GitHub Pages 提供 |
 | `demo/macro/index.html` | 第二個產生的示範頁(macro-inc/macro),以 GitHub Pages 提供 |
 | `demo/assistant-ui/index.html` | 另一個產生的示範頁(assistant-ui/assistant-ui),以 GitHub Pages 提供 |
 | `demo/magicui/index.html` | 再一個產生的示範頁(magicuidesign/magicui),以 GitHub Pages 提供 |
 | `demo/agenui/index.html` | 還有一個產生的示範頁(AGenUI/AGenUI),以 GitHub Pages 提供 |
+
+入口頁為自動產生:要新增示範,只要在 `demo/<名稱>/index.html` 放入頁面並 push,Action 就會加入對應卡片。示範頁可選用的 `<meta>`:`portal-name`、`portal-order`、`upstream-repo`、`upstream-license`、`description:zh-TW`。縮圖可選:`portal/<名稱>.webp`。

@@ -1,0 +1,40 @@
+name: Build portal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'demo/**'
+      - 'portal/**'
+      - 'scripts/build-portal.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-portal
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generate index.html
+        run: node scripts/build-portal.mjs
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html is up to date"
+            exit 0
+          fi
+          git config user.name "Malilion"
+          git config user.email "296698118+malilion@users.noreply.github.com"
+          git add index.html
+          git commit -m "Update portal"
+          git pull --rebase origin main
+          git push origin HEAD:main
