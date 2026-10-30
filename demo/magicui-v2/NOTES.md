@@ -9,14 +9,14 @@ Attribution comment on the page: Structure and conversion copy follow elayadesig
 - 主要行動只有一個：前往安裝說明 `https://magicui.design/docs/installation`（網址出自 `skills/magic-ui/SKILL.md`）。轉換定義是點擊這個連結。
 - 對象是已經使用 React 或 Next.js，以及 Tailwind CSS 的設計工程師。依據是 README 的 “UI Library for Design Engineers”，以及 skill 寫的前置條件。
 - 流量來源未知。這是常青的元件庫說明，不是限時廣告頁，因此 `index, follow`。
-- 本機沒有可引用的用戶引言、星數、下載量或客戶商標數字。頁面不顯示這類證明。showcase 的 MDX 不在這份檢出裡，圖說只標檔名。
+- 沒有可引用的用戶引言、星數、下載量或客戶商標數字。頁面不顯示這類證明。showcase 圖說依檔名與畫面內容寫成簡短說明。
 - 「75」是這份 `registry.json` 裡、頂層 `"type": "registry:ui"` 的項目數（`magic-card` 到 `grid-beams`）。example / demo 不算。`mode-toggle.tsx` 只出現在 dock demo 的 files 裡，不算獨立項目。
 - 根目錄 `package.json` 是 `"private": true`、`"version": "0.1.0"`。頁面不把它寫成 `npm install magicui`。
-- 風險消除只用 MIT 授權本文。倉庫沒有定價、試用或退款頁。
+- 風險消除只用 MIT 授權本文。頁面不提定價、試用或退款。
 - 預設語言是繁體中文。選擇存在 `localStorage` 鍵 `magicui-landing-lang`。
 - 色彩取自 `apps/www/app/icon.svg`（以及本頁 `./assets/icon.svg`）的 `#9E7AFF`、`#FE8BBB`、`#FFBD7A`、`#F8EAC3`，底色是偏紫的暖墨 `#141016`。
-- showcase 圖檔說明約 1400px 寬，文件沒有寫高度。框用 16:10，`object-fit: contain`，避免裁切與版面位移。`pixel-image-demo.webp` 依說明為 1400×1400。
-- `.nvmrc` 內容是 `22`。`package.json` engines 是 Node `>=22.14.0`、pnpm `>=9`，`packageManager` 是 `pnpm@9.15.0`。
+- Hero 是 README 的 bento-grid 動圖（原 GIF 3.2 MB），轉成靜音循環的 `hero.webm`（87 KB）與 `hero.mp4`（104 KB），搭配 `hero-poster.webp`（10 KB）。`og:image` 是自架的 1200×630 `og.jpg`（38 KB）。showcase 框用 16:10，`object-fit: contain`，避免裁切與版面位移。
+- `package.json` engines 是 Node `>=22.14.0`、pnpm `>=9`，`packageManager` 是 `pnpm@9.15.0`。
 - 貢獻時間同時保留兩個原文數字：README 寫約 5 分鐘，CONTRIBUTING.md 寫約 10 分鐘、5 個檔案。頁面兩邊都寫明出處，不取其中一個當成唯一事實。
 
 ## 1. 頁面結構大綱
@@ -130,3 +130,7 @@ Attribution comment on the page: Structure and conversion copy follow elayadesig
 - `./assets/` 檔案：`icon.svg`、`pixel-image-demo.webp`、`showcase-aryankarma.webp`、`showcase-d1rshan.webp`、`showcase-miles.webp`、`showcase-overlay-ui.webp`、`showcase-pulpsense.webp`、`showcase-robot-toast.webp`。
 - 沒有連網，沒有用 shell，所以沒有在瀏覽器執行頁面，也沒有重算 Lucide SRI，沒有確認 CDN 或 `og:image` 的 HTTP 狀態。
 - 完成前以檔案搜尋核對：`data-i18n` / `data-i18n-alt` 的 key 是否兩邊字典都有、`./assets/` 路徑是否都在目錄裡、標語 CSS class 與 JS 是否都在。
+
+## 修訂
+
+第一版 hero 用了元件 demo 的樣本照片，頁面文字裡也有「這份檢出」之類關於素材來源的後設文字，圖說是通用句。這一版改成產品本身的 hero 動圖、移除後設文字、改寫成具體的 alt 與圖說。規則寫在 SKILL.md §6。
